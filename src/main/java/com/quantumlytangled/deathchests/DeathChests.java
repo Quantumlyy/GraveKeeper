@@ -41,5 +41,4 @@ public class DeathChests
     private void init(final FMLInitializationEvent event) {
         this.registration.initialize(event);
     }
-
 }
