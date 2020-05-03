@@ -22,7 +22,7 @@ public class DeathChests
     private final Registration registration;
 
     private DeathChests() {
-        this.registration = new Registration();
+        registration = new Registration();
         MinecraftForge.EVENT_BUS.register(this.registration);
     }
 

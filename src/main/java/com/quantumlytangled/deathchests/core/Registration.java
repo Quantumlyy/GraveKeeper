@@ -32,7 +32,7 @@ import java.util.UUID;
 
 public final class Registration {
 
-    private static Logger logger;
+    public static Logger logger;
 
     public static Block blockDeathChest;
 
@@ -57,6 +57,7 @@ public final class Registration {
     public void onPlayerDeath(@Nonnull LivingDeathEvent event) {
         EntityLivingBase entity = event.getEntityLiving();
         if (!(entity instanceof EntityPlayer && entity.isServerWorld())) return;
+        Date tof = new Date();
 
         EntityPlayerMP playerEntity = (EntityPlayerMP) entity;
         String playerName = playerEntity.getDisplayNameString();
@@ -70,7 +71,7 @@ public final class Registration {
         BlockPos deathPos = new BlockPos(pX, pY, pZ);
 
         String worldTimeHex = Long.toHexString(playerEntity.getServerWorld().getWorldTime());
-        String timestamp = new SimpleDateFormat("dd-MM-yyyy-mm-HH-ss").format(new Date());
+        String timestamp = new SimpleDateFormat("dd-MM-yyyy-mm-HH-ss").format(tof);
         String identifier = playerName + "." + playerUUID + "." + worldTimeHex + "." + timestamp;
         String fileName = identifier + ".nbt";
 
@@ -86,7 +87,7 @@ public final class Registration {
                 try {
                     world.setBlockState(deathPos, blockDeathChest.getDefaultState());
                     TileDeathChest dChest = (TileDeathChest) world.getTileEntity(deathPos);
-                    dChest.setIdentifier(identifier);
+                    dChest.setData(identifier, playerName, playerUUID, tof);
                 } catch (Exception e) {
                     logger.error(e);
                 }
