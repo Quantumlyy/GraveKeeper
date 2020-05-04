@@ -1,10 +1,12 @@
 package com.quantumlytangled.deathchests.tile;
 
+import com.quantumlytangled.deathchests.core.InventoryDeath;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -21,32 +23,32 @@ public class TileDeathChest extends TileEntity {
 
     private long creationDate = 0;
 
-    private ItemStack[] contents = new ItemStack[255];
+    private InventoryDeath contents;
 
     public TileDeathChest() {
         super();
     }
 
     public void processRight(EntityPlayer player, World world, BlockPos pos) {
-        if (processInValidity(player)) return;
+        if (checkPlayerInvalidity(player)) return;
         if (player.isCreative()) processCreativeInspect(player, world, pos);
             else processItemReturn(player, world, pos);
     }
 
     public void processLeft(EntityPlayer player, World world, BlockPos pos) {
-        if (processInValidity(player)) return;
+        if (checkPlayerInvalidity(player)) return;
         if (player.isCreative()) processCreativeItemReturn(player, world, pos);
     }
 
-    public void setData(String identifier, String name, UUID uniqueID, Date creation) {
+    public void setData(String identifier, String name, UUID uniqueID, Date creation, InventoryDeath inventory) {
         dataIdentifier = identifier;
         ownerName = name;
         ownerUUID = uniqueID;
         creationDate = creation.getTime();
-        contents[0] = new ItemStack(Items.IRON_HOE);
+        contents = inventory;
     }
 
-    private boolean processInValidity(EntityPlayer player) {
+    private boolean checkPlayerInvalidity(EntityPlayer player) {
         return !((ownerUUID == player.getUniqueID()) || player.isCreative());
     }
 
@@ -55,8 +57,10 @@ public class TileDeathChest extends TileEntity {
     }
 
     private void processCreativeItemReturn(EntityPlayer player, World world, BlockPos pos) {
-        for (ItemStack item : contents) {
-            world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), item));
+        for (NonNullList<ItemStack> inventory : contents.allInventories) {
+            for (ItemStack item : inventory) {
+                world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), item.copy()));
+            }
         }
     }
 

@@ -85,9 +85,11 @@ public final class Registration {
                     CompressedStreamTools.writeCompressed(nbtTag, output);
                 }
                 try {
+                    InventoryDeath invDeath = new InventoryDeath(playerEntity);
                     world.setBlockState(deathPos, blockDeathChest.getDefaultState());
                     TileDeathChest dChest = (TileDeathChest) world.getTileEntity(deathPos);
-                    dChest.setData(identifier, playerName, playerUUID, tof);
+                    dChest.setData(identifier, playerName, playerUUID, tof, invDeath);
+                    playerEntity.inventory.clear();
                 } catch (Exception e) {
                     logger.error(e);
                 }

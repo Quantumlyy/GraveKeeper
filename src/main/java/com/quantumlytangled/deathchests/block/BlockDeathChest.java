@@ -2,7 +2,6 @@ package com.quantumlytangled.deathchests.block;
 
 import com.quantumlytangled.deathchests.DeathChests;
 import com.quantumlytangled.deathchests.core.CustomEntitySelectors;
-import com.quantumlytangled.deathchests.core.Registration;
 import com.quantumlytangled.deathchests.tile.TileDeathChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -63,9 +62,7 @@ public class BlockDeathChest extends Block {
             return;
         }
         final TileDeathChest chest = (TileDeathChest) tChest;
-        EntityPlayer player = worldIn.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10, CustomEntitySelectors.IN_CREATIVE);
-
-        Registration.logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        EntityPlayer player = worldIn.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 6, CustomEntitySelectors.IN_CREATIVE);
 
         chest.processLeft(player, worldIn, pos);
     }
