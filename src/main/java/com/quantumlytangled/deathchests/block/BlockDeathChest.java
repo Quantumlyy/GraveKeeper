@@ -1,6 +1,8 @@
 package com.quantumlytangled.deathchests.block;
 
 import com.quantumlytangled.deathchests.DeathChests;
+import com.quantumlytangled.deathchests.core.CustomEntitySelectors;
+import com.quantumlytangled.deathchests.core.Registration;
 import com.quantumlytangled.deathchests.tile.TileDeathChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -25,21 +27,58 @@ public class BlockDeathChest extends Block {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        TileDeathChest chest = (TileDeathChest) worldIn.getTileEntity(pos);
-        if (!worldIn.isRemote) chest.processRight(playerIn, worldIn, pos);
+    public boolean onBlockActivated(
+            @Nonnull World worldIn,
+            @Nonnull BlockPos pos,
+            @Nonnull IBlockState state,
+            @Nonnull EntityPlayer playerIn,
+            @Nonnull EnumHand hand,
+            @Nonnull EnumFacing facing,
+            float hitX,
+            float hitY,
+            float hitZ) {
+        if (worldIn.isRemote) return false;
+
+        final TileEntity tChest = worldIn.getTileEntity(pos);
+        if (!(tChest instanceof TileDeathChest)) return false;
+        final TileDeathChest chest = (TileDeathChest) tChest;
+
+        chest.processRight(playerIn, worldIn, pos);
         return true;
     }
 
     @Override
-    public boolean hasTileEntity(IBlockState state)
+    public void breakBlock(
+            @Nonnull World worldIn,
+            @Nonnull BlockPos pos,
+            @Nonnull IBlockState state) {
+        if (worldIn.isRemote) {
+            super.breakBlock(worldIn, pos, state);
+            return;
+        }
+
+        final TileEntity tChest = worldIn.getTileEntity(pos);
+        if (!(tChest instanceof TileDeathChest)) {
+            super.breakBlock(worldIn, pos, state);
+            return;
+        }
+        final TileDeathChest chest = (TileDeathChest) tChest;
+        EntityPlayer player = worldIn.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 10, CustomEntitySelectors.IN_CREATIVE);
+
+        Registration.logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        chest.processLeft(player, worldIn, pos);
+    }
+
+    @Override
+    public boolean hasTileEntity(@Nonnull IBlockState state)
     {
         return true;
     }
 
     @Nonnull
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
+    public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
     {
         return new TileDeathChest();
     }
