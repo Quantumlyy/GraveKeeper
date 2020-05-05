@@ -27,6 +27,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.UUID;
 
@@ -36,15 +39,13 @@ public final class Registration {
 
     public static Block blockDeathChest;
 
-    public void preInitialize(FMLPreInitializationEvent event)
-    {
+    public void preInitialize(FMLPreInitializationEvent event) {
         logger = event.getModLog();
 
         blockDeathChest = new BlockDeathChest();
     }
 
-    public void initialize(FMLInitializationEvent event)
-    {
+    public void initialize(FMLInitializationEvent event) {
     }
 
     @SubscribeEvent
@@ -57,7 +58,7 @@ public final class Registration {
     public void onPlayerDeath(@Nonnull LivingDeathEvent event) {
         EntityLivingBase entity = event.getEntityLiving();
         if (!(entity instanceof EntityPlayer && entity.isServerWorld())) return;
-        Date tof = new Date();
+        ZonedDateTime tof = ZonedDateTime.now(ZoneOffset.UTC);
 
         EntityPlayerMP playerEntity = (EntityPlayerMP) entity;
         String playerName = playerEntity.getDisplayNameString();
@@ -71,7 +72,7 @@ public final class Registration {
         BlockPos deathPos = new BlockPos(pX, pY, pZ);
 
         String worldTimeHex = Long.toHexString(playerEntity.getServerWorld().getWorldTime());
-        String timestamp = new SimpleDateFormat("dd-MM-yyyy-mm-HH-ss").format(tof);
+        String timestamp = tof.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss"));
         String identifier = playerName + "." + playerUUID + "." + worldTimeHex + "." + timestamp;
         String fileName = identifier + ".nbt";
 
@@ -85,10 +86,14 @@ public final class Registration {
                     CompressedStreamTools.writeCompressed(nbtTag, output);
                 }
                 try {
-                    InventoryDeath invDeath = new InventoryDeath(playerEntity);
+                    InventoryDeath invDeath = new InventoryDeath();
                     world.setBlockState(deathPos, blockDeathChest.getDefaultState());
                     TileDeathChest dChest = (TileDeathChest) world.getTileEntity(deathPos);
-                    dChest.setData(identifier, playerName, playerUUID, tof, invDeath);
+                    invDeath.formInventory(playerEntity);
+
+                    assert dChest != null;
+
+                    dChest.setData(playerEntity, identifier, tof, invDeath);
                     playerEntity.inventory.clear();
                 } catch (Exception e) {
                     logger.error(e);

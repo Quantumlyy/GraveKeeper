@@ -24,9 +24,9 @@ public class InventoryDeath {
 
     public final List<NonNullList<ItemStack>> allInventories;
 
-    private final EntityPlayer player;
+    private EntityPlayer player;
 
-    public InventoryDeath(EntityPlayer player) {
+    public InventoryDeath() {
         this.allInventories = Arrays.asList(
                 this.mainInventory,
                 this.armorInventory,
@@ -34,6 +34,9 @@ public class InventoryDeath {
                 this.baublesInventory,
                 this.galacticCraftInventory,
                 this.techGunsInventory);
+    }
+
+    public void formInventory(EntityPlayer player) {
         this.player = player;
 
         this.populateInventories();

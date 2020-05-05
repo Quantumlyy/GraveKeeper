@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 public class BlockDeathChest extends Block {
-    public BlockDeathChest () {
+    public BlockDeathChest() {
         super(Material.ROCK);
 
         setBlockUnbreakable();
@@ -36,10 +36,10 @@ public class BlockDeathChest extends Block {
             float hitX,
             float hitY,
             float hitZ) {
-        if (worldIn.isRemote) return false;
+        if (worldIn.isRemote) return true;
 
         final TileEntity tChest = worldIn.getTileEntity(pos);
-        if (!(tChest instanceof TileDeathChest)) return false;
+        if (!(tChest instanceof TileDeathChest)) return true;
         final TileDeathChest chest = (TileDeathChest) tChest;
 
         chest.processRight(playerIn, worldIn, pos);
@@ -68,15 +68,13 @@ public class BlockDeathChest extends Block {
     }
 
     @Override
-    public boolean hasTileEntity(@Nonnull IBlockState state)
-    {
+    public boolean hasTileEntity(@Nonnull IBlockState state) {
         return true;
     }
 
     @Nonnull
     @Override
-    public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
-    {
+    public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) {
         return new TileDeathChest();
     }
 }
