@@ -1,10 +1,9 @@
 package com.quantumlytangled.deathchests.tile;
 
+import com.quantumlytangled.deathchests.core.DeathHandler;
 import com.quantumlytangled.deathchests.core.InventoryDeath;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
@@ -65,39 +64,14 @@ public class TileDeathChest extends TileEntity {
     }
 
     private void processItemReturn(EntityPlayer player, World world, BlockPos pos) {
-        final List<ItemStack> overflow = new ArrayList<>();
+        List<ItemStack> overflow = new ArrayList<>();
 
-        for (int i = 0; i < contents.mainInventory.size(); ++i) {
-            final ItemStack item = contents.mainInventory.get(i);
-            if (player.inventory.mainInventory.get(i) == ItemStack.EMPTY) {
-                player.inventory.mainInventory.set(i, item);
-                return;
-            }
-            overflow.add(item);
-        }
-        for (int i = 0; i < contents.armorInventory.size(); ++i) {
-            final ItemStack item = contents.armorInventory.get(i);
-            if (player.inventory.armorInventory.get(i) == ItemStack.EMPTY) {
-                player.inventory.armorInventory.set(i, item);
-                return;
-            }
-            overflow.add(item);
-        }
-        for (int i = 0; i < contents.offHandInventory.size(); ++i) {
-            final ItemStack item = contents.offHandInventory.get(i);
-            if (player.inventory.offHandInventory.get(i) == ItemStack.EMPTY) {
-                player.inventory.offHandInventory.set(i, item);
-                return;
-            }
-            overflow.add(item);
-        }
+        DeathHandler.restoreVanillaInventory(contents.mainInventory, player.inventory.mainInventory, overflow);
+        DeathHandler.restoreVanillaInventory(contents.armorInventory, player.inventory.armorInventory, overflow);
+        DeathHandler.restoreVanillaInventory(contents.offHandInventory, player.inventory.offHandInventory, overflow);
 
-        for (int i = 0; i < overflow.size(); ++i) {
-            final ItemStack item = overflow.get(i);
-            if (player.inventory.mainInventory.get(i) == ItemStack.EMPTY) {
-                player.inventory.mainInventory.set(i, item);
-                return;
-            }
+        for (final ItemStack item : overflow) {
+            if (player.inventory.addItemStackToInventory(item.copy())) continue;
             world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), item.copy()));
         }
 
