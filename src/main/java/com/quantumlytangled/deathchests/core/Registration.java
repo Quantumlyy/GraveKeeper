@@ -7,11 +7,9 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -23,14 +21,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.UUID;
 
 public final class Registration {
@@ -63,7 +56,6 @@ public final class Registration {
         EntityPlayerMP playerEntity = (EntityPlayerMP) entity;
         String playerName = playerEntity.getDisplayNameString();
         UUID playerUUID = playerEntity.getUniqueID();
-        NBTTagCompound nbtTag = playerEntity.writeToNBT(new NBTTagCompound());
         World world = playerEntity.world;
 
         double pX = playerEntity.posX;
@@ -74,33 +66,15 @@ public final class Registration {
         String worldTimeHex = Long.toHexString(playerEntity.getServerWorld().getWorldTime());
         String timestamp = tof.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss"));
         String identifier = playerName + "." + playerUUID + "." + worldTimeHex + "." + timestamp;
-        String fileName = identifier + ".nbt";
 
-        File dir = new File(playerEntity.server.getWorld(DimensionType.OVERWORLD.getId()).getSaveHandler().getWorldDirectory(), "deathchests_deathdata");
-        if ((!dir.exists()) && (!dir.mkdir())) logger.error("Unable to create `deathchests_deathdata` folder.");
+        InventoryDeath invDeath = new InventoryDeath();
+        world.setBlockState(deathPos, blockDeathChest.getDefaultState());
 
-        File file = new File(dir, fileName);
-        try {
-            if (!file.exists()) {
-                try (FileOutputStream output = new FileOutputStream(file)) {
-                    CompressedStreamTools.writeCompressed(nbtTag, output);
-                }
-                try {
-                    InventoryDeath invDeath = new InventoryDeath();
-                    world.setBlockState(deathPos, blockDeathChest.getDefaultState());
-                    TileDeathChest dChest = (TileDeathChest) world.getTileEntity(deathPos);
-                    invDeath.formInventory(playerEntity);
+        final TileEntity tChest = world.getTileEntity(deathPos);
+        if (!(tChest instanceof TileDeathChest)) return;
+        final TileDeathChest dChest = (TileDeathChest) tChest;
 
-                    assert dChest != null;
-
-                    dChest.setData(playerEntity, identifier, tof, invDeath);
-                    playerEntity.inventory.clear();
-                } catch (Exception e) {
-                    logger.error(e);
-                }
-            }
-        } catch (IOException e) {
-            logger.error("Unable to save player death data for " + playerName + "." + playerUUID, e);
-        }
+        dChest.setData(playerEntity, identifier, tof, invDeath);
+        playerEntity.inventory.clear();
     }
 }
