@@ -4,6 +4,7 @@ import com.quantumlytangled.deathchests.DeathChests;
 import com.quantumlytangled.deathchests.core.CustomEntitySelectors;
 import com.quantumlytangled.deathchests.tile.TileDeathChest;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +18,7 @@ import javax.annotation.Nonnull;
 
 public class BlockDeathChest extends Block {
     public BlockDeathChest() {
-        super(Material.ROCK);
+        super(Material.ANVIL);
 
         setBlockUnbreakable();
         setResistance(6000000.0F);
