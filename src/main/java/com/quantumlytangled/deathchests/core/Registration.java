@@ -74,6 +74,7 @@ public final class Registration {
         if (!(tChest instanceof TileDeathChest)) return;
         final TileDeathChest dChest = (TileDeathChest) tChest;
 
+        invDeath.formInventory(playerEntity);
         dChest.setData(playerEntity, identifier, tof, invDeath);
         playerEntity.inventory.clear();
     }
