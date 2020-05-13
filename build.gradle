@@ -40,8 +40,8 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     // replacing
-    replace "@VERSION@", version
-    replaceIn "WarpDrive.java"
+    replace "@VERSION@", project.version
+    replaceIn "DeathChests.java"
 }
 
 dependencies {
