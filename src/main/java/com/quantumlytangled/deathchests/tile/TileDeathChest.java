@@ -63,6 +63,7 @@ public class TileDeathChest extends TileEntity {
     @Override
     public void readFromNBT(@Nonnull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
+        if (!nbt.hasKey("Contents", Constants.NBT.TAG_COMPOUND)) return;
 
         NBTTagCompound contents = (NBTTagCompound) nbt.getTag("Contents");
         NBTTagList mainInv = contents.getTagList("MainInventory", Constants.NBT.TAG_COMPOUND);
@@ -104,7 +105,7 @@ public class TileDeathChest extends TileEntity {
     }
 
     private boolean checkInvalidity(EntityPlayer player) {
-        return !((ownerUUID == player.getUniqueID()) || player.isCreative());
+        return !((ownerUUID.equals(player.getUniqueID())) || player.isCreative());
     }
 
     private void processCreativeInspect(EntityPlayer player, World world, BlockPos pos) {

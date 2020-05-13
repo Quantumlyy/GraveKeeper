@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -63,9 +64,8 @@ public final class Registration {
         double pZ = playerEntity.posZ;
         BlockPos deathPos = new BlockPos(pX, pY, pZ);
 
-        String worldTimeHex = Long.toHexString(playerEntity.getServerWorld().getWorldTime());
-        String timestamp = tof.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss"));
-        String identifier = playerName + "." + playerUUID + "." + worldTimeHex + "." + timestamp;
+        String timestamp = tof.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss.n"));
+        String identifier = playerName + "." + playerUUID + "." + timestamp;
 
         InventoryDeath invDeath = new InventoryDeath();
         world.setBlockState(deathPos, blockDeathChest.getDefaultState());
@@ -77,5 +77,8 @@ public final class Registration {
         invDeath.formInventory(playerEntity);
         dChest.setData(playerEntity, identifier, tof, invDeath);
         playerEntity.inventory.clear();
+
+        playerEntity.sendMessage(new TextComponentString(String.format("Chest placed at x: %s; y: %s; z: %s", (int) pX, (int) pY, (int) pZ)));
+        logger.info(String.format("Generated DeathChest for %s(%s) at x: %s; y: %s; z: %s", playerName, playerUUID, (int) pX, (int) pY, (int) pZ));
     }
 }
