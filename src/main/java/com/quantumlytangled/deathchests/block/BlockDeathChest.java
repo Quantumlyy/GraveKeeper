@@ -4,7 +4,7 @@ import com.quantumlytangled.deathchests.DeathChests;
 import com.quantumlytangled.deathchests.core.CustomEntitySelectors;
 import com.quantumlytangled.deathchests.tile.TileDeathChest;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +43,7 @@ public class BlockDeathChest extends Block {
         if (!(tChest instanceof TileDeathChest)) return true;
         final TileDeathChest chest = (TileDeathChest) tChest;
 
-        chest.processRight(playerIn, worldIn, pos);
+        chest.processInteraction(playerIn, worldIn, pos);
         return true;
     }
 
@@ -63,9 +63,9 @@ public class BlockDeathChest extends Block {
             return;
         }
         final TileDeathChest chest = (TileDeathChest) tChest;
-        EntityPlayer player = worldIn.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 6, CustomEntitySelectors.IN_CREATIVE);
+        EntityPlayer player = worldIn.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 6, CustomEntitySelectors.IN_CREATIVE::test);
 
-        chest.processLeft(player, worldIn, pos);
+        chest.processBreak(player, worldIn, pos);
     }
 
     @Override
@@ -77,5 +77,12 @@ public class BlockDeathChest extends Block {
     @Override
     public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) {
         return new TileDeathChest();
+    }
+
+    @SuppressWarnings("deprecation")
+    @Nonnull
+    @Override
+    public EnumPushReaction getPushReaction(@Nonnull final IBlockState blockState) {
+        return EnumPushReaction.BLOCK;
     }
 }

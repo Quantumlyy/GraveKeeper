@@ -1,8 +1,9 @@
 package com.quantumlytangled.deathchests.core;
 
-import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+
+import java.util.function.Predicate;
 
 
 public final class CustomEntitySelectors {

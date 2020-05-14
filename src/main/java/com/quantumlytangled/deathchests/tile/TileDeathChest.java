@@ -32,17 +32,15 @@ public class TileDeathChest extends TileEntity {
 
     private InventoryDeath contents = new InventoryDeath();
 
-    public TileDeathChest() {
-        super();
-    }
+    public TileDeathChest() { super(); }
 
-    public void processRight(EntityPlayer player, World world, BlockPos pos) {
+    public void processInteraction(EntityPlayer player, World world, BlockPos pos) {
         if (checkInvalidity(player)) return;
         if (player.isCreative()) processCreativeInspect(player, world, pos);
         else processItemReturn(player, world, pos);
     }
 
-    public void processLeft(EntityPlayer player, World world, BlockPos pos) {
+    public void processBreak(EntityPlayer player, World world, BlockPos pos) {
         if (checkInvalidity(player)) return;
         if (player.isCreative()) processCreativeItemReturn(player, world, pos);
     }
