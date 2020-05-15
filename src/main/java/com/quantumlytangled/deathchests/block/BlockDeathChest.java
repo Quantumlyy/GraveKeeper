@@ -63,7 +63,9 @@ public class BlockDeathChest extends Block {
             return;
         }
         final TileDeathChest chest = (TileDeathChest) tChest;
-        EntityPlayer player = worldIn.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 6, CustomEntitySelectors.IN_CREATIVE::test);
+
+        final EntityPlayer player = worldIn.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 6, CustomEntitySelectors.IN_CREATIVE::test);
+        assert player != null;
 
         chest.processBreak(player, worldIn, pos);
     }

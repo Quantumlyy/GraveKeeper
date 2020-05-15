@@ -1,40 +1,19 @@
 package com.quantumlytangled.deathchests.core;
 
+import com.quantumlytangled.deathchests.compatability.CompatBaubles;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryDeath {
 
-    public final NonNullList<ItemStack> mainInventory = NonNullList.withSize(36, ItemStack.EMPTY);
-    public final NonNullList<ItemStack> armorInventory = NonNullList.withSize(4, ItemStack.EMPTY);
-    public final NonNullList<ItemStack> offHandInventory = NonNullList.withSize(1, ItemStack.EMPTY);
-
-    // TODO: Adjust size
-    public final NonNullList<ItemStack> baublesInventory = NonNullList.withSize(10, ItemStack.EMPTY);
-    // TODO: Adjust size
-    public final NonNullList<ItemStack> galacticCraftInventory = NonNullList.withSize(100, ItemStack.EMPTY);
-    // TODO: Adjust size
-    public final NonNullList<ItemStack> techGunsInventory = NonNullList.withSize(100, ItemStack.EMPTY);
-
-    public final List<NonNullList<ItemStack>> allInventories;
+    public final List<InventoryDeathSlot> inventory = new ArrayList<>();
 
     private EntityPlayer player;
-
-    public InventoryDeath() {
-        this.allInventories = Arrays.asList(
-                this.mainInventory,
-                this.armorInventory,
-                this.offHandInventory,
-                this.baublesInventory,
-                this.galacticCraftInventory,
-                this.techGunsInventory);
-    }
 
     public void formInventory(EntityPlayer player) {
         this.player = player;
@@ -45,9 +24,19 @@ public class InventoryDeath {
     private void populateInventories() {
         final InventoryPlayer inventory = player.inventory;
 
-        Collections.copy(mainInventory, inventory.mainInventory);
-        Collections.copy(armorInventory, inventory.armorInventory);
-        Collections.copy(offHandInventory, inventory.offHandInventory);
+        readContents(inventory.mainInventory, InventoryType.MAIN);
+        readContents(inventory.armorInventory, InventoryType.ARMOUR);
+        readContents(inventory.offHandInventory, InventoryType.OFFHAND);
+
+        if (DeathChestsConfig.isBaublesLoaded) readContents(CompatBaubles.getAllBaubles(player), InventoryType.BAUBLES);
+    }
+
+    private void readContents(NonNullList<ItemStack> contents, InventoryType type) {
+        for (int i = 0; i<contents.size(); i++) {
+            if (contents.get(i).isEmpty()) continue;
+            InventoryDeathSlot entry = new InventoryDeathSlot(contents.get(i), i, type);
+            inventory.add(entry);
+        }
     }
 
 }

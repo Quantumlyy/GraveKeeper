@@ -40,8 +40,31 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     // replacing
-    replace "@VERSION@", project.version
+    replace "@VERSION@", "${config.MAJORMOD}.${config.MAJORAPI}.${config.MINOR}.${config.PATCH}"
     replaceIn "DeathChests.java"
+}
+
+repositories {
+    maven { // Baubles
+        name = "thiakil"
+        url = "http://maven.thiakil.com"
+    }
+    maven { // Tinkers
+        name 'DVS1 Maven FS'
+        url 'http://dvs1.progwml6.com/files/maven'
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+    ivy { // GalacticCraftCore
+        name "GalacticraftCore"
+        artifactPattern "https://ci.micdoodle8.com/job/Galacticraft-1.12/${config.Galacticraft_build}/artifact/Forge/build/libs/[module]-[revision].[ext]"
+    }
 }
 
 dependencies {
@@ -66,6 +89,9 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+    // provided "pwn3d1337.techguns:Techguns:${config.Techguns_version}"
+    provided "com.azanor.baubles:Baubles:${config.Baubles_version}"
+    provided name: "GalacticraftCore", version: "${config.Galacticraft_version}.${config.Galacticraft_build}", ext: "jar"
 }
 
 processResources {

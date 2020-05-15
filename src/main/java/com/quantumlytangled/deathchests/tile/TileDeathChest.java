@@ -1,16 +1,17 @@
 package com.quantumlytangled.deathchests.tile;
 
-import com.quantumlytangled.deathchests.DeathChests;
+import com.quantumlytangled.deathchests.compatability.CompatBaubles;
 import com.quantumlytangled.deathchests.core.DeathChestsConfig;
-import com.quantumlytangled.deathchests.core.DeathHandler;
 import com.quantumlytangled.deathchests.core.InventoryDeath;
+import com.quantumlytangled.deathchests.core.InventoryDeathSlot;
+import com.quantumlytangled.deathchests.core.InventoryType;
+import com.quantumlytangled.deathchests.util.DeathHandler;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -62,21 +63,22 @@ public class TileDeathChest extends TileEntity {
     @Override
     public void readFromNBT(@Nonnull NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        if (!nbt.hasKey("Contents", Constants.NBT.TAG_COMPOUND)) return;
+        if (!nbt.hasKey("Contents", Constants.NBT.TAG_LIST)) return;
 
-        NBTTagCompound contents = (NBTTagCompound) nbt.getTag("Contents");
-        NBTTagList mainInv = contents.getTagList("MainInventory", Constants.NBT.TAG_COMPOUND);
-        NBTTagList offhandInv = contents.getTagList("OffHandInventory", Constants.NBT.TAG_COMPOUND);
-        NBTTagList armorInv = contents.getTagList("ArmorInventory", Constants.NBT.TAG_COMPOUND);
+        NBTTagList contents = (NBTTagList) nbt.getTag("Contents");
+
+        for (int i = 0; i < contents.tagCount(); i++) {
+            NBTTagCompound tag = contents.getCompoundTagAt(i);
+            this.contents.inventory.add(new InventoryDeathSlot(
+                    new ItemStack(tag),
+                    tag.getByte("Slot"),
+                    InventoryType.valueOf(tag.getString("Type"))));
+        }
 
         this.dataIdentifier = nbt.getString("DataIdentifier");
         this.ownerName = nbt.getString("OwnerName");
         this.ownerUUID = nbt.getUniqueId("OwnerUUID");
         this.creationDate = nbt.getLong("CreationDate");
-
-        DeathHandler.readInventoryContentsFromNBTTagList(mainInv, this.contents.mainInventory);
-        DeathHandler.readInventoryContentsFromNBTTagList(offhandInv, this.contents.offHandInventory);
-        DeathHandler.readInventoryContentsFromNBTTagList(armorInv, this.contents.armorInventory);
     }
 
     @Nonnull
@@ -84,15 +86,14 @@ public class TileDeathChest extends TileEntity {
     public NBTTagCompound writeToNBT(@Nonnull NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        NBTTagCompound contents = new NBTTagCompound();
+        NBTTagList contents = new NBTTagList();
 
-        NBTTagList mainInv = new NBTTagList();
-        NBTTagList offhandInv = new NBTTagList();
-        NBTTagList armorInv = new NBTTagList();
-
-        contents.setTag("MainInventory", DeathHandler.formNBTTagListFromInventoryContents(mainInv, this.contents.mainInventory));
-        contents.setTag("OffHandInventory", DeathHandler.formNBTTagListFromInventoryContents(offhandInv, this.contents.offHandInventory));
-        contents.setTag("ArmorInventory", DeathHandler.formNBTTagListFromInventoryContents(armorInv, this.contents.armorInventory));
+        for (InventoryDeathSlot slot : this.contents.inventory) {
+            NBTTagCompound entry = new NBTTagCompound();
+            entry.setByte("Slot", (byte) slot.slot);
+            entry.setString("Type", slot.type.toString());
+            contents.appendTag(slot.content.writeToNBT(entry));
+        }
 
         nbt.setString("DataIdentifier", this.dataIdentifier);
         nbt.setString("OwnerName", this.ownerName);
@@ -111,19 +112,30 @@ public class TileDeathChest extends TileEntity {
     }
 
     private void processCreativeItemReturn(EntityPlayer player, World world, BlockPos pos) {
-        for (NonNullList<ItemStack> inventory : contents.allInventories) {
-            for (ItemStack item : inventory) {
-                world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), item.copy()));
-            }
-        }
+        for (InventoryDeathSlot inventory : contents.inventory)
+            world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), inventory.content.copy()));
     }
 
     private void processItemReturn(EntityPlayer player, World world, BlockPos pos) {
         List<ItemStack> overflow = new ArrayList<>();
 
-        DeathHandler.restoreVanillaInventory(contents.mainInventory, player.inventory.mainInventory, overflow);
-        DeathHandler.restoreVanillaInventory(contents.armorInventory, player.inventory.armorInventory, overflow);
-        DeathHandler.restoreVanillaInventory(contents.offHandInventory, player.inventory.offHandInventory, overflow);
+        for (InventoryDeathSlot slot : this.contents.inventory) {
+            switch(slot.type) {
+                case MAIN:
+                    DeathHandler.restoreInvSlot(slot, player.inventory.mainInventory, overflow);
+                    break;
+                case ARMOUR:
+                    DeathHandler.restoreInvSlot(slot, player.inventory.armorInventory, overflow);
+                    break;
+                case OFFHAND:
+                    DeathHandler.restoreInvSlot(slot, player.inventory.offHandInventory, overflow);
+                    break;
+                case BAUBLES:
+                    if (!DeathChestsConfig.isBaublesLoaded) break;
+                    CompatBaubles.setItem(slot.slot, slot.content, player);
+                    break;
+            }
+        }
 
         for (final ItemStack item : overflow) {
             if (player.inventory.addItemStackToInventory(item.copy())) continue;
