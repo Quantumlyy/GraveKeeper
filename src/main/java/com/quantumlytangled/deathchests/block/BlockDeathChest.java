@@ -75,9 +75,7 @@ public class BlockDeathChest extends Block {
 
     @Nonnull
     @Override
-    public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) {
-        return new TileDeathChest();
-    }
+    public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) { return new TileDeathChest(); }
 
     @SuppressWarnings("deprecation")
     @Nonnull

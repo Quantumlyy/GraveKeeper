@@ -36,6 +36,8 @@ public final class Registration {
     public void preInitialize(FMLPreInitializationEvent event) {
         logger = event.getModLog();
 
+        DeathChestsConfig.onFMLpreInitialization(event.getModConfigurationDirectory().getAbsolutePath());
+
         blockDeathChest = new BlockDeathChest();
     }
 

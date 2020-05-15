@@ -1,5 +1,7 @@
 package com.quantumlytangled.deathchests.tile;
 
+import com.quantumlytangled.deathchests.DeathChests;
+import com.quantumlytangled.deathchests.core.DeathChestsConfig;
 import com.quantumlytangled.deathchests.core.DeathHandler;
 import com.quantumlytangled.deathchests.core.InventoryDeath;
 import net.minecraft.entity.item.EntityItem;
@@ -35,13 +37,12 @@ public class TileDeathChest extends TileEntity {
     public TileDeathChest() { super(); }
 
     public void processInteraction(EntityPlayer player, World world, BlockPos pos) {
-        if (checkInvalidity(player)) return;
         if (player.isCreative()) processCreativeInspect(player, world, pos);
-        else processItemReturn(player, world, pos);
+        else if (ownerUUID.equals(player.getUniqueID()) || DeathChestsConfig.INSTANT_COLLECTION) processItemReturn(player, world, pos);
+        else if (DeathChestsConfig.getExpiredStatus(creationDate)) processItemReturn(player, world, pos);
     }
 
     public void processBreak(EntityPlayer player, World world, BlockPos pos) {
-        if (checkInvalidity(player)) return;
         if (player.isCreative()) processCreativeItemReturn(player, world, pos);
     }
 
@@ -100,10 +101,6 @@ public class TileDeathChest extends TileEntity {
         nbt.setTag("Contents", contents);
 
         return nbt;
-    }
-
-    private boolean checkInvalidity(EntityPlayer player) {
-        return !((ownerUUID.equals(player.getUniqueID())) || player.isCreative());
     }
 
     private void processCreativeInspect(EntityPlayer player, World world, BlockPos pos) {
