@@ -12,9 +12,8 @@ public class CompatBaubles {
         IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
 
         NonNullList<ItemStack> invContents = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
-        for (int i = 0; i<handler.getSlots(); i++) {
+        for (int i = 0; i < handler.getSlots(); i++)
             invContents.set(i, handler.getStackInSlot(i));
-        }
 
         return invContents;
     }
@@ -33,9 +32,7 @@ public class CompatBaubles {
         IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
 
         for (int i = 0; i < handler.getSlots(); ++i)
-        {
             handler.setStackInSlot(i, ItemStack.EMPTY);
-        }
     }
 
 }

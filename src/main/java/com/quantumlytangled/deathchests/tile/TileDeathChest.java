@@ -2,6 +2,7 @@ package com.quantumlytangled.deathchests.tile;
 
 import com.quantumlytangled.deathchests.compatability.CompatBaubles;
 import com.quantumlytangled.deathchests.compatability.CompatGalacticCraftCore;
+import com.quantumlytangled.deathchests.compatability.CompatTechguns;
 import com.quantumlytangled.deathchests.core.DeathChestsConfig;
 import com.quantumlytangled.deathchests.core.InventoryDeath;
 import com.quantumlytangled.deathchests.core.InventoryDeathSlot;
@@ -41,12 +42,12 @@ public class TileDeathChest extends TileEntity {
 
     public void processInteraction(EntityPlayer player, World world, BlockPos pos) {
         if (player.isCreative()) processCreativeInspect(player, world, pos);
-        else if (ownerUUID.equals(player.getUniqueID()) || DeathChestsConfig.INSTANT_COLLECTION) processItemReturn(player, world, pos);
-        else if (DeathChestsConfig.getExpiredStatus(creationDate)) processItemReturn(player, world, pos);
+        else if (ownerUUID.equals(player.getUniqueID())) processItemReturn(player, world, pos);
+        else if ((DeathChestsConfig.getExpiredStatus(creationDate) || DeathChestsConfig.INSTANT_COLLECTION) && !ownerUUID.equals(player.getUniqueID())) processDropItemReturn(player, world, pos);
     }
 
     public void processBreak(EntityPlayer player, World world, BlockPos pos) {
-        if (player.isCreative()) processCreativeItemReturn(player, world, pos);
+        if (player.isCreative()) processDropItemReturn(player, world, pos);
     }
 
     public void setData(
@@ -113,7 +114,7 @@ public class TileDeathChest extends TileEntity {
         )));
     }
 
-    private void processCreativeItemReturn(EntityPlayer player, World world, BlockPos pos) {
+    private void processDropItemReturn(EntityPlayer player, World world, BlockPos pos) {
         for (InventoryDeathSlot inventory : contents.inventory)
             world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), inventory.content.copy()));
     }
@@ -140,6 +141,11 @@ public class TileDeathChest extends TileEntity {
                 case GCC:
                     if (!DeathChestsConfig.isGalacticCraftCoreLoaded) break;
                     if (CompatGalacticCraftCore.isSlotEmpty(slot.slot, (EntityPlayerMP) player)) CompatGalacticCraftCore.setItem(slot.slot, slot.content, (EntityPlayerMP) player);
+                    else overflow.add(slot.content);
+                    break;
+                case TECHGUNS:
+                    if (!DeathChestsConfig.isTechgunsLoaded) break;
+                    if (CompatTechguns.isSlotEmpty(slot.slot, player)) CompatTechguns.setItem(slot.slot, slot.content, player);
                     else overflow.add(slot.content);
                     break;
             }

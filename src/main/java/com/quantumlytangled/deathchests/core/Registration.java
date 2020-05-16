@@ -4,6 +4,7 @@ import com.quantumlytangled.deathchests.DeathChests;
 import com.quantumlytangled.deathchests.block.BlockDeathChest;
 import com.quantumlytangled.deathchests.compatability.CompatBaubles;
 import com.quantumlytangled.deathchests.compatability.CompatGalacticCraftCore;
+import com.quantumlytangled.deathchests.compatability.CompatTechguns;
 import com.quantumlytangled.deathchests.tile.TileDeathChest;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -86,6 +87,7 @@ public final class Registration {
         playerEntity.inventory.clear();
         if (DeathChestsConfig.isBaublesLoaded) CompatBaubles.clearInventory(playerEntity);
         if (DeathChestsConfig.isGalacticCraftCoreLoaded) CompatGalacticCraftCore.clearInventory(playerEntity);
+        if (DeathChestsConfig.isTechgunsLoaded) CompatTechguns.clearInventory(playerEntity);
 
         playerEntity.sendMessage(new TextComponentString(String.format("Chest placed at x: %s; y: %s; z: %s", (int) pX, (int) pY, (int) pZ)));
         logger.info(String.format("Generated DeathChest for %s(%s) at x: %s; y: %s; z: %s", playerName, playerUUID, (int) pX, (int) pY, (int) pZ));

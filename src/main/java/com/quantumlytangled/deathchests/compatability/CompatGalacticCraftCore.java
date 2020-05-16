@@ -12,7 +12,7 @@ public class CompatGalacticCraftCore {
         IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
 
         NonNullList<ItemStack> invContents = NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
-        for (int i = 0; i<inventory.getSizeInventory(); i++)
+        for (int i = 0; i < inventory.getSizeInventory(); i++)
             invContents.set(i, inventory.getStackInSlot(i));
 
         return invContents;

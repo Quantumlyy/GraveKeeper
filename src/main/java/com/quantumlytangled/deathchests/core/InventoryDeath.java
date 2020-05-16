@@ -2,6 +2,7 @@ package com.quantumlytangled.deathchests.core;
 
 import com.quantumlytangled.deathchests.compatability.CompatBaubles;
 import com.quantumlytangled.deathchests.compatability.CompatGalacticCraftCore;
+import com.quantumlytangled.deathchests.compatability.CompatTechguns;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -31,6 +32,7 @@ public class InventoryDeath {
 
         if (DeathChestsConfig.isBaublesLoaded) readContents(CompatBaubles.getAllContents(player), InventoryType.BAUBLES);
         if (DeathChestsConfig.isGalacticCraftCoreLoaded) readContents(CompatGalacticCraftCore.getAllContents(player), InventoryType.GCC);
+        if (DeathChestsConfig.isTechgunsLoaded) readContents(CompatTechguns.getAllContents(player), InventoryType.TECHGUNS);
     }
 
     private void readContents(NonNullList<ItemStack> contents, InventoryType type) {
