@@ -38,7 +38,9 @@ public class TileDeathChest extends TileEntity {
 
     private InventoryDeath contents = new InventoryDeath();
 
-    public TileDeathChest() { super(); }
+    public TileDeathChest() {
+        super();
+    }
 
     public void processInteraction(EntityPlayer player, World world, BlockPos pos) {
         if (player.isCreative()) processCreativeInspect(player, world, pos);

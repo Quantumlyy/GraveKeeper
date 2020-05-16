@@ -97,10 +97,10 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    provided "techguns:Techguns:${config.Techguns_version}"
+    //provided "techguns:Techguns:${config.Techguns_version}"
     provided "com.azanor.baubles:Baubles:${config.Baubles_version}"
     provided name: "GalacticraftCore", version: "${config.Galacticraft_version}.${config.Galacticraft_build}", ext: "jar"
-    //provided curse.resolve("techguns", "${config.Techguns_fileid}")
+    provided curse.resolve("techguns", "${config.Techguns_fileid}")
 }
 
 processResources {
