@@ -15,6 +15,8 @@ public class DeathChestsConfig {
     private static File fileConfigDirectory;
 
     public static boolean isBaublesLoaded = false;
+    public static boolean isGalacticCraftCoreLoaded = false;
+    public static boolean isTechgunsLoaded = false;
 
     public static boolean IGNORE_KEEP_INVENTORY = false;
 
@@ -39,6 +41,8 @@ public class DeathChestsConfig {
         loadConfig(new File(fileConfigDirectory, "config.yml"));
 
         isBaublesLoaded = Loader.isModLoaded("baubles");
+        isGalacticCraftCoreLoaded = Loader.isModLoaded("galacticraftcore");
+        isTechgunsLoaded = Loader.isModLoaded("techguns");
     }
 
     public static void loadConfig(final File file) {

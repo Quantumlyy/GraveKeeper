@@ -1,6 +1,7 @@
 package com.quantumlytangled.deathchests.tile;
 
 import com.quantumlytangled.deathchests.compatability.CompatBaubles;
+import com.quantumlytangled.deathchests.compatability.CompatGalacticCraftCore;
 import com.quantumlytangled.deathchests.core.DeathChestsConfig;
 import com.quantumlytangled.deathchests.core.InventoryDeath;
 import com.quantumlytangled.deathchests.core.InventoryDeathSlot;
@@ -8,6 +9,7 @@ import com.quantumlytangled.deathchests.core.InventoryType;
 import com.quantumlytangled.deathchests.util.DeathHandler;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -132,7 +134,13 @@ public class TileDeathChest extends TileEntity {
                     break;
                 case BAUBLES:
                     if (!DeathChestsConfig.isBaublesLoaded) break;
-                    CompatBaubles.setItem(slot.slot, slot.content, player);
+                    if (CompatBaubles.isSlotEmpty(slot.slot, player)) CompatBaubles.setItem(slot.slot, slot.content, player);
+                    else overflow.add(slot.content);
+                    break;
+                case GCC:
+                    if (!DeathChestsConfig.isGalacticCraftCoreLoaded) break;
+                    if (CompatGalacticCraftCore.isSlotEmpty(slot.slot, (EntityPlayerMP) player)) CompatGalacticCraftCore.setItem(slot.slot, slot.content, (EntityPlayerMP) player);
+                    else overflow.add(slot.content);
                     break;
             }
         }

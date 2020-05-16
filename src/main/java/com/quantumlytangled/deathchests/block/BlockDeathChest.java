@@ -1,7 +1,7 @@
 package com.quantumlytangled.deathchests.block;
 
 import com.quantumlytangled.deathchests.DeathChests;
-import com.quantumlytangled.deathchests.core.CustomEntitySelectors;
+import com.quantumlytangled.deathchests.util.CustomEntitySelectors;
 import com.quantumlytangled.deathchests.tile.TileDeathChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;

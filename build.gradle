@@ -92,6 +92,7 @@ dependencies {
     // provided "pwn3d1337.techguns:Techguns:${config.Techguns_version}"
     provided "com.azanor.baubles:Baubles:${config.Baubles_version}"
     provided name: "GalacticraftCore", version: "${config.Galacticraft_version}.${config.Galacticraft_build}", ext: "jar"
+    provided "techguns:techguns:${config.Techguns_version}"
 }
 
 processResources {

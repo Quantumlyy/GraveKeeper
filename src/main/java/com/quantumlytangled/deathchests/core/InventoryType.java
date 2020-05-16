@@ -4,5 +4,6 @@ public enum InventoryType {
     MAIN,
     ARMOUR,
     OFFHAND,
-    BAUBLES
+    BAUBLES,
+    GCC
 }

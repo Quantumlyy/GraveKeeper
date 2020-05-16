@@ -1,4 +1,4 @@
-package com.quantumlytangled.deathchests.core;
+package com.quantumlytangled.deathchests.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

@@ -8,7 +8,7 @@ import net.minecraft.util.NonNullList;
 
 public class CompatBaubles {
 
-    public static NonNullList<ItemStack> getAllBaubles(EntityPlayer player) {
+    public static NonNullList<ItemStack> getAllContents(EntityPlayer player) {
         IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
 
         NonNullList<ItemStack> invContents = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
@@ -22,6 +22,11 @@ public class CompatBaubles {
     public static void setItem(int slot, ItemStack item, EntityPlayer player) {
         IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
         handler.setStackInSlot(slot, item);
+    }
+
+    public static boolean isSlotEmpty(int slot, EntityPlayer player) {
+        IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
+        return handler.getStackInSlot(slot).isEmpty();
     }
 
     public static void clearInventory(EntityPlayer player) {
