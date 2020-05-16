@@ -26,20 +26,40 @@ public class InventoryDeath {
     private void populateInventories() {
         final InventoryPlayer inventory = player.inventory;
 
-        readContents(inventory.mainInventory, InventoryType.MAIN);
-        readContents(inventory.armorInventory, InventoryType.ARMOUR);
-        readContents(inventory.offHandInventory, InventoryType.OFFHAND);
+        extractContents(inventory.mainInventory, InventoryType.MAIN);
+        extractContents(inventory.armorInventory, InventoryType.ARMOUR);
+        extractContents(inventory.offHandInventory, InventoryType.OFFHAND);
 
-        if (DeathChestsConfig.isBaublesLoaded) readContents(CompatBaubles.getAllContents(player), InventoryType.BAUBLES);
-        if (DeathChestsConfig.isGalacticCraftCoreLoaded) readContents(CompatGalacticCraftCore.getAllContents(player), InventoryType.GCC);
-        if (DeathChestsConfig.isTechgunsLoaded) readContents(CompatTechguns.getAllContents(player), InventoryType.TECHGUNS);
+        if (DeathChestsConfig.isBaublesLoaded) extractContents(CompatBaubles.getAllContents(player), InventoryType.BAUBLES);
+        if (DeathChestsConfig.isGalacticCraftCoreLoaded) extractContents(CompatGalacticCraftCore.getAllContents(player), InventoryType.GCC);
+        if (DeathChestsConfig.isTechgunsLoaded) extractContents(CompatTechguns.getAllContents(player), InventoryType.TECHGUNS);
     }
 
-    private void readContents(NonNullList<ItemStack> contents, InventoryType type) {
-        for (int i = 0; i<contents.size(); i++) {
+    private void extractContents(NonNullList<ItemStack> contents, InventoryType type) {
+        for (int i = 0; i < contents.size(); i++) {
             if (contents.get(i).isEmpty()) continue;
             InventoryDeathSlot entry = new InventoryDeathSlot(contents.get(i), i, type);
             inventory.add(entry);
+            switch (type) {
+                case MAIN:
+                    this.player.inventory.mainInventory.set(i, ItemStack.EMPTY);
+                    break;
+                case ARMOUR:
+                    this.player.inventory.armorInventory.set(i, ItemStack.EMPTY);
+                    break;
+                case OFFHAND:
+                    this.player.inventory.offHandInventory.set(i, ItemStack.EMPTY);
+                    break;
+                case BAUBLES:
+                    CompatBaubles.setItem(i, ItemStack.EMPTY, this.player);
+                    break;
+                case GCC:
+                    CompatGalacticCraftCore.setItem(i, ItemStack.EMPTY, this.player);
+                    break;
+                case TECHGUNS:
+                    CompatTechguns.setItem(i, ItemStack.EMPTY, this.player);
+                    break;
+            }
         }
     }
 

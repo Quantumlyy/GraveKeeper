@@ -2,9 +2,6 @@ package com.quantumlytangled.deathchests.core;
 
 import com.quantumlytangled.deathchests.DeathChests;
 import com.quantumlytangled.deathchests.block.BlockDeathChest;
-import com.quantumlytangled.deathchests.compatability.CompatBaubles;
-import com.quantumlytangled.deathchests.compatability.CompatGalacticCraftCore;
-import com.quantumlytangled.deathchests.compatability.CompatTechguns;
 import com.quantumlytangled.deathchests.tile.TileDeathChest;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -72,7 +69,7 @@ public final class Registration {
         String timestamp = tof.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss.n"));
         String identifier = playerName + "." + playerUUID + "." + timestamp;
 
-        if (playerEntity.world.getGameRules().getBoolean("keepInventory") && !DeathChestsConfig.IGNORE_KEEP_INVENTORY) return;
+        if (!DeathChestsConfig.IGNORE_KEEP_INVENTORY && playerEntity.world.getGameRules().getBoolean("keepInventory")) return;
 
         InventoryDeath invDeath = new InventoryDeath();
         world.setBlockState(deathPos, blockDeathChest.getDefaultState());
@@ -83,11 +80,6 @@ public final class Registration {
 
         invDeath.formInventory(playerEntity);
         dChest.setData(playerEntity, identifier, tof, invDeath);
-
-        playerEntity.inventory.clear();
-        if (DeathChestsConfig.isBaublesLoaded) CompatBaubles.clearInventory(playerEntity);
-        if (DeathChestsConfig.isGalacticCraftCoreLoaded) CompatGalacticCraftCore.clearInventory(playerEntity);
-        if (DeathChestsConfig.isTechgunsLoaded) CompatTechguns.clearInventory(playerEntity);
 
         playerEntity.sendMessage(new TextComponentString(String.format("Chest placed at x: %s; y: %s; z: %s", (int) pX, (int) pY, (int) pZ)));
         logger.info(String.format("Generated DeathChest for %s(%s) at x: %s; y: %s; z: %s", playerName, playerUUID, (int) pX, (int) pY, (int) pZ));
