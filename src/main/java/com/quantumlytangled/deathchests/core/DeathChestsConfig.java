@@ -17,11 +17,15 @@ public class DeathChestsConfig {
     public static boolean isBaublesLoaded = false;
     public static boolean isGalacticCraftCoreLoaded = false;
     public static boolean isTechgunsLoaded = false;
+    public static boolean isBotaniaLoaded = false;
 
     public static boolean IGNORE_KEEP_INVENTORY = false;
 
     public static boolean INSTANT_COLLECTION = false;
     public static int EXPIRE_TIME = 7200;
+
+    public static boolean KEEP_SOULBOUND = false;
+    public static int KEEP_SOULBOUND_AMOUNT = 5;
 
     public static boolean getExpiredStatus(long creationDate) {
         return (creationDate + EXPIRE_TIME) < ZonedDateTime.now(ZoneOffset.UTC).getLong(ChronoField.INSTANT_SECONDS);
@@ -43,16 +47,30 @@ public class DeathChestsConfig {
         isBaublesLoaded = Loader.isModLoaded("baubles");
         isGalacticCraftCoreLoaded = Loader.isModLoaded("galacticraftcore");
         isTechgunsLoaded = Loader.isModLoaded("techguns");
+        isBotaniaLoaded = Loader.isModLoaded("botania");
     }
 
     public static void loadConfig(final File file) {
         final Configuration config = new Configuration(file);
         config.load();
 
-        IGNORE_KEEP_INVENTORY = config.get("general", "ignore_keep_inventory", IGNORE_KEEP_INVENTORY, "Whether the chests should still spawn on keepInventory").getBoolean(false);
+        IGNORE_KEEP_INVENTORY = config
+                .get("general", "ignore_keep_inventory", IGNORE_KEEP_INVENTORY, "Whether the chests should still spawn on keepInventory")
+                .getBoolean(false);
 
-        INSTANT_COLLECTION = config.get("chest_collection", "instant_collection", INSTANT_COLLECTION, "Whether other players should be able to instantly collect ones Death Chest").getBoolean(true);
-        EXPIRE_TIME = config.get("chest_collection", "expire_time", EXPIRE_TIME, "Time in seconds after which other players will be able to collect ones chest").getInt(7200);
+        INSTANT_COLLECTION = config
+                .get("chest_collection", "instant_collection", INSTANT_COLLECTION, "Whether other players should be able to instantly collect ones Death Chest")
+                .getBoolean(true);
+        EXPIRE_TIME = config
+                .get("chest_collection", "expire_time", EXPIRE_TIME, "Time in seconds after which other players will be able to collect ones chest")
+                .getInt(7200);
+
+        KEEP_SOULBOUND = config
+                .get("soulbound", "keep", KEEP_SOULBOUND, "Should soulbound items be kept in players inventory")
+                .getBoolean(true);
+        KEEP_SOULBOUND_AMOUNT = config
+                .get("soulbound", "amount", KEEP_SOULBOUND_AMOUNT, "The amount of items soulbound should affect and be saved")
+                .getInt(5);
 
         config.save();
     }

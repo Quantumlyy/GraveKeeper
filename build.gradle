@@ -101,6 +101,7 @@ dependencies {
     provided "com.azanor.baubles:Baubles:${config.Baubles_version}"
     provided name: "GalacticraftCore", version: "${config.Galacticraft_version}.${config.Galacticraft_build}", ext: "jar"
     provided curse.resolve("techguns", "${config.Techguns_fileid}")
+    provided "botania:Botania:${config.Botania_version}"
 }
 
 processResources {

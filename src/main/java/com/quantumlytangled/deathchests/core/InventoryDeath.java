@@ -13,6 +13,8 @@ import java.util.List;
 
 public class InventoryDeath {
 
+    public static int MAX_SOULBOUND = DeathChestsConfig.KEEP_SOULBOUND_AMOUNT;
+
     public final List<InventoryDeathSlot> inventory = new ArrayList<>();
 
     private EntityPlayerMP player;
@@ -26,9 +28,9 @@ public class InventoryDeath {
     private void populateInventories() {
         final InventoryPlayer inventory = player.inventory;
 
-        extractContents(inventory.mainInventory, InventoryType.MAIN);
         extractContents(inventory.armorInventory, InventoryType.ARMOUR);
         extractContents(inventory.offHandInventory, InventoryType.OFFHAND);
+        extractContents(inventory.mainInventory, InventoryType.MAIN);
 
         if (DeathChestsConfig.isBaublesLoaded) extractContents(CompatBaubles.getAllContents(player), InventoryType.BAUBLES);
         if (DeathChestsConfig.isGalacticCraftCoreLoaded) extractContents(CompatGalacticCraftCore.getAllContents(player), InventoryType.GCC);
