@@ -6,9 +6,15 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class CompatGalacticCraftCore {
+public class CompatGalacticCraftCore implements ICompatInventory {
 
-    public static NonNullList<ItemStack> getAllContents(EntityPlayerMP player) {
+    private static final CompatGalacticCraftCore _INSTANCE = new CompatGalacticCraftCore();
+
+    public static CompatGalacticCraftCore INSTANCE() {
+        return _INSTANCE;
+    }
+
+    public NonNullList<ItemStack> getAllContents(EntityPlayerMP player) {
         IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
 
         NonNullList<ItemStack> invContents = NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
@@ -18,17 +24,17 @@ public class CompatGalacticCraftCore {
         return invContents;
     }
 
-    public static void setItem(int slot, ItemStack item, EntityPlayerMP player) {
+    public void setItem(int slot, ItemStack item, EntityPlayerMP player) {
         IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
         inventory.setInventorySlotContents(slot, item);
     }
 
-    public static boolean isSlotEmpty(int slot, EntityPlayerMP player) {
+    public boolean isSlotEmpty(int slot, EntityPlayerMP player) {
         IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
         return inventory.getStackInSlot(slot).isEmpty();
     }
 
-    public static void clearInventory(EntityPlayerMP player) {
+    public void clearInventory(EntityPlayerMP player) {
         IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
 
         for (int i = 0; i < inventory.getSizeInventory(); ++i)

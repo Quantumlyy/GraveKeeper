@@ -32,9 +32,9 @@ public class InventoryDeath {
         extractContents(inventory.offHandInventory, InventoryType.OFFHAND);
         extractContents(inventory.mainInventory, InventoryType.MAIN);
 
-        if (DeathChestsConfig.isBaublesLoaded) extractContents(CompatBaubles.getAllContents(player), InventoryType.BAUBLES);
-        if (DeathChestsConfig.isGalacticCraftCoreLoaded) extractContents(CompatGalacticCraftCore.getAllContents(player), InventoryType.GCC);
-        if (DeathChestsConfig.isTechgunsLoaded) extractContents(CompatTechguns.getAllContents(player), InventoryType.TECHGUNS);
+        if (DeathChestsConfig.isBaublesLoaded != null) extractContents(DeathChestsConfig.isBaublesLoaded.getAllContents(player), InventoryType.BAUBLES);
+        if (DeathChestsConfig.isGalacticCraftCoreLoaded != null) extractContents(DeathChestsConfig.isGalacticCraftCoreLoaded.getAllContents(player), InventoryType.GCC);
+        if (DeathChestsConfig.isTechgunsLoaded != null) extractContents(DeathChestsConfig.isTechgunsLoaded.getAllContents(player), InventoryType.TECHGUNS);
     }
 
     private void extractContents(NonNullList<ItemStack> contents, InventoryType type) {
@@ -53,13 +53,13 @@ public class InventoryDeath {
                     this.player.inventory.offHandInventory.set(i, ItemStack.EMPTY);
                     break;
                 case BAUBLES:
-                    CompatBaubles.setItem(i, ItemStack.EMPTY, this.player);
+                    DeathChestsConfig.isBaublesLoaded.setItem(i, ItemStack.EMPTY, this.player);
                     break;
                 case GCC:
-                    CompatGalacticCraftCore.setItem(i, ItemStack.EMPTY, this.player);
+                    DeathChestsConfig.isGalacticCraftCoreLoaded.setItem(i, ItemStack.EMPTY, this.player);
                     break;
                 case TECHGUNS:
-                    CompatTechguns.setItem(i, ItemStack.EMPTY, this.player);
+                    DeathChestsConfig.isTechgunsLoaded.setItem(i, ItemStack.EMPTY, this.player);
                     break;
             }
         }

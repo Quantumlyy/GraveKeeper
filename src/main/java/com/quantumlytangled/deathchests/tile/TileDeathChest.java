@@ -1,8 +1,5 @@
 package com.quantumlytangled.deathchests.tile;
 
-import com.quantumlytangled.deathchests.compatability.CompatBaubles;
-import com.quantumlytangled.deathchests.compatability.CompatGalacticCraftCore;
-import com.quantumlytangled.deathchests.compatability.CompatTechguns;
 import com.quantumlytangled.deathchests.core.DeathChestsConfig;
 import com.quantumlytangled.deathchests.core.InventoryDeath;
 import com.quantumlytangled.deathchests.core.InventoryDeathSlot;
@@ -121,8 +118,9 @@ public class TileDeathChest extends TileEntity {
             world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), inventory.content.copy()));
     }
 
-    private void processItemReturn(EntityPlayer player, World world, BlockPos pos) {
+    private void processItemReturn(EntityPlayer _player, World world, BlockPos pos) {
         List<ItemStack> overflow = new ArrayList<>();
+        EntityPlayerMP player = (EntityPlayerMP) _player;
 
         for (InventoryDeathSlot slot : this.contents.inventory) {
             switch(slot.type) {
@@ -136,18 +134,18 @@ public class TileDeathChest extends TileEntity {
                     DeathHandler.restoreInvSlot(slot, player.inventory.offHandInventory, overflow);
                     break;
                 case BAUBLES:
-                    if (!DeathChestsConfig.isBaublesLoaded) break;
-                    if (CompatBaubles.isSlotEmpty(slot.slot, player)) CompatBaubles.setItem(slot.slot, slot.content, player);
+                    if (DeathChestsConfig.isBaublesLoaded == null) break;
+                    if (DeathChestsConfig.isBaublesLoaded.isSlotEmpty(slot.slot, player)) DeathChestsConfig.isBaublesLoaded.setItem(slot.slot, slot.content, player);
                     else overflow.add(slot.content);
                     break;
                 case GCC:
-                    if (!DeathChestsConfig.isGalacticCraftCoreLoaded) break;
-                    if (CompatGalacticCraftCore.isSlotEmpty(slot.slot, (EntityPlayerMP) player)) CompatGalacticCraftCore.setItem(slot.slot, slot.content, (EntityPlayerMP) player);
+                    if (DeathChestsConfig.isGalacticCraftCoreLoaded == null) break;
+                    if (DeathChestsConfig.isGalacticCraftCoreLoaded.isSlotEmpty(slot.slot, (EntityPlayerMP) player)) DeathChestsConfig.isGalacticCraftCoreLoaded.setItem(slot.slot, slot.content, (EntityPlayerMP) player);
                     else overflow.add(slot.content);
                     break;
                 case TECHGUNS:
-                    if (!DeathChestsConfig.isTechgunsLoaded) break;
-                    if (CompatTechguns.isSlotEmpty(slot.slot, player)) CompatTechguns.setItem(slot.slot, slot.content, player);
+                    if (DeathChestsConfig.isTechgunsLoaded == null) break;
+                    if (DeathChestsConfig.isTechgunsLoaded.isSlotEmpty(slot.slot, player)) DeathChestsConfig.isTechgunsLoaded.setItem(slot.slot, slot.content, player);
                     else overflow.add(slot.content);
                     break;
             }

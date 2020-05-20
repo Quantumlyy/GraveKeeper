@@ -2,13 +2,19 @@ package com.quantumlytangled.deathchests.compatability;
 
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class CompatBaubles {
+public class CompatBaubles implements ICompatInventory {
 
-    public static NonNullList<ItemStack> getAllContents(EntityPlayer player) {
+    private static final CompatBaubles _INSTANCE = new CompatBaubles();
+
+    public static CompatBaubles INSTANCE() {
+        return _INSTANCE;
+    }
+
+    public NonNullList<ItemStack> getAllContents(EntityPlayerMP player) {
         IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
 
         NonNullList<ItemStack> invContents = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
@@ -18,17 +24,17 @@ public class CompatBaubles {
         return invContents;
     }
 
-    public static void setItem(int slot, ItemStack item, EntityPlayer player) {
+    public void setItem(int slot, ItemStack item, EntityPlayerMP player) {
         IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
         handler.setStackInSlot(slot, item);
     }
 
-    public static boolean isSlotEmpty(int slot, EntityPlayer player) {
+    public boolean isSlotEmpty(int slot, EntityPlayerMP player) {
         IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
         return handler.getStackInSlot(slot).isEmpty();
     }
 
-    public static void clearInventory(EntityPlayer player) {
+    public void clearInventory(EntityPlayerMP player) {
         IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
 
         for (int i = 0; i < handler.getSlots(); ++i)

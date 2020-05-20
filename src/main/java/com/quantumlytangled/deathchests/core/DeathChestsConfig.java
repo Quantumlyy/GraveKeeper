@@ -1,6 +1,9 @@
 package com.quantumlytangled.deathchests.core;
 
 import com.quantumlytangled.deathchests.DeathChests;
+import com.quantumlytangled.deathchests.compatability.CompatBaubles;
+import com.quantumlytangled.deathchests.compatability.CompatGalacticCraftCore;
+import com.quantumlytangled.deathchests.compatability.CompatTechguns;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 
@@ -14,10 +17,9 @@ public class DeathChestsConfig {
     private static String stringConfigDirectory;
     private static File fileConfigDirectory;
 
-    public static boolean isBaublesLoaded = false;
-    public static boolean isGalacticCraftCoreLoaded = false;
-    public static boolean isTechgunsLoaded = false;
-    public static boolean isBotaniaLoaded = false;
+    public static CompatBaubles isBaublesLoaded = null;
+    public static CompatGalacticCraftCore isGalacticCraftCoreLoaded = null;
+    public static CompatTechguns isTechgunsLoaded = null;
 
     public static boolean IGNORE_KEEP_INVENTORY = false;
 
@@ -44,10 +46,9 @@ public class DeathChestsConfig {
 
         loadConfig(new File(fileConfigDirectory, "config.yml"));
 
-        isBaublesLoaded = Loader.isModLoaded("baubles");
-        isGalacticCraftCoreLoaded = Loader.isModLoaded("galacticraftcore");
-        isTechgunsLoaded = Loader.isModLoaded("techguns");
-        isBotaniaLoaded = Loader.isModLoaded("botania");
+        if (Loader.isModLoaded("baubles")) isBaublesLoaded = CompatBaubles.INSTANCE();
+        if (Loader.isModLoaded("galacticraftcore")) isGalacticCraftCoreLoaded = CompatGalacticCraftCore.INSTANCE();
+        if (Loader.isModLoaded("techguns")) isTechgunsLoaded = CompatTechguns.INSTANCE();
     }
 
     public static void loadConfig(final File file) {
