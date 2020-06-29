@@ -19,7 +19,6 @@ public class DeathChestsConfig {
 
     public static CompatBaubles isBaublesLoaded = null;
     public static CompatGalacticCraftCore isGalacticCraftCoreLoaded = null;
-    public static CompatTechguns isTechgunsLoaded = null;
 
     public static boolean IGNORE_KEEP_INVENTORY = false;
 
@@ -48,7 +47,6 @@ public class DeathChestsConfig {
 
         if (Loader.isModLoaded("baubles")) isBaublesLoaded = CompatBaubles.INSTANCE();
         if (Loader.isModLoaded("galacticraftcore")) isGalacticCraftCoreLoaded = CompatGalacticCraftCore.INSTANCE();
-        if (Loader.isModLoaded("techguns")) isTechgunsLoaded = CompatTechguns.INSTANCE();
     }
 
     public static void loadConfig(final File file) {

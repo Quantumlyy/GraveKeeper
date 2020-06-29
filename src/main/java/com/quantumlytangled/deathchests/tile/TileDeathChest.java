@@ -143,11 +143,6 @@ public class TileDeathChest extends TileEntity {
                     if (DeathChestsConfig.isGalacticCraftCoreLoaded.isSlotEmpty(slot.slot, player)) DeathChestsConfig.isGalacticCraftCoreLoaded.setItem(slot.slot, slot.content, player);
                     else overflow.add(slot.content);
                     break;
-                case TECHGUNS:
-                    if (DeathChestsConfig.isTechgunsLoaded == null) break;
-                    if (DeathChestsConfig.isTechgunsLoaded.isSlotEmpty(slot.slot, player)) DeathChestsConfig.isTechgunsLoaded.setItem(slot.slot, slot.content, player);
-                    else overflow.add(slot.content);
-                    break;
             }
         }
 

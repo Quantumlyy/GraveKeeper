@@ -34,7 +34,6 @@ public class InventoryDeath {
 
         if (DeathChestsConfig.isBaublesLoaded != null) extractContents(DeathChestsConfig.isBaublesLoaded.getAllContents(player), InventoryType.BAUBLES);
         if (DeathChestsConfig.isGalacticCraftCoreLoaded != null) extractContents(DeathChestsConfig.isGalacticCraftCoreLoaded.getAllContents(player), InventoryType.GCC);
-        if (DeathChestsConfig.isTechgunsLoaded != null) extractContents(DeathChestsConfig.isTechgunsLoaded.getAllContents(player), InventoryType.TECHGUNS);
     }
 
     private void extractContents(NonNullList<ItemStack> contents, InventoryType type) {

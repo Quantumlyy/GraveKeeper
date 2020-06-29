@@ -71,7 +71,13 @@ repositories {
     }
     ivy { // GalacticCraftCore
         name "GalacticraftCore"
-        artifactPattern "https://ci.micdoodle8.com/job/Galacticraft-1.12/${config.Galacticraft_build}/artifact/Forge/build/libs/[module]-[revision].[ext]"
+        url "https://micdoodle8.com/new-builds/"
+        layout 'pattern', {
+            artifact "[organization]/${config.Galacticraft_build}/[module]-[revision].jar"
+        }
+        metadataSources {
+            artifact()
+        }
     }
 }
 
@@ -99,7 +105,8 @@ dependencies {
 
     //provided "techguns:Techguns:${config.Techguns_version}"
     provided "com.azanor.baubles:Baubles:${config.Baubles_version}"
-    provided name: "GalacticraftCore", version: "${config.Galacticraft_version}.${config.Galacticraft_build}", ext: "jar"
+    provided "GC-1.12-dev:GalacticraftCore-Dev:${config.Galacticraft_version}.${config.Galacticraft_build}"
+    // provided name: "GalacticraftCore-Dev", version: "${config.Galacticraft_version}.${config.Galacticraft_build}", ext: "jar"
     provided curse.resolve("techguns", "${config.Techguns_fileid}")
     // provided "botania:Botania:${config.Botania_version}"
 }
