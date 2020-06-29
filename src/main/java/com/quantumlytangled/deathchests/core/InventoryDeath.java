@@ -1,8 +1,5 @@
 package com.quantumlytangled.deathchests.core;
 
-import com.quantumlytangled.deathchests.compatability.CompatBaubles;
-import com.quantumlytangled.deathchests.compatability.CompatGalacticCraftCore;
-import com.quantumlytangled.deathchests.compatability.CompatTechguns;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -56,9 +53,6 @@ public class InventoryDeath {
                     break;
                 case GCC:
                     DeathChestsConfig.isGalacticCraftCoreLoaded.setItem(i, ItemStack.EMPTY, this.player);
-                    break;
-                case TECHGUNS:
-                    DeathChestsConfig.isTechgunsLoaded.setItem(i, ItemStack.EMPTY, this.player);
                     break;
             }
         }

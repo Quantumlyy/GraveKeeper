@@ -3,7 +3,7 @@ package com.quantumlytangled.deathchests.core;
 import com.quantumlytangled.deathchests.DeathChests;
 import com.quantumlytangled.deathchests.compatability.CompatBaubles;
 import com.quantumlytangled.deathchests.compatability.CompatGalacticCraftCore;
-import com.quantumlytangled.deathchests.compatability.CompatTechguns;
+import com.quantumlytangled.deathchests.compatability.ICompatInventory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 
@@ -17,8 +17,8 @@ public class DeathChestsConfig {
     private static String stringConfigDirectory;
     private static File fileConfigDirectory;
 
-    public static CompatBaubles isBaublesLoaded = null;
-    public static CompatGalacticCraftCore isGalacticCraftCoreLoaded = null;
+    public static ICompatInventory isBaublesLoaded = null;
+    public static ICompatInventory isGalacticCraftCoreLoaded = null;
 
     public static boolean IGNORE_KEEP_INVENTORY = false;
 
