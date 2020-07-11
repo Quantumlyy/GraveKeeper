@@ -1,7 +1,7 @@
 [
 {
-  "modid": "deathchests",
-  "name": "DeathChests",
+  "modid": "chestedgravestones",
+  "name": "ChestedGravestones",
   "description": "",
   "version": "${version}",
   "mcversion": "1.12.2",

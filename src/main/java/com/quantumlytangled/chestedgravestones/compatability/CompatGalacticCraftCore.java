@@ -1,4 +1,4 @@
-package com.quantumlytangled.deathchests.compatability;
+package com.quantumlytangled.chestedgravestones.compatability;
 
 import micdoodle8.mods.galacticraft.api.inventory.AccessInventoryGC;
 import micdoodle8.mods.galacticraft.api.inventory.IInventoryGC;

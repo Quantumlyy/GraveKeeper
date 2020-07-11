@@ -1,4 +1,4 @@
-package com.quantumlytangled.deathchests.compatability;
+package com.quantumlytangled.chestedgravestones.compatability;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

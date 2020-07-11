@@ -1,4 +1,4 @@
-package com.quantumlytangled.deathchests.core;
+package com.quantumlytangled.chestedgravestones.core;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class InventoryDeath {
 
-    public static int MAX_SOULBOUND = DeathChestsConfig.KEEP_SOULBOUND_AMOUNT;
+    public static int MAX_SOULBOUND = ChestedGravestonesConfig.KEEP_SOULBOUND_AMOUNT;
 
     public final List<InventoryDeathSlot> inventory = new ArrayList<>();
 
@@ -29,8 +29,8 @@ public class InventoryDeath {
         extractContents(inventory.offHandInventory, InventoryType.OFFHAND);
         extractContents(inventory.mainInventory, InventoryType.MAIN);
 
-        if (DeathChestsConfig.isBaublesLoaded != null) extractContents(DeathChestsConfig.isBaublesLoaded.getAllContents(player), InventoryType.BAUBLES);
-        if (DeathChestsConfig.isGalacticCraftCoreLoaded != null) extractContents(DeathChestsConfig.isGalacticCraftCoreLoaded.getAllContents(player), InventoryType.GCC);
+        if (ChestedGravestonesConfig.isBaublesLoaded != null) extractContents(ChestedGravestonesConfig.isBaublesLoaded.getAllContents(player), InventoryType.BAUBLES);
+        if (ChestedGravestonesConfig.isGalacticCraftCoreLoaded != null) extractContents(ChestedGravestonesConfig.isGalacticCraftCoreLoaded.getAllContents(player), InventoryType.GCC);
     }
 
     private void extractContents(NonNullList<ItemStack> contents, InventoryType type) {
@@ -49,10 +49,10 @@ public class InventoryDeath {
                     this.player.inventory.offHandInventory.set(i, ItemStack.EMPTY);
                     break;
                 case BAUBLES:
-                    DeathChestsConfig.isBaublesLoaded.setItem(i, ItemStack.EMPTY, this.player);
+                    ChestedGravestonesConfig.isBaublesLoaded.setItem(i, ItemStack.EMPTY, this.player);
                     break;
                 case GCC:
-                    DeathChestsConfig.isGalacticCraftCoreLoaded.setItem(i, ItemStack.EMPTY, this.player);
+                    ChestedGravestonesConfig.isGalacticCraftCoreLoaded.setItem(i, ItemStack.EMPTY, this.player);
                     break;
             }
         }

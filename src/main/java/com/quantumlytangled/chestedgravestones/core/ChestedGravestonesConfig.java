@@ -1,9 +1,9 @@
-package com.quantumlytangled.deathchests.core;
+package com.quantumlytangled.chestedgravestones.core;
 
-import com.quantumlytangled.deathchests.DeathChests;
-import com.quantumlytangled.deathchests.compatability.CompatBaubles;
-import com.quantumlytangled.deathchests.compatability.CompatGalacticCraftCore;
-import com.quantumlytangled.deathchests.compatability.ICompatInventory;
+import com.quantumlytangled.chestedgravestones.ChestedGravestones;
+import com.quantumlytangled.chestedgravestones.compatability.CompatBaubles;
+import com.quantumlytangled.chestedgravestones.compatability.CompatGalacticCraftCore;
+import com.quantumlytangled.chestedgravestones.compatability.ICompatInventory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 
@@ -12,7 +12,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 
-public class DeathChestsConfig {
+public class ChestedGravestonesConfig {
 
     private static String stringConfigDirectory;
     private static File fileConfigDirectory;
@@ -33,9 +33,9 @@ public class DeathChestsConfig {
     }
 
     public static void onFMLpreInitialization(final String stringConfigDirectory) {
-        DeathChestsConfig.stringConfigDirectory = stringConfigDirectory;
+        ChestedGravestonesConfig.stringConfigDirectory = stringConfigDirectory;
 
-        fileConfigDirectory = new File(stringConfigDirectory, DeathChests.MODID);
+        fileConfigDirectory = new File(stringConfigDirectory, ChestedGravestones.MODID);
         //noinspection ResultOfMethodCallIgnored
         fileConfigDirectory.mkdir();
         if (!fileConfigDirectory.isDirectory()) {

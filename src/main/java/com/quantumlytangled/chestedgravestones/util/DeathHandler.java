@@ -1,6 +1,6 @@
-package com.quantumlytangled.deathchests.util;
+package com.quantumlytangled.chestedgravestones.util;
 
-import com.quantumlytangled.deathchests.core.InventoryDeathSlot;
+import com.quantumlytangled.chestedgravestones.core.InventoryDeathSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 

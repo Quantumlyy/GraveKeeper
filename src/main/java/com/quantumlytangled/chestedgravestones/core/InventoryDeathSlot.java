@@ -1,4 +1,4 @@
-package com.quantumlytangled.deathchests.core;
+package com.quantumlytangled.chestedgravestones.core;
 
 import net.minecraft.item.ItemStack;
 

@@ -1,4 +1,4 @@
-package com.quantumlytangled.deathchests.compatability;
+package com.quantumlytangled.chestedgravestones.compatability;
 
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;

@@ -29,8 +29,8 @@ configFile.withReader {
 }
 
 version = "${config.minecraft_version}-${config.MAJORMOD}.${config.MAJORAPI}.${config.MINOR}.${config.PATCH}"
-group = "com.quantumlytangled.deathchests" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "DeathChests"
+group = "com.quantumlytangled.chestedgravestones" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "ChestedGravestones"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -49,7 +49,7 @@ minecraft {
 
     // replacing
     replace "@VERSION@", "${config.MAJORMOD}.${config.MAJORAPI}.${config.MINOR}.${config.PATCH}"
-    replaceIn "DeathChests.java"
+    replaceIn "ChestedGravestones.java"
 }
 
 repositories {
