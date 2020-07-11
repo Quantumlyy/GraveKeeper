@@ -1,8 +1,9 @@
 package com.quantumlytangled.chestedgravestones.block;
 
 import com.quantumlytangled.chestedgravestones.ChestedGravestones;
-import com.quantumlytangled.chestedgravestones.util.CustomEntitySelectors;
 import com.quantumlytangled.chestedgravestones.tile.TileDeathChest;
+import com.quantumlytangled.chestedgravestones.util.CustomEntitySelectors;
+import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
@@ -14,75 +15,81 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-
 public class BlockDeathChest extends Block {
-    public BlockDeathChest() {
-        super(Material.ANVIL);
 
-        setBlockUnbreakable();
-        setResistance(6000000.0F);
-        setRegistryName("DeathChest");
-        setTranslationKey(ChestedGravestones.MODID + ".death_chest");
+  public BlockDeathChest() {
+    super(Material.ANVIL);
+
+    setBlockUnbreakable();
+    setResistance(6000000.0F);
+    setRegistryName("DeathChest");
+    setTranslationKey(ChestedGravestones.MODID + ".death_chest");
+  }
+
+  @Override
+  public boolean onBlockActivated(
+      @Nonnull World worldIn,
+      @Nonnull BlockPos pos,
+      @Nonnull IBlockState state,
+      @Nonnull EntityPlayer playerIn,
+      @Nonnull EnumHand hand,
+      @Nonnull EnumFacing facing,
+      float hitX,
+      float hitY,
+      float hitZ) {
+    if (worldIn.isRemote) {
+      return true;
     }
 
-    @Override
-    public boolean onBlockActivated(
-            @Nonnull World worldIn,
-            @Nonnull BlockPos pos,
-            @Nonnull IBlockState state,
-            @Nonnull EntityPlayer playerIn,
-            @Nonnull EnumHand hand,
-            @Nonnull EnumFacing facing,
-            float hitX,
-            float hitY,
-            float hitZ) {
-        if (worldIn.isRemote) return true;
+    final TileEntity tChest = worldIn.getTileEntity(pos);
+    if (!(tChest instanceof TileDeathChest)) {
+      return true;
+    }
+    final TileDeathChest chest = (TileDeathChest) tChest;
 
-        final TileEntity tChest = worldIn.getTileEntity(pos);
-        if (!(tChest instanceof TileDeathChest)) return true;
-        final TileDeathChest chest = (TileDeathChest) tChest;
+    chest.processInteraction(playerIn, worldIn, pos);
+    return true;
+  }
 
-        chest.processInteraction(playerIn, worldIn, pos);
-        return true;
+  @Override
+  public void breakBlock(
+      @Nonnull World worldIn,
+      @Nonnull BlockPos pos,
+      @Nonnull IBlockState state) {
+    if (worldIn.isRemote) {
+      super.breakBlock(worldIn, pos, state);
+      return;
     }
 
-    @Override
-    public void breakBlock(
-            @Nonnull World worldIn,
-            @Nonnull BlockPos pos,
-            @Nonnull IBlockState state) {
-        if (worldIn.isRemote) {
-            super.breakBlock(worldIn, pos, state);
-            return;
-        }
-
-        final TileEntity tChest = worldIn.getTileEntity(pos);
-        if (!(tChest instanceof TileDeathChest)) {
-            super.breakBlock(worldIn, pos, state);
-            return;
-        }
-        final TileDeathChest chest = (TileDeathChest) tChest;
-
-        final EntityPlayer player = worldIn.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 6, CustomEntitySelectors.IN_CREATIVE::test);
-        assert player != null;
-
-        chest.processBreak(player, worldIn, pos);
+    final TileEntity tChest = worldIn.getTileEntity(pos);
+    if (!(tChest instanceof TileDeathChest)) {
+      super.breakBlock(worldIn, pos, state);
+      return;
     }
+    final TileDeathChest chest = (TileDeathChest) tChest;
 
-    @Override
-    public boolean hasTileEntity(@Nonnull IBlockState state) {
-        return true;
-    }
+    final EntityPlayer player = worldIn.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 6,
+        CustomEntitySelectors.IN_CREATIVE::test);
+    assert player != null;
 
-    @Nonnull
-    @Override
-    public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) { return new TileDeathChest(); }
+    chest.processBreak(player, worldIn, pos);
+  }
 
-    @SuppressWarnings("deprecation")
-    @Nonnull
-    @Override
-    public EnumPushReaction getPushReaction(@Nonnull final IBlockState blockState) {
-        return EnumPushReaction.BLOCK;
-    }
+  @Override
+  public boolean hasTileEntity(@Nonnull IBlockState state) {
+    return true;
+  }
+
+  @Nonnull
+  @Override
+  public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) {
+    return new TileDeathChest();
+  }
+
+  @SuppressWarnings("deprecation")
+  @Nonnull
+  @Override
+  public EnumPushReaction getPushReaction(@Nonnull final IBlockState blockState) {
+    return EnumPushReaction.BLOCK;
+  }
 }
