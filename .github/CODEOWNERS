@@ -1,0 +1,6 @@
+# QuantumlyTangled
+build.gradle @quantumlytangled
+build.properties @quantumlytangled
+src/main/java/com/quantumlytangled @quantumlytangled
+src/main/resources/mcmod.info @quantumlytangled
+src/main/resources/chestedgravestones/lang @quantumlytangled
