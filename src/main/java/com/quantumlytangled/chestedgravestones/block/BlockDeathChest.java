@@ -1,8 +1,8 @@
-package com.quantumlytangled.deathchests.block;
+package com.quantumlytangled.chestedgravestones.block;
 
-import com.quantumlytangled.deathchests.DeathChests;
-import com.quantumlytangled.deathchests.util.CustomEntitySelectors;
-import com.quantumlytangled.deathchests.tile.TileDeathChest;
+import com.quantumlytangled.chestedgravestones.ChestedGravestones;
+import com.quantumlytangled.chestedgravestones.util.CustomEntitySelectors;
+import com.quantumlytangled.chestedgravestones.tile.TileDeathChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
@@ -23,7 +23,7 @@ public class BlockDeathChest extends Block {
         setBlockUnbreakable();
         setResistance(6000000.0F);
         setRegistryName("DeathChest");
-        setTranslationKey(DeathChests.MODID + ".death_chest");
+        setTranslationKey(ChestedGravestones.MODID + ".death_chest");
     }
 
     @Override
