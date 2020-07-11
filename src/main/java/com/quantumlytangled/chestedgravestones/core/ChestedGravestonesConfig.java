@@ -22,8 +22,8 @@ public class ChestedGravestonesConfig {
 
     public static boolean IGNORE_KEEP_INVENTORY = false;
 
-    public static boolean INSTANT_COLLECTION = false;
     public static int EXPIRE_TIME = 7200;
+    public static boolean INSTANT_COLLECTION = false;
 
     public static boolean KEEP_SOULBOUND = false;
     public static int KEEP_SOULBOUND_AMOUNT = 5;
@@ -57,12 +57,13 @@ public class ChestedGravestonesConfig {
                 .get("general", "ignore_keep_inventory", IGNORE_KEEP_INVENTORY, "Whether the chests should still spawn on keepInventory")
                 .getBoolean(false);
 
-        INSTANT_COLLECTION = config
-                .get("chest_collection", "instant_collection", INSTANT_COLLECTION, "Whether other players should be able to instantly collect ones Death Chest")
-                .getBoolean(true);
         EXPIRE_TIME = config
-                .get("chest_collection", "expire_time", EXPIRE_TIME, "Time in seconds after which other players will be able to collect ones chest")
+                .get("chest_collection", "expire_time", EXPIRE_TIME, String.join("\n", new String[]{
+                        "Time in seconds after which other players will be able to collect ones chest",
+                        "If -1 is passed EXPIRE_TIME will be disable any anyone will be able to pick up the chest instantly"
+                }))
                 .getInt(7200);
+        INSTANT_COLLECTION = EXPIRE_TIME == -1;
 
         KEEP_SOULBOUND = config
                 .get("soulbound", "keep", KEEP_SOULBOUND, "Should soulbound items be kept in players inventory")

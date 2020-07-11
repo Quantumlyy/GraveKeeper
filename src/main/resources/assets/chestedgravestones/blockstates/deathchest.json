@@ -3,7 +3,7 @@
   "defaults": {
     "model": "minecraft:cube_all",
     "textures": {
-      "all": "deathchests:blocks/death_chest"
+      "all": "chestedgravestones:blocks/death_chest"
     },
     "transform": "forge:default-block"
   },
