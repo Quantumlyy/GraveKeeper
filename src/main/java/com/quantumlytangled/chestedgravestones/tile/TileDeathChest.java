@@ -43,9 +43,9 @@ public class TileDeathChest extends TileEntity {
       processCreativeInspect(player, world, pos);
     } else if (ownerUUID.equals(player.getUniqueID())) {
       processItemReturn(player, world, pos);
-    } else if ((ChestedGravestonesConfig.getExpiredStatus(creationDate)
-        || ChestedGravestonesConfig.INSTANT_FOREIGN_COLLECTION) && !ownerUUID
-        .equals(player.getUniqueID())) {
+    } else if ((ChestedGravestonesConfig.getExpiredStatus(creationDate) || ChestedGravestonesConfig.INSTANT_FOREIGN_COLLECTION)
+            && !ownerUUID.equals(player.getUniqueID())
+            && !ChestedGravestonesConfig.OWNER_ONLY_COLLECTION) {
       processDropItemReturn(player, world, pos);
     }
   }
