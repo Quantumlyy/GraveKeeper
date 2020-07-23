@@ -28,13 +28,17 @@ public class InventoryDeath {
     extractContents(inventory.offHandInventory, InventoryType.OFFHAND);
     extractContents(inventory.mainInventory, InventoryType.MAIN);
 
-    if (ChestedGravestonesConfig.isBaublesLoaded != null) {
-      extractContents(ChestedGravestonesConfig.isBaublesLoaded.getAllContents(player),
+    if (ChestedGravestonesConfig.compatBaubles != null) {
+      extractContents(ChestedGravestonesConfig.compatBaubles.getAllContents(player),
           InventoryType.BAUBLES);
     }
-    if (ChestedGravestonesConfig.isGalacticCraftCoreLoaded != null) {
-      extractContents(ChestedGravestonesConfig.isGalacticCraftCoreLoaded.getAllContents(player),
+    if (ChestedGravestonesConfig.compatGalacticCraft != null) {
+      extractContents(ChestedGravestonesConfig.compatGalacticCraft.getAllContents(player),
           InventoryType.GCC);
+    }
+    if (ChestedGravestonesConfig.compatTechGuns != null) {
+      extractContents(ChestedGravestonesConfig.compatTechGuns.getAllContents(player),
+                      InventoryType.TECHGUNS);
     }
   }
 
@@ -53,9 +57,9 @@ public class InventoryDeath {
         case OFFHAND:
           this.player.inventory.offHandInventory.set(i, ItemStack.EMPTY);
         case BAUBLES:
-          ChestedGravestonesConfig.isBaublesLoaded.setItem(i, ItemStack.EMPTY, this.player);
+          ChestedGravestonesConfig.compatBaubles.setItem(i, ItemStack.EMPTY, this.player);
         case GCC:
-          ChestedGravestonesConfig.isGalacticCraftCoreLoaded
+          ChestedGravestonesConfig.compatGalacticCraft
               .setItem(i, ItemStack.EMPTY, this.player);
       }
     }

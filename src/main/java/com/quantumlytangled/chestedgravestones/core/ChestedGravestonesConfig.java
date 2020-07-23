@@ -3,6 +3,7 @@ package com.quantumlytangled.chestedgravestones.core;
 import com.quantumlytangled.chestedgravestones.ChestedGravestones;
 import com.quantumlytangled.chestedgravestones.compatability.CompatBaubles;
 import com.quantumlytangled.chestedgravestones.compatability.CompatGalacticCraftCore;
+import com.quantumlytangled.chestedgravestones.compatability.CompatTechguns;
 import com.quantumlytangled.chestedgravestones.compatability.ICompatInventory;
 import java.io.File;
 import java.time.ZoneOffset;
@@ -13,8 +14,9 @@ import net.minecraftforge.fml.common.Loader;
 
 public class ChestedGravestonesConfig {
 
-  public static ICompatInventory isBaublesLoaded = null;
-  public static ICompatInventory isGalacticCraftCoreLoaded = null;
+  public static ICompatInventory compatBaubles = null;
+  public static ICompatInventory compatGalacticCraft = null;
+  public static ICompatInventory compatTechGuns = null;
 
   public static boolean IGNORE_KEEP_INVENTORY = false;
 
@@ -43,10 +45,13 @@ public class ChestedGravestonesConfig {
     loadConfig(new File(fileConfigDirectory, "config.yml"));
 
     if (Loader.isModLoaded("baubles")) {
-      isBaublesLoaded = CompatBaubles.INSTANCE();
+      compatBaubles = CompatBaubles.getInstance();
     }
     if (Loader.isModLoaded("galacticraftcore")) {
-      isGalacticCraftCoreLoaded = CompatGalacticCraftCore.INSTANCE();
+      compatGalacticCraft = CompatGalacticCraftCore.getInstance();
+    }
+    if (Loader.isModLoaded("techguns")) {
+      compatTechGuns = CompatTechguns.getInstance();
     }
   }
 

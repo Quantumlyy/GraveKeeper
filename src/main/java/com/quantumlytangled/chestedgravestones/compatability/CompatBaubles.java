@@ -8,10 +8,10 @@ import net.minecraft.util.NonNullList;
 
 public class CompatBaubles implements ICompatInventory {
 
-  private static final CompatBaubles _INSTANCE = new CompatBaubles();
+  private static final CompatBaubles INSTANCE = new CompatBaubles();
 
-  public static CompatBaubles INSTANCE() {
-    return _INSTANCE;
+  public static CompatBaubles getInstance() {
+    return INSTANCE;
   }
 
   public NonNullList<ItemStack> getAllContents(EntityPlayerMP player) {

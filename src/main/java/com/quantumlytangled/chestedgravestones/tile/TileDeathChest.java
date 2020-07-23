@@ -137,29 +137,48 @@ public class TileDeathChest extends TileEntity {
       switch (slot.type) {
         case MAIN:
           DeathHandler.restoreInvSlot(slot, player.inventory.mainInventory, overflow);
+          break;
+          
         case ARMOUR:
           DeathHandler.restoreInvSlot(slot, player.inventory.armorInventory, overflow);
+          break;
+          
         case OFFHAND:
           DeathHandler.restoreInvSlot(slot, player.inventory.offHandInventory, overflow);
+          break;
+          
         case BAUBLES:
-          if (ChestedGravestonesConfig.isBaublesLoaded == null) {
-            break;
+          if (ChestedGravestonesConfig.compatBaubles != null) {
+            if (ChestedGravestonesConfig.compatBaubles.isSlotEmpty(slot.slot, player)) {
+              ChestedGravestonesConfig.compatBaubles.setItem(slot.slot, slot.content, player);
+            } else {
+              overflow.add(slot.content);
+            }
           }
-          if (ChestedGravestonesConfig.isBaublesLoaded.isSlotEmpty(slot.slot, player)) {
-            ChestedGravestonesConfig.isBaublesLoaded.setItem(slot.slot, slot.content, player);
+          break;
+
+      case GCC:
+          if (ChestedGravestonesConfig.compatGalacticCraft != null) {
+            if (ChestedGravestonesConfig.compatGalacticCraft.isSlotEmpty(slot.slot, player)) {
+              ChestedGravestonesConfig.compatGalacticCraft
+                      .setItem(slot.slot, slot.content, player);
+            } else {
+              overflow.add(slot.content);
+            }
+          }
+          break;
+
+      case TECHGUNS:
+        if (ChestedGravestonesConfig.compatTechGuns != null) {
+          if (ChestedGravestonesConfig.compatTechGuns.isSlotEmpty(slot.slot, player)) {
+            ChestedGravestonesConfig.compatTechGuns
+                    .setItem(slot.slot, slot.content, player);
           } else {
             overflow.add(slot.content);
           }
-        case GCC:
-          if (ChestedGravestonesConfig.isGalacticCraftCoreLoaded == null) {
-            break;
-          }
-          if (ChestedGravestonesConfig.isGalacticCraftCoreLoaded.isSlotEmpty(slot.slot, player)) {
-            ChestedGravestonesConfig.isGalacticCraftCoreLoaded
-                .setItem(slot.slot, slot.content, player);
-          } else {
-            overflow.add(slot.content);
-          }
+        }
+        break;
+        
       }
     }
 

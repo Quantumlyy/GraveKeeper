@@ -10,13 +10,12 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
         classpath "com.wynprice.cursemaven:CurseMaven:1.2.3"
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: "com.wynprice.cursemaven"
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 // define the properties file
 ext.configFile = file "build.properties"
@@ -28,23 +27,24 @@ configFile.withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-version = "${config.minecraft_version}-${config.MAJORMOD}.${config.MAJORAPI}.${config.MINOR}.${config.PATCH}"
 group = "com.quantumlytangled.chestedgravestones" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "${config.minecraft_version}-${config.MAJORMOD}.${config.MAJORAPI}.${config.MINOR}.${config.PATCH}"
 archivesBaseName = "ChestedGravestones"
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+// Enforce Java version explicitly so eclipse task generates correctly.
+sourceCompatibility = compileJava.sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = compileJava.targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
     runDir = "run"
     
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
+    // The mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   Snapshot are built nightly.
+    // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = config.mappings_version
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings = "${config.mappings_version}"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     // replacing
@@ -53,15 +53,16 @@ minecraft {
 }
 
 repositories {
+    mavenCentral()
     maven { // Baubles
         name = "thiakil"
         url = "http://maven.thiakil.com"
     }
-    maven { // Tinkers
+    maven { // JEI & Tinkers
         name 'DVS1 Maven FS'
         url 'http://dvs1.progwml6.com/files/maven'
     }
-    maven {
+    maven { // JEI fallback
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
@@ -69,7 +70,7 @@ repositories {
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven/"
     }
-    ivy { // GalacticCraftCore
+    ivy {
         name "GalacticraftCore"
         url "https://micdoodle8.com/new-builds/"
         layout 'pattern', {
@@ -79,25 +80,17 @@ repositories {
             artifact()
         }
     }
+//    mavenLocal()
 }
 
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
+    // You may put jars on which you depend on in ./libs or you may define them like so..
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
       
-    // real examples
+    // Real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
-    // except that these dependencies get remapped to your current MCP mappings
-    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -106,7 +99,6 @@ dependencies {
     //provided "techguns:Techguns:${config.Techguns_version}"
     provided "com.azanor.baubles:Baubles:${config.Baubles_version}"
     provided "GC-1.12-dev:GalacticraftCore-Dev:${config.Galacticraft_version}.${config.Galacticraft_build}"
-    // provided name: "GalacticraftCore-Dev", version: "${config.Galacticraft_version}.${config.Galacticraft_build}", ext: "jar"
     provided curse.resolve("techguns", "${config.Techguns_fileid}")
     // provided "botania:Botania:${config.Botania_version}"
 }
@@ -128,4 +120,23 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+jar {
+    classifier = ''
+    destinationDir = file 'output'
+}
+
+idea {
+    module {
+        inheritOutputDirs = true
+    }
+}
+
+runClient {
+    jvmArgs "-Xmx2048m", "-Xms1024m", "-ea"
+}
+
+runServer {
+    jvmArgs "-Xmx2048m", "-Xms1024m", "-ea"
 }
