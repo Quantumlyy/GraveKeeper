@@ -17,7 +17,7 @@ public class CompatTechGuns implements ICompatInventory {
   }
   
   @Override
-  public NonNullList<ItemStack> getAllContents(EntityPlayerMP player) {
+  public NonNullList<ItemStack> getAllContents(@Nonnull final EntityPlayerMP player) {
     final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
     final NonNullList<ItemStack> itemStacks = NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
     for (int index = 0; index < inventory.getSizeInventory(); index++) {
@@ -28,22 +28,14 @@ public class CompatTechGuns implements ICompatInventory {
   }
 
   @Override
-  public void setItem(final int slot, @Nonnull final ItemStack itemStack, @Nonnull final EntityPlayerMP player) {
+  public void setItem(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
     final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
     inventory.setInventorySlotContents(slot, itemStack);
   }
 
   @Override
-  public boolean isSlotEmpty(final int slot, @Nonnull final EntityPlayerMP player) {
+  public boolean isSlotEmpty(@Nonnull final EntityPlayerMP player, final int slot) {
     final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
     return inventory.getStackInSlot(slot).isEmpty();
-  }
-
-  @Override
-  public void clearInventory(@Nonnull final EntityPlayerMP player) {
-    final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
-    for (int index = 0; index < inventory.getSizeInventory(); index++) {
-      inventory.setInventorySlotContents(index, ItemStack.EMPTY);
-    }
   }
 }

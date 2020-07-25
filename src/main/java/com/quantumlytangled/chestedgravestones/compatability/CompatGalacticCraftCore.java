@@ -28,22 +28,14 @@ public class CompatGalacticCraftCore implements ICompatInventory {
   }
   
   @Override
-  public void setItem(final int slot, @Nonnull final ItemStack item, @Nonnull final EntityPlayerMP player) {
+  public void setItem(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack item) {
     final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
     inventory.setInventorySlotContents(slot, item);
   }
   
   @Override
-  public boolean isSlotEmpty(final int slot, @Nonnull final EntityPlayerMP player) {
+  public boolean isSlotEmpty(@Nonnull final EntityPlayerMP player, final int slot) {
     final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
     return inventory.getStackInSlot(slot).isEmpty();
-  }
-  
-  @Override
-  public void clearInventory(@Nonnull final EntityPlayerMP player) {
-    final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
-    for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-      inventory.setInventorySlotContents(i, ItemStack.EMPTY);
-    }
   }
 }

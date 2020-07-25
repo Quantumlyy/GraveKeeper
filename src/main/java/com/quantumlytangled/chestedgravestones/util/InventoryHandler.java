@@ -57,10 +57,13 @@ public class InventoryHandler {
           player.inventory.offHandInventory.set(index, ItemStack.EMPTY);
           break;
         case BAUBLES:
-          compatBaubles.setItem(index, ItemStack.EMPTY, player);
+          compatBaubles.setItem(player, index, ItemStack.EMPTY);
           break;
         case GCC:
-          compatGalacticCraft.setItem(index, ItemStack.EMPTY, player);
+          compatGalacticCraft.setItem(player, index, ItemStack.EMPTY);
+          break;
+        case TECHGUNS:
+          compatTechGuns.setItem(player, index, ItemStack.EMPTY);
           break;
       }
     }

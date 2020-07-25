@@ -132,8 +132,8 @@ public class TileDeathChest extends TileEntity {
           
         case BAUBLES:
           if (InventoryHandler.compatBaubles != null) {
-            if (InventoryHandler.compatBaubles.isSlotEmpty(slot.slot, player)) {
-              InventoryHandler.compatBaubles.setItem(slot.slot, slot.itemStack, player);
+            if (InventoryHandler.compatBaubles.isSlotEmpty(player, slot.slot)) {
+              InventoryHandler.compatBaubles.setItem(player, slot.slot, slot.itemStack);
             } else {
               overflow.add(slot.itemStack);
             }
@@ -142,8 +142,8 @@ public class TileDeathChest extends TileEntity {
 
       case GCC:
           if (InventoryHandler.compatGalacticCraft != null) {
-            if (InventoryHandler.compatGalacticCraft.isSlotEmpty(slot.slot, player)) {
-              InventoryHandler.compatGalacticCraft.setItem(slot.slot, slot.itemStack, player);
+            if (InventoryHandler.compatGalacticCraft.isSlotEmpty(player, slot.slot)) {
+              InventoryHandler.compatGalacticCraft.setItem(player, slot.slot, slot.itemStack);
             } else {
               overflow.add(slot.itemStack);
             }
@@ -152,8 +152,8 @@ public class TileDeathChest extends TileEntity {
 
       case TECHGUNS:
         if (InventoryHandler.compatTechGuns != null) {
-          if (InventoryHandler.compatTechGuns.isSlotEmpty(slot.slot, player)) {
-            InventoryHandler.compatTechGuns.setItem(slot.slot, slot.itemStack, player);
+          if (InventoryHandler.compatTechGuns.isSlotEmpty(player, slot.slot)) {
+            InventoryHandler.compatTechGuns.setItem(player, slot.slot, slot.itemStack);
           } else {
             overflow.add(slot.itemStack);
           }

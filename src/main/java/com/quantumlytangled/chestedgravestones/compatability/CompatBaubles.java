@@ -27,22 +27,14 @@ public class CompatBaubles implements ICompatInventory {
   }
 
   @Override
-  public void setItem(final int slot, @Nonnull final ItemStack itemStack, @Nonnull final EntityPlayerMP player) {
+  public void setItem(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
     final IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
     handler.setStackInSlot(slot, itemStack);
   }
 
   @Override
-  public boolean isSlotEmpty(final int slot, @Nonnull final EntityPlayerMP player) {
+  public boolean isSlotEmpty(@Nonnull final EntityPlayerMP player, final int slot) {
     final IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
     return handler.getStackInSlot(slot).isEmpty();
-  }
-
-  @Override
-  public void clearInventory(@Nonnull final EntityPlayerMP player) {
-    final IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
-    for (int index = 0; index < handler.getSlots(); index++) {
-      handler.setStackInSlot(index, ItemStack.EMPTY);
-    }
   }
 }
