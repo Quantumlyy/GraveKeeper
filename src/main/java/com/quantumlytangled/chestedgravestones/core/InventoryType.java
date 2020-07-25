@@ -5,6 +5,6 @@ public enum InventoryType {
   ARMOUR,
   OFFHAND,
   BAUBLES,
-  GCC,
+  GALACTICRAFT,
   TECHGUNS
 }

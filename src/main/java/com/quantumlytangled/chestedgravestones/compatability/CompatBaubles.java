@@ -3,6 +3,7 @@ package com.quantumlytangled.chestedgravestones.compatability;
 import javax.annotation.Nonnull;
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
+import com.quantumlytangled.chestedgravestones.core.InventoryType;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -13,6 +14,11 @@ public class CompatBaubles implements ICompatInventory {
 
   public static CompatBaubles getInstance() {
     return INSTANCE;
+  }
+
+  @Override
+  public InventoryType getType() {
+    return InventoryType.BAUBLES;
   }
 
   @Override
@@ -27,9 +33,19 @@ public class CompatBaubles implements ICompatInventory {
   }
 
   @Override
-  public void setItem(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
+  public void removeItem(@Nonnull final EntityPlayerMP player, final int slot) {
     final IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
-    handler.setStackInSlot(slot, itemStack);
+    handler.setStackInSlot(slot, ItemStack.EMPTY);
+  }
+
+  @Override
+  public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
+    final IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
+    if (handler.getStackInSlot(slot).isEmpty()) {
+      handler.setStackInSlot(slot, itemStack);
+      return ItemStack.EMPTY;
+    }
+    return itemStack;
   }
 
   @Override

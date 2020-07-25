@@ -6,6 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
+import com.quantumlytangled.chestedgravestones.core.InventoryType;
 import techguns.capabilities.TGExtendedPlayer;
 
 public class CompatTechGuns implements ICompatInventory {
@@ -15,7 +16,12 @@ public class CompatTechGuns implements ICompatInventory {
   public static CompatTechGuns getInstance() {
     return INSTANCE;
   }
-  
+
+  @Override
+  public InventoryType getType() {
+    return InventoryType.TECHGUNS;
+  }
+
   @Override
   public NonNullList<ItemStack> getAllContents(@Nonnull final EntityPlayerMP player) {
     final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
@@ -28,9 +34,19 @@ public class CompatTechGuns implements ICompatInventory {
   }
 
   @Override
-  public void setItem(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
+  public void removeItem(@Nonnull final EntityPlayerMP player, final int slot) {
     final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
-    inventory.setInventorySlotContents(slot, itemStack);
+    inventory.setInventorySlotContents(slot, ItemStack.EMPTY);
+  }
+
+  @Override
+  public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
+    final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
+    if (inventory.getStackInSlot(slot).isEmpty()) {
+      inventory.setInventorySlotContents(slot, itemStack);
+      return ItemStack.EMPTY;
+    }
+    return itemStack;
   }
 
   @Override

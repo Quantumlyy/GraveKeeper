@@ -114,55 +114,8 @@ public class TileDeathChest extends TileEntity {
   }
 
   private void doReturnToOwner(@Nonnull final EntityPlayerMP player) {
-    final List<ItemStack> overflow = new ArrayList<>();
-
-    for (final InventorySlot slot : inventorySlots) {
-      switch (slot.type) {
-        case MAIN:
-          InventoryHandler.restoreOrOverflow(slot, player.inventory.mainInventory, overflow);
-          break;
-          
-        case ARMOUR:
-          InventoryHandler.restoreOrOverflow(slot, player.inventory.armorInventory, overflow);
-          break;
-          
-        case OFFHAND:
-          InventoryHandler.restoreOrOverflow(slot, player.inventory.offHandInventory, overflow);
-          break;
-          
-        case BAUBLES:
-          if (InventoryHandler.compatBaubles != null) {
-            if (InventoryHandler.compatBaubles.isSlotEmpty(player, slot.slot)) {
-              InventoryHandler.compatBaubles.setItem(player, slot.slot, slot.itemStack);
-            } else {
-              overflow.add(slot.itemStack);
-            }
-          }
-          break;
-
-      case GCC:
-          if (InventoryHandler.compatGalacticCraft != null) {
-            if (InventoryHandler.compatGalacticCraft.isSlotEmpty(player, slot.slot)) {
-              InventoryHandler.compatGalacticCraft.setItem(player, slot.slot, slot.itemStack);
-            } else {
-              overflow.add(slot.itemStack);
-            }
-          }
-          break;
-
-      case TECHGUNS:
-        if (InventoryHandler.compatTechGuns != null) {
-          if (InventoryHandler.compatTechGuns.isSlotEmpty(player, slot.slot)) {
-            InventoryHandler.compatTechGuns.setItem(player, slot.slot, slot.itemStack);
-          } else {
-            overflow.add(slot.itemStack);
-          }
-        }
-        break;
-        
-      }
-    }
-
+    final List<ItemStack> overflow = InventoryHandler.restoreOrOverflow(player, inventorySlots);
+    
     for (final ItemStack itemStack : overflow) {
       if (player.inventory.addItemStackToInventory(itemStack.copy())) {
         continue;
