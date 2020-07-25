@@ -2,10 +2,11 @@ package com.quantumlytangled.chestedgravestones.core;
 
 import com.quantumlytangled.chestedgravestones.ChestedGravestones;
 import com.quantumlytangled.chestedgravestones.block.BlockDeathChest;
-import com.quantumlytangled.chestedgravestones.tile.TileDeathChest;
+import com.quantumlytangled.chestedgravestones.block.TileDeathChest;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
@@ -24,6 +26,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import com.quantumlytangled.chestedgravestones.util.InventoryHandler;
 import org.apache.logging.log4j.Logger;
 
 public final class Registration {
@@ -32,67 +35,73 @@ public final class Registration {
 
   public static Block blockDeathChest;
 
-  public void preInitialize(FMLPreInitializationEvent event) {
+  public void preInitialize(@Nonnull final FMLPreInitializationEvent event) {
     logger = event.getModLog();
 
-    ChestedGravestonesConfig
-        .onFMLpreInitialization(event.getModConfigurationDirectory().getAbsolutePath());
+    ChestedGravestonesConfig.onFMLpreInitialization(event.getModConfigurationDirectory());
 
     blockDeathChest = new BlockDeathChest();
   }
 
-  public void initialize(FMLInitializationEvent event) {
+  public void initialize(@Nonnull final FMLInitializationEvent event) {
+    // no operation
   }
 
   @SubscribeEvent
-  public void registerBlocks(final RegistryEvent.Register<Block> event) {
+  public void registerBlocks(@Nonnull final RegistryEvent.Register<Block> event) {
     event.getRegistry().register(blockDeathChest);
     GameRegistry.registerTileEntity(TileDeathChest.class,
         new ResourceLocation(ChestedGravestones.MODID, "death_chest"));
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public void onPlayerDeath(@Nonnull LivingDeathEvent event) {
-    EntityLivingBase entity = event.getEntityLiving();
+  public void onPlayerDeath(@Nonnull final LivingDeathEvent event) {
+    final EntityLivingBase entityLiving = event.getEntityLiving();
     if (!(entity instanceof EntityPlayer && entity.isServerWorld())) {
       return;
     }
-    ZonedDateTime tof = ZonedDateTime.now(ZoneOffset.UTC);
-
-    EntityPlayerMP playerEntity = (EntityPlayerMP) entity;
-    String playerName = playerEntity.getDisplayNameString();
-    UUID playerUUID = playerEntity.getUniqueID();
-    World world = playerEntity.world;
-
-    double pX = playerEntity.posX;
-    double pY = playerEntity.posY;
-    double pZ = playerEntity.posZ;
-    BlockPos deathPos = new BlockPos(pX, pY, pZ);
-
-    String timestamp = tof.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss.n"));
-    String identifier = playerName + "." + playerUUID + "." + timestamp;
-
-    if (!ChestedGravestonesConfig.IGNORE_KEEP_INVENTORY && playerEntity.world.getGameRules()
-        .getBoolean("keepInventory")) {
+    final EntityPlayerMP player = (EntityPlayerMP) entityLiving;
+    
+    if ( !ChestedGravestonesConfig.IGNORE_KEEP_INVENTORY
+      && player.world.getGameRules().getBoolean("keepInventory") ) {
+      logger.debug(String.format("Keep inventory is enabled, ignoring death of player %s",
+          player ));
+      return;
+    }
+    
+    final ZonedDateTime utcTimeStamp = ZonedDateTime.now(ZoneOffset.UTC);
+    final String stringTimestamp = utcTimeStamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss.n"));
+    final String playerName = player.getDisplayNameString();
+    final UUID playerUUID = player.getUniqueID();
+    final String identifier = playerUUID + "." + playerName + "." + stringTimestamp;
+    final List<InventorySlot> inventorySlots = InventoryHandler.collectOnDeath(player);
+    if (inventorySlots.isEmpty()) {
+      logger.warn(String.format("No item to save, ignoring death of player %s",
+          player ));
       return;
     }
 
-    InventoryDeath invDeath = new InventoryDeath();
-    world.setBlockState(deathPos, blockDeathChest.getDefaultState());
+    final World world = player.world;
+    double pX = player.posX;
+    double pY = player.posY;
+    double pZ = player.posZ;
+    final BlockPos blockPosDeath = new BlockPos(MathHelper.floor(pX), MathHelper.floor(pY), MathHelper.floor(pZ));
 
-    final TileEntity tChest = world.getTileEntity(deathPos);
-    if (!(tChest instanceof TileDeathChest)) {
+    world.setBlockState(blockPosDeath, blockDeathChest.getDefaultState());
+
+    final TileEntity tileEntity = world.getTileEntity(blockPosDeath);
+    if (!(tileEntity instanceof TileDeathChest)) {
+      logger.error(String.format("Missing tile entity %s, unable to save player %s inventory in world %s at %s",
+          tileEntity, playerName, world, blockPosDeath ));
       return;
     }
-    final TileDeathChest dChest = (TileDeathChest) tChest;
+    final TileDeathChest tileDeathChest = (TileDeathChest) tileEntity;
 
-    invDeath.formInventory(playerEntity);
-    dChest.setData(playerEntity, identifier, tof, invDeath);
+    tileDeathChest.setData(player, identifier, utcTimeStamp, inventorySlots);
 
-    playerEntity.sendMessage(new TextComponentString(
-        String.format("Chest placed at x: %s; y: %s; z: %s", (int) pX, (int) pY, (int) pZ)));
-    logger.info(String
-        .format("Generated DeathChest for %s(%s) at x: %s; y: %s; z: %s", playerName, playerUUID,
-            (int) pX, (int) pY, (int) pZ));
+    player.sendMessage(new TextComponentString(String.format("Chest placed at (%d %d %d)",
+        blockPosDeath.getX(), blockPosDeath.getY(), blockPosDeath.getZ() )));
+    logger.info(String.format("Generated DeathChest for %s(%s) at (%d %d %d)",
+        playerName, playerUUID, blockPosDeath.getX(), blockPosDeath.getY(), blockPosDeath.getZ() ));
   }
 }

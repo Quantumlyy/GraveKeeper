@@ -1,5 +1,6 @@
 package com.quantumlytangled.chestedgravestones.compatability;
 
+import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -16,11 +17,9 @@ public class CompatGalacticCraftCore implements ICompatInventory {
   }
   
   @Override
-  public NonNullList<ItemStack> getAllContents(EntityPlayerMP player) {
-    IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
-    
-    NonNullList<ItemStack> invContents = NonNullList
-        .withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
+  public NonNullList<ItemStack> getAllContents(@Nonnull final EntityPlayerMP player) {
+    final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
+    final NonNullList<ItemStack> invContents = NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
     for (int i = 0; i < inventory.getSizeInventory(); i++) {
       invContents.set(i, inventory.getStackInSlot(i));
     }
@@ -29,21 +28,20 @@ public class CompatGalacticCraftCore implements ICompatInventory {
   }
   
   @Override
-  public void setItem(int slot, ItemStack item, EntityPlayerMP player) {
-    IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
+  public void setItem(final int slot, @Nonnull final ItemStack item, @Nonnull final EntityPlayerMP player) {
+    final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
     inventory.setInventorySlotContents(slot, item);
   }
   
   @Override
-  public boolean isSlotEmpty(int slot, EntityPlayerMP player) {
-    IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
+  public boolean isSlotEmpty(final int slot, @Nonnull final EntityPlayerMP player) {
+    final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
     return inventory.getStackInSlot(slot).isEmpty();
   }
   
   @Override
-  public void clearInventory(EntityPlayerMP player) {
-    IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
-    
+  public void clearInventory(@Nonnull final EntityPlayerMP player) {
+    final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
     for (int i = 0; i < inventory.getSizeInventory(); ++i) {
       inventory.setInventorySlotContents(i, ItemStack.EMPTY);
     }

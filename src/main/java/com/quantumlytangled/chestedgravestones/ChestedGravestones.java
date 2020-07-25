@@ -22,7 +22,7 @@ public class ChestedGravestones {
 
   private ChestedGravestones() {
     registration = new Registration();
-    MinecraftForge.EVENT_BUS.register(this.registration);
+    MinecraftForge.EVENT_BUS.register(registration);
   }
 
   @Nonnull
@@ -33,11 +33,11 @@ public class ChestedGravestones {
 
   @EventHandler
   private void preInit(final FMLPreInitializationEvent event) {
-    this.registration.preInitialize(event);
+    registration.preInitialize(event);
   }
 
   @EventHandler
   private void init(final FMLInitializationEvent event) {
-    this.registration.initialize(event);
+    registration.initialize(event);
   }
 }

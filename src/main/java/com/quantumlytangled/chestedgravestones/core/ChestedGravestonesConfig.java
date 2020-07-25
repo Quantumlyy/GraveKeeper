@@ -3,8 +3,8 @@ package com.quantumlytangled.chestedgravestones.core;
 import com.quantumlytangled.chestedgravestones.ChestedGravestones;
 import com.quantumlytangled.chestedgravestones.compatability.CompatBaubles;
 import com.quantumlytangled.chestedgravestones.compatability.CompatGalacticCraftCore;
-import com.quantumlytangled.chestedgravestones.compatability.CompatTechguns;
-import com.quantumlytangled.chestedgravestones.compatability.ICompatInventory;
+import com.quantumlytangled.chestedgravestones.compatability.CompatTechGuns;
+import com.quantumlytangled.chestedgravestones.util.InventoryHandler;
 import java.io.File;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -14,13 +14,9 @@ import net.minecraftforge.fml.common.Loader;
 
 public class ChestedGravestonesConfig {
 
-  public static ICompatInventory compatBaubles = null;
-  public static ICompatInventory compatGalacticCraft = null;
-  public static ICompatInventory compatTechGuns = null;
-
   public static boolean IGNORE_KEEP_INVENTORY = false;
 
-  public static int EXPIRE_TIME = 7200;
+  public static int EXPIRE_TIME_HOURS = 7200;
   public static boolean INSTANT_FOREIGN_COLLECTION = false;
   public static boolean OWNER_ONLY_COLLECTION = false;
 
@@ -28,11 +24,10 @@ public class ChestedGravestonesConfig {
   public static int KEEP_SOULBOUND_AMOUNT = 5;
 
   public static boolean getExpiredStatus(long creationDate) {
-    return (creationDate + EXPIRE_TIME) < ZonedDateTime.now(ZoneOffset.UTC)
-        .getLong(ChronoField.INSTANT_SECONDS);
+    return (creationDate + EXPIRE_TIME_HOURS) < ZonedDateTime.now(ZoneOffset.UTC).getLong(ChronoField.INSTANT_SECONDS);
   }
 
-  public static void onFMLpreInitialization(final String stringConfigDirectory) {
+  public static void onFMLpreInitialization(final File fileConfigDirectory) {
 
     File fileConfigDirectory = new File(stringConfigDirectory, ChestedGravestones.MODID);
     //noinspection ResultOfMethodCallIgnored
@@ -45,13 +40,13 @@ public class ChestedGravestonesConfig {
     loadConfig(new File(fileConfigDirectory, "config.yml"));
 
     if (Loader.isModLoaded("baubles")) {
-      compatBaubles = CompatBaubles.getInstance();
+      InventoryHandler.compatBaubles = CompatBaubles.getInstance();
     }
     if (Loader.isModLoaded("galacticraftcore")) {
-      compatGalacticCraft = CompatGalacticCraftCore.getInstance();
+      InventoryHandler.compatGalacticCraft = CompatGalacticCraftCore.getInstance();
     }
     if (Loader.isModLoaded("techguns")) {
-      compatTechGuns = CompatTechguns.getInstance();
+      InventoryHandler.compatTechGuns = CompatTechGuns.getInstance();
     }
   }
 
@@ -64,15 +59,16 @@ public class ChestedGravestonesConfig {
             "Whether the chests should still spawn on keepInventory")
         .getBoolean(false);
 
-    EXPIRE_TIME = config
-        .get("chest_collection", "expire_time", EXPIRE_TIME, String.join("\n", new String[]{
+    EXPIRE_TIME_HOURS = config
+        .get("chest_collection", "expire_time", EXPIRE_TIME_HOURS, String.join("\n", new String[]{
             "Time in seconds after which other players will be able to collect ones chest",
             "If 0 is passed EXPIRE_TIME will be disabled any anyone will be able to pick up the chest instantly",
             "If -1 is passed EXPIRE_TIME will be irrelevant as only the owner will be able to pick up the chest"
         }))
         .getInt(7200);
-    INSTANT_FOREIGN_COLLECTION = EXPIRE_TIME == 0;
-    OWNER_ONLY_COLLECTION = EXPIRE_TIME == -1;
+    EXPIRE_TIME_HOURS = Math.max(-1, EXPIRE_TIME_HOURS);
+    INSTANT_FOREIGN_COLLECTION = EXPIRE_TIME_HOURS == 0;
+    OWNER_ONLY_COLLECTION = EXPIRE_TIME_HOURS == -1;
 
     KEEP_SOULBOUND = config
         .get("soulbound", "keep", KEEP_SOULBOUND,
