@@ -28,7 +28,7 @@ public class BlockDeathChest extends Block {
 
     setBlockUnbreakable();
     setResistance(6000000.0F);
-    setRegistryName("DeathChest");
+    setRegistryName(ChestedGravestones.MODID + ":death_chest");
     setTranslationKey(ChestedGravestones.MODID + ".death_chest");
   }
 
@@ -89,5 +89,31 @@ public class BlockDeathChest extends Block {
   @Override
   public EnumPushReaction getPushReaction(@Nonnull final IBlockState blockState) {
     return EnumPushReaction.BLOCK;
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public boolean isOpaqueCube(@Nonnull final IBlockState blockState) {
+    return false;
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public boolean isFullCube(@Nonnull final IBlockState blockState) {
+    return false;
+  }
+
+  @SuppressWarnings("deprecation")
+  @Nonnull
+  @Override
+  public BlockFaceShape getBlockFaceShape(@Nonnull final IBlockAccess blockAccess, @Nonnull final IBlockState blockState, @Nonnull final BlockPos blockPos, @Nonnull final EnumFacing enumFacing) {
+    return enumFacing == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
+  }
+
+  @Nonnull
+  @SideOnly(Side.CLIENT)
+  @Override
+  public BlockRenderLayer getRenderLayer() {
+    return BlockRenderLayer.TRANSLUCENT;
   }
 }
