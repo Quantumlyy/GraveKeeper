@@ -57,7 +57,8 @@ public final class Registration {
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public void onPlayerDeath(@Nonnull final LivingDeathEvent event) {
     final EntityLivingBase entityLiving = event.getEntityLiving();
-    if (!(entity instanceof EntityPlayer && entity.isServerWorld())) {
+    if ( !(entityLiving instanceof EntityPlayer)
+      || !entityLiving.isServerWorld() ) {
       return;
     }
     final EntityPlayerMP player = (EntityPlayerMP) entityLiving;
