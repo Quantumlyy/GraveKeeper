@@ -31,13 +31,15 @@ public class CompatOffHand implements ICompatInventory {
 
   @Override
   public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
-    if ( slot >= 0
-      && slot < player.inventory.offHandInventory.size()
-      && player.inventory.offHandInventory.get(slot).isEmpty()
-      /* items are always valid */ ) {
+    if (player.inventory.offHandInventory.get(slot).isEmpty()) {
       player.inventory.offHandInventory.set(slot, itemStack);
       return ItemStack.EMPTY;
     }
     return itemStack;
+  }
+
+  @Override
+  public boolean isSlotEmpty(@Nonnull final EntityPlayerMP player, final int slot) {
+    return player.inventory.offHandInventory.get(slot).isEmpty();
   }
 }

@@ -41,13 +41,16 @@ public class CompatBaubles implements ICompatInventory {
   @Override
   public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
     final IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
-    if ( slot >= 0
-      && slot < handler.getSlots()
-      && handler.getStackInSlot(slot).isEmpty()
-      && handler.isItemValidForSlot(slot, itemStack, player) ) {
+    if (handler.getStackInSlot(slot).isEmpty()) {
       handler.setStackInSlot(slot, itemStack);
       return ItemStack.EMPTY;
     }
     return itemStack;
+  }
+
+  @Override
+  public boolean isSlotEmpty(@Nonnull final EntityPlayerMP player, final int slot) {
+    final IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
+    return handler.getStackInSlot(slot).isEmpty();
   }
 }
