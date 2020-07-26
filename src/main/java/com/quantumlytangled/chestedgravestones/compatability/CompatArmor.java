@@ -37,9 +37,4 @@ public class CompatArmor implements ICompatInventory {
     }
     return itemStack;
   }
-
-  @Override
-  public boolean isSlotEmpty(@Nonnull final EntityPlayerMP player, final int slot) {
-    return player.inventory.armorInventory.get(slot).isEmpty();
-  }
 }

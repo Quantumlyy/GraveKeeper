@@ -48,10 +48,4 @@ public class CompatGalacticCraftCore implements ICompatInventory {
     }
     return itemStack;
   }
-  
-  @Override
-  public boolean isSlotEmpty(@Nonnull final EntityPlayerMP player, final int slot) {
-    final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
-    return inventory.getStackInSlot(slot).isEmpty();
-  }
 }

@@ -37,9 +37,4 @@ public class CompatMain implements ICompatInventory {
     }
     return itemStack;
   }
-
-  @Override
-  public boolean isSlotEmpty(@Nonnull final EntityPlayerMP player, final int slot) {
-    return player.inventory.mainInventory.get(slot).isEmpty();
-  }
 }

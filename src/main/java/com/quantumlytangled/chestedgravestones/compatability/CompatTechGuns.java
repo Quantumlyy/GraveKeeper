@@ -48,10 +48,4 @@ public class CompatTechGuns implements ICompatInventory {
     }
     return itemStack;
   }
-
-  @Override
-  public boolean isSlotEmpty(@Nonnull final EntityPlayerMP player, final int slot) {
-    final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
-    return inventory.getStackInSlot(slot).isEmpty();
-  }
 }
