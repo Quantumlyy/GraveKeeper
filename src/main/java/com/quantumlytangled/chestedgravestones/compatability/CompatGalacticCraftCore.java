@@ -42,16 +42,13 @@ public class CompatGalacticCraftCore implements ICompatInventory {
   @Override
   public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
     final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
-    if (inventory.getStackInSlot(slot).isEmpty()) {
+    if ( slot >= 0
+      && slot < inventory.getSizeInventory()
+      && inventory.getStackInSlot(slot).isEmpty()
+      && inventory.isItemValidForSlot(slot, itemStack) ) {
       inventory.setInventorySlotContents(slot, itemStack);
       return ItemStack.EMPTY;
     }
     return itemStack;
-  }
-  
-  @Override
-  public boolean isSlotEmpty(@Nonnull final EntityPlayerMP player, final int slot) {
-    final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
-    return inventory.getStackInSlot(slot).isEmpty();
   }
 }

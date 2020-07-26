@@ -15,9 +15,9 @@ import net.minecraft.util.NonNullList;
 public class InventoryHandler {
 
   // Vanilla wrappers
-  public static ICompatInventory compatArmor = new CompatArmor();
-  public static ICompatInventory compatMain = new CompatMain();
-  public static ICompatInventory compatOffHand = new CompatOffHand();
+  public static ICompatInventory compatArmor = CompatArmor.getInstance();
+  public static ICompatInventory compatMain = CompatMain.getInstance();
+  public static ICompatInventory compatOffHand = CompatOffHand.getInstance();
   
   // Modded wrappers
   public static ICompatInventory compatBaubles = null;
