@@ -15,6 +15,7 @@ public class ChestedGravestones {
   public static final String NAME = "ChestedGravestones";
   public static final String VERSION = "@VERSION@";
 
+  @Nonnull
   private static final ChestedGravestones INSTANCE = new ChestedGravestones();
 
   private final Registration registration;

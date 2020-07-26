@@ -15,4 +15,6 @@ public interface ICompatInventory {
   void removeItem(@Nonnull final EntityPlayerMP player, final int slot);
 
   ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack item);
+
+  boolean isSlotEmpty(@Nonnull final EntityPlayerMP player, final int slot);
 }
