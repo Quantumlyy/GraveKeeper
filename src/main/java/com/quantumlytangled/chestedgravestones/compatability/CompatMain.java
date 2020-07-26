@@ -31,7 +31,10 @@ public class CompatMain implements ICompatInventory {
 
   @Override
   public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
-    if (player.inventory.mainInventory.get(slot).isEmpty()) {
+    if ( slot >= 0
+      && slot < player.inventory.mainInventory.size()
+      && player.inventory.mainInventory.get(slot).isEmpty()
+      /* items are always valid */ ) {
       player.inventory.mainInventory.set(slot, itemStack);
       return ItemStack.EMPTY;
     }

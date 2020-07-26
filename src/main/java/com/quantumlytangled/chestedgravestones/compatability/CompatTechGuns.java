@@ -42,7 +42,10 @@ public class CompatTechGuns implements ICompatInventory {
   @Override
   public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
     final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
-    if (inventory.getStackInSlot(slot).isEmpty()) {
+    if ( slot >= 0
+      && slot < inventory.getSizeInventory()
+      && inventory.getStackInSlot(slot).isEmpty()
+      && inventory.isItemValidForSlot(slot, itemStack) ) {
       inventory.setInventorySlotContents(slot, itemStack);
       return ItemStack.EMPTY;
     }
