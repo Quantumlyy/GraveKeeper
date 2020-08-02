@@ -53,6 +53,12 @@ public final class Registration {
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public void onPlayerDeath(@Nonnull final LivingDeathEvent event) {
+    if (event.isCanceled()) {
+      logger.debug(String.format("Event is cancelled, ignoring death event of %s",
+          event.getEntity() ));
+      return;
+    }
+    
     final EntityLivingBase entityLiving = event.getEntityLiving();
     if ( !(entityLiving instanceof EntityPlayer)
       || !entityLiving.isServerWorld() ) {
