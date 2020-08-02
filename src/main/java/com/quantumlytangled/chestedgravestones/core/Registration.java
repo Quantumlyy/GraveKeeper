@@ -3,9 +3,6 @@ package com.quantumlytangled.chestedgravestones.core;
 import com.quantumlytangled.chestedgravestones.ChestedGravestones;
 import com.quantumlytangled.chestedgravestones.block.BlockDeathChest;
 import com.quantumlytangled.chestedgravestones.block.TileDeathChest;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -69,9 +66,9 @@ public final class Registration {
           player ));
       return;
     }
-    
-    final ZonedDateTime utcTimeStamp = ZonedDateTime.now(ZoneOffset.UTC);
-    final String stringTimestamp = utcTimeStamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss.n"));
+
+    final CreationDate creationDate = new CreationDate();
+    final String stringTimestamp = creationDate.string;
     final String playerName = player.getDisplayNameString();
     final UUID playerUUID = player.getUniqueID();
     final String identifier = playerUUID + "." + playerName + "." + stringTimestamp;
@@ -97,9 +94,9 @@ public final class Registration {
       return;
     }
     final TileDeathChest tileDeathChest = (TileDeathChest) tileEntity;
-
-    tileDeathChest.setData(player, identifier, utcTimeStamp, inventorySlots);
-
+    
+    tileDeathChest.setData(player, identifier, creationDate.seconds, inventorySlots);
+    
     player.sendMessage(new TextComponentString(String.format("Chest placed at (%d %d %d)",
         blockPosDeath.getX(), blockPosDeath.getY(), blockPosDeath.getZ() )));
     logger.info(String.format("Generated DeathChest for %s(%s) at (%d %d %d)",

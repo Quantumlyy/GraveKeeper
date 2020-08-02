@@ -1,11 +1,10 @@
 package com.quantumlytangled.chestedgravestones.block;
 
 import com.quantumlytangled.chestedgravestones.core.ChestedGravestonesConfig;
+import com.quantumlytangled.chestedgravestones.core.CreationDate;
 import com.quantumlytangled.chestedgravestones.core.InventorySlot;
 import com.quantumlytangled.chestedgravestones.core.InventoryType;
 import com.quantumlytangled.chestedgravestones.util.InventoryHandler;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -44,18 +43,18 @@ public class TileDeathChest extends TileEntity {
       doReturnToOwner(player);
       
     } else if ( ( ChestedGravestonesConfig.INSTANT_FOREIGN_COLLECTION
-               || ChestedGravestonesConfig.getExpiredStatus(creationDate) )
-            && !ChestedGravestonesConfig.OWNER_ONLY_COLLECTION ) {
+               || CreationDate.isExpired(creationDate) )
+             && !ChestedGravestonesConfig.OWNER_ONLY_COLLECTION ) {
       doDropContent();
     }
   }
 
   public void setData(@Nonnull final EntityPlayer player, @Nonnull final String identifier,
-      @Nonnull final ZonedDateTime creation, @Nonnull final List<InventorySlot> inventorySlots) {
+      final long creationDate, @Nonnull final List<InventorySlot> inventorySlots) {
     dataIdentifier = identifier;
     ownerName = player.getDisplayNameString();
     ownerUUID = player.getUniqueID();
-    creationDate = creation.getLong(ChronoField.INSTANT_SECONDS);
+    this.creationDate = creationDate;
     this.inventorySlots = inventorySlots;
     markDirty();
   }
