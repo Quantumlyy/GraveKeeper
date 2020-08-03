@@ -1,1 +1,17 @@
-block.chestedgraves.death_chest=Death Chest
+
+tile.chestedgravestones.death_chest.name=Death Chest
+
+item.chestedgravestones.death_certificate.name=Death Certificate
+
+chestedgravestones.chat.grave_placed=Your grave was safely placed in %1$s.
+chestedgravestones.chat.world_xyz=%1$s at x %2$d, y %3$d, z %4$d
+
+# 1 is owner's name, 2 is cooldown, 4 is inventory size
+chestedgravestones.chat.inspect.elapsed_yours=I was waiting for you, %1$s, right click to get your %3$d items back!
+chestedgravestones.chat.inspect.delayed_yours=I'm guarding your %3$d items for another %2$s, right click before it's too late!
+chestedgravestones.chat.inspect.guarded_yours=I'm guarding your %3$d items until the end of time, right click to get your items back!
+chestedgravestones.chat.inspect.elapsed_other=Here lies %1$s, right click to loot their %3$d items!
+chestedgravestones.chat.inspect.delayed_other=Here lies %1$s, I'm guarding their %3$d items for %2$s!
+chestedgravestones.chat.inspect.guarded_other=Here lies %1$s, I'm guarding their %3$d items until the end of time...
+
+chestedgravestones.chat.inspect.survival_required=Only a survival player can recover those items.

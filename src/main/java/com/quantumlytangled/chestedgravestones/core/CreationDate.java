@@ -16,7 +16,13 @@ public class CreationDate {
     string = utcTimeStamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss.n"));
   }
 
-  public static boolean isExpired(long creationDate) {
-    return (creationDate + ChestedGravestonesConfig.EXPIRE_TIME_SECONDS) < new CreationDate().seconds;
+  public static long getRemainingSeconds(long creationDate) {
+    if (ChestedGravestonesConfig.INSTANT_FOREIGN_COLLECTION) {
+      return 0L;
+    }
+    if (ChestedGravestonesConfig.OWNER_ONLY_COLLECTION) {
+      return Long.MAX_VALUE;
+    }
+    return (creationDate + ChestedGravestonesConfig.EXPIRE_TIME_SECONDS) - new CreationDate().seconds;
   }
 }

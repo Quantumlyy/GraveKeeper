@@ -14,7 +14,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -101,10 +104,17 @@ public final class Registration {
     
     tileDeathChest.setData(player, identifier, creationDate.seconds, inventorySlots);
     
-    player.sendMessage(new TextComponentString(String.format("Chest placed at (%d %d %d)",
-        worldPositionChest.blockPos.getX(), worldPositionChest.blockPos.getY(), worldPositionChest.blockPos.getZ() )));
-    logger.info(String.format("Generated DeathChest for %s(%s) at (%d %d %d)",
-        playerName, playerUUID, worldPositionChest.blockPos.getX(), worldPositionChest.blockPos.getY(), worldPositionChest.blockPos.getZ() ));
+    final ITextComponent textLocation = new TextComponentString(worldPositionChest.format());
+    textLocation.getStyle().setColor(TextFormatting.AQUA).setBold(true);
+    final ITextComponent textMessage = new TextComponentTranslation("chestedgravestones.chat.grave_placed",
+        textLocation );
+    textMessage.getStyle().setColor(TextFormatting.GOLD);
+    player.sendMessage(textMessage);
+    
+    logger.info(String.format("Generated DeathChest for %s (%s) in DIM%d at (%d %d %d)",
+        playerName, playerUUID,
+        worldPositionChest.world.provider.getDimension(),
+        worldPositionChest.blockPos.getX(), worldPositionChest.blockPos.getY(), worldPositionChest.blockPos.getZ() ));
   }
   
 }

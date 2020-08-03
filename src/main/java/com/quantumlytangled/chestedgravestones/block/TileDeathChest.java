@@ -5,6 +5,7 @@ import com.quantumlytangled.chestedgravestones.core.CreationDate;
 import com.quantumlytangled.chestedgravestones.core.InventorySlot;
 import com.quantumlytangled.chestedgravestones.core.InventoryType;
 import com.quantumlytangled.chestedgravestones.util.InventoryHandler;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +17,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.util.text.event.HoverEvent.Action;
 import net.minecraftforge.common.util.Constants;
 
 public class TileDeathChest extends TileEntity {
@@ -35,17 +41,23 @@ public class TileDeathChest extends TileEntity {
   }
 
   public void processInteraction(@Nonnull final EntityPlayerMP player) {
-    if ( player.isCreative()
+    final boolean isCreative = player.isCreative();
+    final boolean isOwner = player.getUniqueID().equals(ownerUUID);
+    final long timeRemaining = CreationDate.getRemainingSeconds(creationDate);
+    if ( isCreative
       || player.isSneaking() ) {
-      doInspection(player);
+      doInspection(player, isCreative, isOwner, timeRemaining);
       
-    } else if (player.getUniqueID().equals(ownerUUID)) {
+    } else if (isOwner) {
       doReturnToOwner(player);
       
     } else if ( ( ChestedGravestonesConfig.INSTANT_FOREIGN_COLLECTION
-               || CreationDate.isExpired(creationDate) )
+               || timeRemaining <= 0L )
              && !ChestedGravestonesConfig.OWNER_ONLY_COLLECTION ) {
       doDropContent();
+      
+    } else {
+      doInspection(player, false, false, timeRemaining);
     }
   }
 
@@ -100,9 +112,60 @@ public class TileDeathChest extends TileEntity {
     return tagCompound;
   }
 
-  private void doInspection(@Nonnull final EntityPlayer player) {
-    player.sendMessage(new TextComponentString(String.format("Here lies %s (%s)\nDeathData file name - %s",
-        ownerName, ownerUUID, dataIdentifier )));
+  private void doInspection(@Nonnull final EntityPlayer player, final boolean isCreative, final boolean isOwner, final long timeRemaining) {
+    final ITextComponent textOwner = new TextComponentString(ownerName == null ? "-null-" : ownerName);
+    textOwner.getStyle()
+        .setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new TextComponentString(ownerUUID == null ? "-null-" : ownerUUID.toString())))
+        .setColor(TextFormatting.AQUA);
+    
+    final ITextComponent textDuration = new TextComponentString(DurationFormatUtils.formatDurationWords(Math.abs(timeRemaining * 1000L), true, true));
+    textDuration.getStyle()
+        .setColor(TextFormatting.RED);
+    
+    final ITextComponent textSize = new TextComponentString(String.format("%d", inventorySlots.size()));
+    textSize.getStyle()
+        .setColor(TextFormatting.AQUA);
+    
+    ITextComponent textMessageToSend;
+    if (isOwner) {
+      if (timeRemaining <= 0L) {
+        textMessageToSend = new TextComponentTranslation("chestedgravestones.chat.inspect.elapsed_yours",
+            textOwner, textDuration, textSize );
+        textMessageToSend.getStyle().setColor(TextFormatting.GREEN);
+      } else if (!ChestedGravestonesConfig.OWNER_ONLY_COLLECTION) {
+        textMessageToSend = new TextComponentTranslation("chestedgravestones.chat.inspect.delayed_yours",
+            textOwner, textDuration, textSize );
+        textMessageToSend.getStyle().setColor(TextFormatting.GREEN);
+      } else {
+        textMessageToSend = new TextComponentTranslation("chestedgravestones.chat.inspect.guarded_yours",
+            textOwner, textDuration, textSize );
+        textMessageToSend.getStyle().setColor(TextFormatting.GREEN);
+      }
+    } else {
+      if (timeRemaining <= 0L) {
+        textMessageToSend = new TextComponentTranslation("chestedgravestones.chat.inspect.elapsed_other",
+            textOwner, textDuration, textSize );
+        textMessageToSend.getStyle().setColor(TextFormatting.GREEN);
+      } else if (!ChestedGravestonesConfig.OWNER_ONLY_COLLECTION) {
+        textMessageToSend = new TextComponentTranslation("chestedgravestones.chat.inspect.delayed_other",
+            textOwner, textDuration, textSize );
+        textMessageToSend.getStyle().setColor(TextFormatting.GOLD);
+      } else {
+        textMessageToSend = new TextComponentTranslation("chestedgravestones.chat.inspect.guarded_other",
+            textOwner, textDuration, textSize );
+        textMessageToSend.getStyle().setColor(TextFormatting.GOLD);
+      }
+    }
+    player.sendMessage(textMessageToSend);
+    
+    if ( isCreative
+      && ( isOwner
+        || timeRemaining <= 0L )) {
+      textMessageToSend = new TextComponentTranslation("chestedgravestones.chat.inspect.survival_required",
+          textOwner, textDuration, textSize );
+      textMessageToSend.getStyle().setColor(TextFormatting.RED);
+      player.sendMessage(textMessageToSend);
+    }
   }
 
   protected void doDropContent() {
