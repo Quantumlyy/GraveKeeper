@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -18,6 +22,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -33,6 +38,7 @@ public final class Registration {
   public static Logger logger;
 
   public static Block blockDeathChest;
+  public static Item itemDeathCertificate;
 
   public void preInitialize(@Nonnull final FMLPreInitializationEvent event) {
     logger = event.getModLog();
@@ -40,17 +46,37 @@ public final class Registration {
     ChestedGravestonesConfig.onFMLpreInitialization(event.getModConfigurationDirectory());
 
     blockDeathChest = new BlockDeathChest();
+    
+    itemDeathCertificate = new Item()
+        .setRegistryName(ChestedGravestones.MODID + ":death_certificate")
+        .setTranslationKey("chestedgravestones.death_certificate")
+        .setCreativeTab(CreativeTabs.TOOLS);
   }
-
+  
   public void initialize(@Nonnull final FMLInitializationEvent event) {
     // no operation
   }
-
+  
   @SubscribeEvent
   public void registerBlocks(@Nonnull final RegistryEvent.Register<Block> event) {
     event.getRegistry().register(blockDeathChest);
     GameRegistry.registerTileEntity(TileDeathChest.class,
         new ResourceLocation(ChestedGravestones.MODID, "death_chest"));
+  }
+  
+  @SubscribeEvent
+  public void onRegisterItems(@Nonnull final RegistryEvent.Register<Item> event) {
+    final ItemBlock itemBlock = new ItemBlock(blockDeathChest);
+    ResourceLocation resourceLocation = blockDeathChest.getRegistryName();
+    assert resourceLocation != null;
+    itemBlock.setRegistryName(blockDeathChest.getRegistryName()).setCreativeTab(CreativeTabs.TOOLS);
+    event.getRegistry().register(itemBlock);
+    ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(resourceLocation, "inventory"));
+    
+    resourceLocation = itemDeathCertificate.getRegistryName();
+    assert resourceLocation != null;
+    event.getRegistry().register(itemDeathCertificate);
+    ModelLoader.setCustomModelResourceLocation(itemDeathCertificate, 0, new ModelResourceLocation(resourceLocation, "inventory"));
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)

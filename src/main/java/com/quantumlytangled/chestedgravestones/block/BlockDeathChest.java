@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
@@ -22,6 +23,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockDeathChest extends Block {
+  
+  private final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(
+      0.00D, 0.00D, 0.00D,
+      1.00D, 0.25D, 1.00D );
 
   public BlockDeathChest() {
     super(Material.ANVIL);
@@ -106,6 +111,13 @@ public class BlockDeathChest extends Block {
   @SuppressWarnings("deprecation")
   @Nonnull
   @Override
+  public AxisAlignedBB getBoundingBox(@Nonnull final IBlockState blockState, @Nonnull final IBlockAccess blockAccess, @Nonnull final BlockPos blockPos) {
+    return BOUNDING_BOX;
+  }
+
+  @SuppressWarnings("deprecation")
+  @Nonnull
+  @Override
   public BlockFaceShape getBlockFaceShape(@Nonnull final IBlockAccess blockAccess, @Nonnull final IBlockState blockState, @Nonnull final BlockPos blockPos, @Nonnull final EnumFacing enumFacing) {
     return enumFacing == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
   }
@@ -114,6 +126,6 @@ public class BlockDeathChest extends Block {
   @SideOnly(Side.CLIENT)
   @Override
   public BlockRenderLayer getRenderLayer() {
-    return BlockRenderLayer.TRANSLUCENT;
+    return BlockRenderLayer.CUTOUT;
   }
 }
