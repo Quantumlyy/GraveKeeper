@@ -31,17 +31,24 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.quantumlytangled.chestedgravestones.util.InventoryHandler;
+import com.quantumlytangled.chestedgravestones.util.LoggerPrintStream;
 import org.apache.logging.log4j.Logger;
 
 public final class Registration {
 
   public static Logger logger;
+  public static LoggerPrintStream printStreamError;
+  public static LoggerPrintStream printStreamWarn;
+  public static LoggerPrintStream printStreamInfo;
 
   public static Block blockDeathChest;
   public static Item itemDeathCertificate;
 
   public void preInitialize(@Nonnull final FMLPreInitializationEvent event) {
     logger = event.getModLog();
+    printStreamError = new LoggerPrintStream(Level.ERROR);
+    printStreamWarn = new LoggerPrintStream(Level.WARN);
+    printStreamInfo = new LoggerPrintStream(Level.INFO);
 
     ChestedGravestonesConfig.onFMLpreInitialization(event.getModConfigurationDirectory());
 

@@ -82,7 +82,7 @@ public class GravePosition {
         Registration.logger.info(String.format("NBT is %s",
             nbtTagCompound));
       } catch(final Exception exception) {
-        exception.printStackTrace();
+        exception.printStackTrace(Registration.printStreamError);
       }
     }
     return worldPositionResult;

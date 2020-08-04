@@ -35,7 +35,7 @@ public class WorldPosition {
     try {
       saveFolder = world.provider.getSaveFolder();
     } catch (final Exception exception) {
-      exception.printStackTrace();
+      exception.printStackTrace(Registration.printStreamError);
       saveFolder = "<Exception DIM" + world.provider.getDimension() + ">";
     }
     if (saveFolder == null || saveFolder.isEmpty()) {
