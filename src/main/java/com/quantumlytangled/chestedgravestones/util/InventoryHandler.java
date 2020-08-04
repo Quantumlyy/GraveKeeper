@@ -1,6 +1,7 @@
 package com.quantumlytangled.chestedgravestones.util;
 
 import javax.annotation.Nonnull;
+import com.quantumlytangled.chestedgravestones.ChestedGravestones;
 import com.quantumlytangled.chestedgravestones.compatability.CompatArmor;
 import com.quantumlytangled.chestedgravestones.compatability.CompatMain;
 import com.quantumlytangled.chestedgravestones.compatability.CompatOffHand;
@@ -10,10 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.util.Constants.NBT;
 
 public class InventoryHandler {
-
+  
+  // Version id
+  private static final int VERSION = 1;
+  
   // Vanilla wrappers
   public static ICompatInventory compatArmor = CompatArmor.getInstance();
   public static ICompatInventory compatMain = CompatMain.getInstance();
@@ -100,5 +108,43 @@ public class InventoryHandler {
     if (!itemStackLeft.isEmpty()) {
       overflow.add(itemStackLeft);
     }
+  }
+  
+  @Nonnull
+  public static NBTTagCompound writeToNBT(@Nonnull final List<InventorySlot> inventorySlots) {
+    final NBTTagCompound tagContainer = new NBTTagCompound();
+    
+    tagContainer.setString("modid", ChestedGravestones.MODID);
+    tagContainer.setString("mod_version", ChestedGravestones.VERSION);
+    tagContainer.setInteger("format_version", VERSION);
+
+    final NBTTagList tagSlots = new NBTTagList();
+    for (final InventorySlot inventorySlot : inventorySlots) {
+      tagSlots.appendTag(inventorySlot.writeToNBT());
+    }
+    tagContainer.setTag("inventory_slots", tagSlots);
+    
+    return tagContainer;
+  }
+  
+  @Nonnull
+  public static List<InventorySlot> readFromNBT(@Nonnull final NBTTagCompound tagContainer) {
+    final String modid = tagContainer.getString("modid");
+    if (!modid.equals(ChestedGravestones.MODID)) {
+      throw new RuntimeException(String.format("Invalid InventorySlots format: unknown modid %s", modid));
+    }
+    final int version = tagContainer.getInteger("format_version");
+    if (version != VERSION) {
+      throw new RuntimeException(String.format("Invalid InventorySlots format: unknown version %d", version));
+    }
+    
+    final NBTTagList tagSlots = tagContainer.getTagList("inventory_slots", NBT.TAG_COMPOUND);
+    final List<InventorySlot> inventorySlots = new ArrayList<>(tagSlots.tagCount());
+    for (final NBTBase tagSlot : tagSlots) {
+      assert tagSlot instanceof NBTTagCompound;
+      inventorySlots.add(new InventorySlot((NBTTagCompound) tagSlot));
+    }
+
+    return inventorySlots;
   }
 }

@@ -3,6 +3,7 @@ package com.quantumlytangled.chestedgravestones.core;
 import com.quantumlytangled.chestedgravestones.ChestedGravestones;
 import com.quantumlytangled.chestedgravestones.block.BlockDeathChest;
 import com.quantumlytangled.chestedgravestones.block.TileDeathChest;
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
@@ -14,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -25,13 +27,15 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import com.quantumlytangled.chestedgravestones.util.InventoryHandler;
 import com.quantumlytangled.chestedgravestones.util.LoggerPrintStream;
+import com.quantumlytangled.chestedgravestones.util.NBTFile;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 public final class Registration {
@@ -103,12 +107,13 @@ public final class Registration {
           player ));
       return;
     }
-
+    
+    // compute grave content
     final CreationDate creationDate = new CreationDate();
     final String stringTimestamp = creationDate.string;
     final String playerName = player.getDisplayNameString();
     final UUID playerUUID = player.getUniqueID();
-    final String identifier = playerUUID + "." + playerName + "." + stringTimestamp;
+    final String identifier = playerUUID + "_" + playerName + "_" + stringTimestamp;
     final List<InventorySlot> inventorySlots = InventoryHandler.collectOnDeath(player);
     if (inventorySlots.isEmpty()) {
       logger.warn(String.format("No item to save, ignoring death of player %s",
@@ -116,6 +121,27 @@ public final class Registration {
       return;
     }
     
+    // archive grave content
+    final String stringDirectory = String.format("%s/data/%s/%s",
+        player.world.getSaveHandler().getWorldDirectory().getPath(),
+        ChestedGravestones.MODID,
+        identifier.substring(0, 2) );
+    final File fileDirectory = new File(stringDirectory);
+    try {
+      FileUtils.forceMkdir(fileDirectory);
+      final NBTTagCompound nbtInventorySlots = InventoryHandler.writeToNBT(inventorySlots);
+      final String stringFilePath = String.format("%s/%s.dat", stringDirectory, identifier);
+      NBTFile.write(stringFilePath, nbtInventorySlots);
+      logger.info(String.format("Archived DeathChest content for %s, restore it with /cgrestore %s",
+          playerName,
+          identifier ));
+    } catch (final Exception exception) {
+      exception.printStackTrace(printStreamWarn);
+      logger.warn(String.format("Failed to create inventory backup for player %s",
+          player ));
+    }
+
+    // find a position and place the grave
     double pX = player.posX;
     double pY = player.posY;
     double pZ = player.posZ;
@@ -132,18 +158,20 @@ public final class Registration {
     final TileDeathChest tileDeathChest = (TileDeathChest) tileEntity;
     
     tileDeathChest.setData(player, identifier, creationDate.seconds, inventorySlots);
-    
+
+    // log to console
+    logger.info(String.format("Generated DeathChest for %s (%s) in DIM%d at (%d %d %d).",
+        playerName, playerUUID,
+        worldPositionChest.world.provider.getDimension(),
+        worldPositionChest.blockPos.getX(), worldPositionChest.blockPos.getY(), worldPositionChest.blockPos.getZ() ));
+
+    // inform player
     final ITextComponent textLocation = new TextComponentString(worldPositionChest.format());
     textLocation.getStyle().setColor(TextFormatting.AQUA).setBold(true);
     final ITextComponent textMessage = new TextComponentTranslation("chestedgravestones.chat.grave_placed",
         textLocation );
     textMessage.getStyle().setColor(TextFormatting.GOLD);
     player.sendMessage(textMessage);
-    
-    logger.info(String.format("Generated DeathChest for %s (%s) in DIM%d at (%d %d %d)",
-        playerName, playerUUID,
-        worldPositionChest.world.provider.getDimension(),
-        worldPositionChest.blockPos.getX(), worldPositionChest.blockPos.getY(), worldPositionChest.blockPos.getZ() ));
   }
   
 }
