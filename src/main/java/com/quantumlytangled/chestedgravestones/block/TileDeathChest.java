@@ -27,9 +27,9 @@ import net.minecraftforge.common.util.Constants;
 
 public class TileDeathChest extends TileEntity {
 
-  private String dataIdentifier = null;
+  private String dataIdentifier = "";
 
-  private String ownerName = null;
+  private String ownerName = "";
   private UUID ownerUUID = null;
 
   private long creationDate = 0;
@@ -105,7 +105,9 @@ public class TileDeathChest extends TileEntity {
 
     tagCompound.setString("DataIdentifier", dataIdentifier);
     tagCompound.setString("OwnerName", ownerName);
-    tagCompound.setUniqueId("OwnerUUID", ownerUUID);
+    if (ownerUUID != null) {
+      tagCompound.setUniqueId("OwnerUUID", ownerUUID);
+    }
     tagCompound.setLong("CreationDate", creationDate);
     tagCompound.setTag("InventorySlots", nbtInventorySlots);
 
