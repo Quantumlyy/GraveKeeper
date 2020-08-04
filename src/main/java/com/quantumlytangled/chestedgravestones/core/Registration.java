@@ -53,10 +53,6 @@ public final class Registration {
         .setCreativeTab(CreativeTabs.TOOLS);
   }
   
-  public void initialize(@Nonnull final FMLInitializationEvent event) {
-    // no operation
-  }
-  
   @SubscribeEvent
   public void registerBlocks(@Nonnull final RegistryEvent.Register<Block> event) {
     event.getRegistry().register(blockDeathChest);
