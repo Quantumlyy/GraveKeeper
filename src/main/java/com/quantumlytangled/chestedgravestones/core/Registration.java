@@ -15,7 +15,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -84,19 +83,18 @@ public final class Registration {
           player ));
       return;
     }
-
-    final World world = player.world;
+    
     double pX = player.posX;
     double pY = player.posY;
     double pZ = player.posZ;
-    final BlockPos blockPosDeath = new BlockPos(MathHelper.floor(pX), MathHelper.floor(pY), MathHelper.floor(pZ));
-
-    world.setBlockState(blockPosDeath, blockDeathChest.getDefaultState());
-
-    final TileEntity tileEntity = world.getTileEntity(blockPosDeath);
+    final WorldPosition worldPositionChest = GravePosition.get(player, new BlockPos(MathHelper.floor(pX), MathHelper.floor(pY), MathHelper.floor(pZ)));
+    
+    worldPositionChest.world.setBlockState(worldPositionChest.blockPos, blockDeathChest.getDefaultState());
+    
+    final TileEntity tileEntity = worldPositionChest.world.getTileEntity(worldPositionChest.blockPos);
     if (!(tileEntity instanceof TileDeathChest)) {
       logger.error(String.format("Missing tile entity %s, unable to save player %s inventory in world %s at %s",
-          tileEntity, playerName, world, blockPosDeath ));
+          tileEntity, playerName, worldPositionChest.world, worldPositionChest.blockPos ));
       return;
     }
     final TileDeathChest tileDeathChest = (TileDeathChest) tileEntity;
@@ -104,8 +102,9 @@ public final class Registration {
     tileDeathChest.setData(player, identifier, creationDate.seconds, inventorySlots);
     
     player.sendMessage(new TextComponentString(String.format("Chest placed at (%d %d %d)",
-        blockPosDeath.getX(), blockPosDeath.getY(), blockPosDeath.getZ() )));
+        worldPositionChest.blockPos.getX(), worldPositionChest.blockPos.getY(), worldPositionChest.blockPos.getZ() )));
     logger.info(String.format("Generated DeathChest for %s(%s) at (%d %d %d)",
-        playerName, playerUUID, blockPosDeath.getX(), blockPosDeath.getY(), blockPosDeath.getZ() ));
+        playerName, playerUUID, worldPositionChest.blockPos.getX(), worldPositionChest.blockPos.getY(), worldPositionChest.blockPos.getZ() ));
   }
+  
 }
