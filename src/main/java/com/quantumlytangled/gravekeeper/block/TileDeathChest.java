@@ -78,10 +78,7 @@ public class TileDeathChest extends TileEntity {
     final NBTTagList nbtInventorySlots = tagCompound.getTagList("InventorySlots", Constants.NBT.TAG_COMPOUND);
     for (int index = 0; index < nbtInventorySlots.tagCount(); index++) {
       final NBTTagCompound nbtInventorySlot = nbtInventorySlots.getCompoundTagAt(index);
-      inventorySlots.add(new InventorySlot(
-          new ItemStack(nbtInventorySlot),
-          nbtInventorySlot.getInteger("Slot"),
-          InventoryType.valueOf(nbtInventorySlot.getString("Type")) ));
+      inventorySlots.add(new InventorySlot(nbtInventorySlot));
     }
 
     dataIdentifier = tagCompound.getString("DataIdentifier");
@@ -97,10 +94,7 @@ public class TileDeathChest extends TileEntity {
 
     final NBTTagList nbtInventorySlots = new NBTTagList();
     for (final InventorySlot inventorySlot : inventorySlots) {
-      NBTTagCompound nbtEntry = new NBTTagCompound();
-      nbtEntry.setInteger("Slot", (byte) inventorySlot.slot);
-      nbtEntry.setString("Type", inventorySlot.type.toString());
-      nbtInventorySlots.appendTag(inventorySlot.itemStack.writeToNBT(nbtEntry));
+      nbtInventorySlots.appendTag(inventorySlot.writeToNBT());
     }
 
     tagCompound.setString("DataIdentifier", dataIdentifier);
