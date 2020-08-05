@@ -27,10 +27,12 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import com.quantumlytangled.gravekeeper.util.InventoryHandler;
 import com.quantumlytangled.gravekeeper.util.LoggerPrintStream;
 import com.quantumlytangled.gravekeeper.util.NBTFile;
@@ -78,12 +80,16 @@ public final class Registration {
     assert resourceLocation != null;
     itemBlock.setRegistryName(blockDeathChest.getRegistryName()).setCreativeTab(CreativeTabs.TOOLS);
     event.getRegistry().register(itemBlock);
-    ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(resourceLocation, "inventory"));
+    if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+      ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(resourceLocation, "inventory"));
+    }
     
     resourceLocation = itemDeathCertificate.getRegistryName();
     assert resourceLocation != null;
     event.getRegistry().register(itemDeathCertificate);
-    ModelLoader.setCustomModelResourceLocation(itemDeathCertificate, 0, new ModelResourceLocation(resourceLocation, "inventory"));
+    if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+      ModelLoader.setCustomModelResourceLocation(itemDeathCertificate, 0, new ModelResourceLocation(resourceLocation, "inventory"));
+    }
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
