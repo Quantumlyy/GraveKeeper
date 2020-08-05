@@ -148,7 +148,7 @@ public class CommandRestore extends CommandBase {
     // assert inventorySlots != null;
     
     // restore
-    final List<ItemStack> overflow = InventoryHandler.restoreOrOverflow(entityPlayer, inventorySlots);
+    final List<ItemStack> overflow = InventoryHandler.restoreOrOverflow(entityPlayer, inventorySlots, entityPlayer.isCreative());
     for (final ItemStack itemStack : overflow) {
       if (entityPlayer.inventory.addItemStackToInventory(itemStack.copy())) {
         continue;

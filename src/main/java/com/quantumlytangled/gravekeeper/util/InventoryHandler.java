@@ -6,7 +6,10 @@ import com.quantumlytangled.gravekeeper.compatability.CompatArmor;
 import com.quantumlytangled.gravekeeper.compatability.CompatMain;
 import com.quantumlytangled.gravekeeper.compatability.CompatOffHand;
 import com.quantumlytangled.gravekeeper.compatability.ICompatInventory;
+import com.quantumlytangled.gravekeeper.core.GraveKeeperConfig;
 import com.quantumlytangled.gravekeeper.core.InventorySlot;
+import com.quantumlytangled.gravekeeper.core.InventoryType;
+import com.quantumlytangled.gravekeeper.core.Registration;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,44 +34,114 @@ public class InventoryHandler {
   public static ICompatInventory compatBaubles = null;
   public static ICompatInventory compatGalacticCraft = null;
   public static ICompatInventory compatTechGuns = null;
-
+  
   @Nonnull
   public static List<InventorySlot> collectOnDeath(@Nonnull final EntityPlayerMP player) {
     final List<InventorySlot> inventorySlots = new ArrayList<>();
-
-    collectOnDeath(player, inventorySlots, compatArmor);
-    collectOnDeath(player, inventorySlots, compatOffHand);
-    collectOnDeath(player, inventorySlots, compatMain);
-
+    
+    // check for charms
+    final SoulboundHandler.Mode soulboundMode = computeSoulboundMode(player, compatMain);
+    if (GraveKeeperConfig.DEBUG_LOGS) {
+      Registration.logger.info(String.format("Soulbound mode is %s",
+          soulboundMode));
+    }
+    
+    // collect all items
+    collectOnDeath(player, soulboundMode, inventorySlots, compatArmor);
+    collectOnDeath(player, soulboundMode, inventorySlots, compatOffHand);
+    collectOnDeath(player, soulboundMode, inventorySlots, compatMain);
+    
     if (compatBaubles != null) {
-      collectOnDeath(player, inventorySlots, compatBaubles);
+      collectOnDeath(player, soulboundMode, inventorySlots, compatBaubles);
     }
     if (compatGalacticCraft != null) {
-      collectOnDeath(player, inventorySlots, compatGalacticCraft);
+      collectOnDeath(player, soulboundMode, inventorySlots, compatGalacticCraft);
     }
     if (compatTechGuns != null) {
-      collectOnDeath(player, inventorySlots, compatTechGuns);
+      collectOnDeath(player, soulboundMode, inventorySlots, compatTechGuns);
+    }
+    
+    // restore soulbound items
+    if (GraveKeeperConfig.MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY) {
+      for (final InventorySlot inventorySlot : inventorySlots) {
+        if ( inventorySlot.isSoulbound
+          && inventorySlot.type != InventoryType.ARMOUR
+          && inventorySlot.type != InventoryType.MAIN ) {
+          if (player.inventory.addItemStackToInventory(inventorySlot.itemStack.copy())) {
+            continue;
+          }
+          // main inventory is overflowing => cancel soulbound so we keep that item in the grave
+          Registration.logger.warn(String.format("Failed to move soulbinded item to main inventory (is it full?): %s",
+                  inventorySlot.itemStack ));
+          inventorySlot.isSoulbound = false;
+        }
+      }
     }
     
     return inventorySlots;
   }
-
-  private static void collectOnDeath(@Nonnull final EntityPlayerMP player, @Nonnull final List<InventorySlot> inventorySlots, @Nonnull final ICompatInventory compatInventory) {
+  
+  private static SoulboundHandler.Mode computeSoulboundMode(@Nonnull final EntityPlayerMP player,
+      @Nonnull final ICompatInventory compatInventory) {
     final NonNullList<ItemStack> itemStacks = compatInventory.getAllContents(player);
-    for (int index = 0; index < itemStacks.size(); index++) {
-      if (itemStacks.get(index).isEmpty()) {
+    SoulboundHandler.Mode soulboundMode = null;
+    for (final ItemStack itemStack : itemStacks) {
+      if (itemStack.isEmpty()) {
         continue;
       }
-      final InventorySlot inventorySlot = new InventorySlot(itemStacks.get(index), index, compatInventory.getType());
+      soulboundMode = SoulboundHandler.updateMode(soulboundMode, itemStack);
+    }
+    return soulboundMode;
+  }
+  
+  private static void collectOnDeath(@Nonnull final EntityPlayerMP player,
+      final SoulboundHandler.Mode soulboundMode,
+      @Nonnull final List<InventorySlot> inventorySlots,
+      @Nonnull final ICompatInventory compatInventory) {
+    // compute how many further items are allowed for soulbound
+    int countSoulboundRemaining = GraveKeeperConfig.KEEP_SOULBOUND_AMOUNT;
+    for (final InventorySlot inventorySlot : inventorySlots) {
+      if (inventorySlot.isSoulbound) {
+        countSoulboundRemaining--;
+      }
+    }
+    
+    // scan inventory slots
+    final NonNullList<ItemStack> itemStacks = compatInventory.getAllContents(player);
+    for (int index = 0; index < itemStacks.size(); index++) {
+      final ItemStack itemStack = itemStacks.get(index);
+      if (itemStack.isEmpty()) {
+        continue;
+      }
+      final boolean isSoulbound = countSoulboundRemaining > 0
+                               && SoulboundHandler.isSoulbinded(soulboundMode, player.inventory.currentItem, compatInventory.getType(), index, itemStack);
+      if (isSoulbound) {
+        countSoulboundRemaining--;
+        if (GraveKeeperConfig.DEBUG_LOGS) {
+          Registration.logger.info(String.format("Keeping soulbound item %s with NBT %s",
+              itemStack, itemStack.getTagCompound() ));
+        }
+      }
+      final InventorySlot inventorySlot = new InventorySlot(itemStack, index, compatInventory.getType(), isSoulbound);
       inventorySlots.add(inventorySlot);
-      compatInventory.removeItem(player, index);
+      if ( !isSoulbound
+        || ( GraveKeeperConfig.MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY
+          && inventorySlot.type != InventoryType.ARMOUR
+          && inventorySlot.type != InventoryType.MAIN )) {
+        compatInventory.removeItem(player, index);
+      }
     }
   }
-
+  
   @Nonnull
-  public static List<ItemStack> restoreOrOverflow(@Nonnull final EntityPlayerMP player, @Nonnull final List<InventorySlot> inventorySlots) {
+  public static List<ItemStack> restoreOrOverflow(@Nonnull final EntityPlayerMP player, @Nonnull final List<InventorySlot> inventorySlots,
+      final boolean doRestoreSoulbound) {
     final List<ItemStack> overflow = new ArrayList<>();
     for (final InventorySlot inventorySlot : inventorySlots) {
+      if ( !doRestoreSoulbound
+        && inventorySlot.isSoulbound ) {
+        continue;
+      }
       InventoryHandler.restoreOrOverflow(player, inventorySlot, overflow);
     }
     return overflow;
@@ -103,7 +176,7 @@ public class InventoryHandler {
         compatInventory = compatTechGuns != null ? compatTechGuns : compatMain;
         break;
     }
-
+    
     final ItemStack itemStackLeft = compatInventory.setItemReturnOverflow(player, inventorySlot.slot, inventorySlot.itemStack);
     if (!itemStackLeft.isEmpty()) {
       overflow.add(itemStackLeft);
@@ -117,7 +190,7 @@ public class InventoryHandler {
     tagContainer.setString("modid", GraveKeeper.MODID);
     tagContainer.setString("mod_version", GraveKeeper.VERSION);
     tagContainer.setInteger("format_version", VERSION);
-
+    
     final NBTTagList tagSlots = new NBTTagList();
     for (final InventorySlot inventorySlot : inventorySlots) {
       tagSlots.appendTag(inventorySlot.writeToNBT());
@@ -144,7 +217,7 @@ public class InventoryHandler {
       assert tagSlot instanceof NBTTagCompound;
       inventorySlots.add(new InventorySlot((NBTTagCompound) tagSlot));
     }
-
+    
     return inventorySlots;
   }
 }

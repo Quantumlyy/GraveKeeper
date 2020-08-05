@@ -180,4 +180,7 @@ public final class Registration {
     player.sendMessage(textMessage);
   }
   
+  public void postInitialize() {
+    GraveKeeperConfig.onFMLpostInitialization();   
+  }
 }

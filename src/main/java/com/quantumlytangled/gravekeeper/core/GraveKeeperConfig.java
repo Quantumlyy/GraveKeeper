@@ -6,6 +6,11 @@ import com.quantumlytangled.gravekeeper.compatability.CompatGalacticCraftCore;
 import com.quantumlytangled.gravekeeper.compatability.CompatTechGuns;
 import com.quantumlytangled.gravekeeper.util.InventoryHandler;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 
@@ -18,7 +23,27 @@ public class GraveKeeperConfig {
   public static boolean INSTANT_FOREIGN_COLLECTION = false;
   public static boolean OWNER_ONLY_COLLECTION = false;
 
-  public static boolean KEEP_SOULBOUND = false;
+  public static boolean ANY_ENCHANT_IS_SOULBOUND = false;
+  public static boolean MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY = true;
+  
+  private static String[] SOULBOUND_CHARM_ARMOR_HELD_NAMES = new String[] {
+      "twilightforest:charm_of_keeping_1" };
+  private static String[] SOULBOUND_CHARM_ARMOR_HOTBAR_NAMES = new String[] {
+      "twilightforest:charm_of_keeping_2" };
+  private static String[] SOULBOUND_CHARM_FULL_NAMES = new String[] {
+      "twilightforest:charm_of_keeping_3" };
+  private static String[] SOULBOUND_ENCHANTMENT_NAMES = new String[] {
+      "enderio:soulbound",
+      "cofhcore:soulbound" };
+
+  public static List<Item> SOULBOUND_CHARM_ARMOR_HELD_ITEMS = null;
+  public static List<Item> SOULBOUND_CHARM_ARMOR_HOTBAR_ITEMS = null;
+  public static List<Item> SOULBOUND_CHARM_FULL_ITEMS = null;
+  public static List<Item> SOULBOUND_CHARM_ITEMS = null;
+  public static List<Enchantment> SOULBOUND_ENCHANTMENTS = null;
+  public static String[] SOULBOUND_TAG_BOOLEAN = new String[] {
+      "Botania_keepIvy" };
+  
   public static int KEEP_SOULBOUND_AMOUNT = 5;
 
   public static int SEARCH_MIN_ALTITUDE = 0;
@@ -66,16 +91,43 @@ public class GraveKeeperConfig {
     EXPIRE_TIME_SECONDS = Math.max(-1, EXPIRE_TIME_SECONDS);
     INSTANT_FOREIGN_COLLECTION = EXPIRE_TIME_SECONDS == 0;
     OWNER_ONLY_COLLECTION = EXPIRE_TIME_SECONDS == -1;
-
-    KEEP_SOULBOUND = config
-        .get("soulbound", "keep", KEEP_SOULBOUND,
-            "Should soulbound items be kept in players inventory")
-        .getBoolean(true);
+    
     KEEP_SOULBOUND_AMOUNT = config
         .get("soulbound", "amount", KEEP_SOULBOUND_AMOUNT,
-            "The amount of soulbound items should be kept in player inventory, remaining will go into the chest")
+            "The amount of soulbound items should be kept in player inventory, remaining will go into the grave")
         .getInt(5);
+    ANY_ENCHANT_IS_SOULBOUND = config
+        .get("soulbound", "any_enchant_is_soulbound", ANY_ENCHANT_IS_SOULBOUND,
+            "Enable to consider any enchantment as a soulbound one.")
+        .getBoolean(false);
+    MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY = config
+        .get("soulbound", "move_soulbound_items_to_main_inventory", MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY,
+            "Enable to workaround for soul binding mods that don't support modded inventories (for example: CoFH doesn't support Baubles, Twilight Forest doesn't support TechGuns, etc.")
+        .getBoolean(true);
+    
+    SOULBOUND_CHARM_ARMOR_HELD_NAMES = config
+        .get("soulbound", "soulbound_charm_armor_held_names", SOULBOUND_CHARM_ARMOR_HELD_NAMES,
+            "List of item names that will soulbound armor and held item")
+        .getStringList();
+    SOULBOUND_CHARM_ARMOR_HOTBAR_NAMES = config
+        .get("soulbound", "soulbound_charm_armor_hotbar_names", SOULBOUND_CHARM_ARMOR_HOTBAR_NAMES,
+            "List of item names that will soulbound armor and held item")
+        .getStringList();
+    SOULBOUND_CHARM_FULL_NAMES = config
+        .get("soulbound", "soulbound_charm_full_names", SOULBOUND_CHARM_FULL_NAMES,
+            "List of item names that will soulbound armor and held item")
+        .getStringList();
 
+    SOULBOUND_ENCHANTMENT_NAMES = config
+        .get("soulbound", "soulbound_enchantment_names", SOULBOUND_ENCHANTMENT_NAMES,
+            "List of enchantment names that are considered as soulbinding")
+        .getStringList();
+    
+    SOULBOUND_TAG_BOOLEAN = config
+        .get("soulbound", "soulbound_tag_boolean", SOULBOUND_TAG_BOOLEAN,
+            "List of NBT boolean that are considered as soulbinding when set to true")
+        .getStringList();
+    
     SEARCH_MIN_ALTITUDE = Math.abs(config
         .get("grave_location", "search_min_altitude", SEARCH_MIN_ALTITUDE,
             "Force a minimum altitude before looking for a free spot (this also applies to home/spawn location).")
@@ -112,4 +164,45 @@ public class GraveKeeperConfig {
     config.save();
   }
 
+  public static void onFMLpostInitialization() {
+    // resolve registry names
+    SOULBOUND_CHARM_ARMOR_HELD_ITEMS = new ArrayList<>(SOULBOUND_CHARM_ARMOR_HELD_NAMES.length);
+    for (final String name : SOULBOUND_CHARM_ARMOR_HELD_NAMES) {
+      final Item item = Item.REGISTRY.getObject(new ResourceLocation(name));
+      if (item != null) {
+        SOULBOUND_CHARM_ARMOR_HELD_ITEMS.add(item);
+      }
+    }
+    
+    SOULBOUND_CHARM_ARMOR_HOTBAR_ITEMS = new ArrayList<>(SOULBOUND_CHARM_ARMOR_HOTBAR_NAMES.length);
+    for (final String name : SOULBOUND_CHARM_ARMOR_HOTBAR_NAMES) {
+      final Item item = Item.REGISTRY.getObject(new ResourceLocation(name));
+      if (item != null) {
+        SOULBOUND_CHARM_ARMOR_HOTBAR_ITEMS.add(item);
+      }
+    }
+    
+    SOULBOUND_CHARM_FULL_ITEMS = new ArrayList<>(SOULBOUND_CHARM_FULL_NAMES.length);
+    for (final String name : SOULBOUND_CHARM_FULL_NAMES) {
+      final Item item = Item.REGISTRY.getObject(new ResourceLocation(name));
+      if (item != null) {
+        SOULBOUND_CHARM_FULL_ITEMS.add(item);
+      }
+    }
+    SOULBOUND_CHARM_ITEMS = new ArrayList<>(
+        SOULBOUND_CHARM_ARMOR_HELD_ITEMS.size()
+            + SOULBOUND_CHARM_ARMOR_HOTBAR_ITEMS.size()
+            + SOULBOUND_CHARM_FULL_ITEMS.size() );
+    SOULBOUND_CHARM_ITEMS.addAll(SOULBOUND_CHARM_ARMOR_HELD_ITEMS);
+    SOULBOUND_CHARM_ITEMS.addAll(SOULBOUND_CHARM_ARMOR_HOTBAR_ITEMS);
+    SOULBOUND_CHARM_ITEMS.addAll(SOULBOUND_CHARM_FULL_ITEMS);
+    
+    SOULBOUND_ENCHANTMENTS = new ArrayList<>(SOULBOUND_ENCHANTMENT_NAMES.length);
+    for (final String name : SOULBOUND_ENCHANTMENT_NAMES) {
+      final Enchantment enchantment = Enchantment.REGISTRY.getObject(new ResourceLocation(name));
+      if (enchantment != null) {
+        SOULBOUND_ENCHANTMENTS.add(enchantment);
+      }
+    }
+  }
 }

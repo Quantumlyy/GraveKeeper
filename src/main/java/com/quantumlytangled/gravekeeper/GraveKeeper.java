@@ -7,6 +7,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
@@ -32,6 +33,11 @@ public class GraveKeeper {
   @EventHandler
   private void preInit(@Nonnull final FMLPreInitializationEvent event) {
     registration.preInitialize(event);
+  }
+
+  @EventHandler
+  private void preInit(@Nonnull final FMLPostInitializationEvent event) {
+    registration.postInitialize();
   }
 
   @EventHandler

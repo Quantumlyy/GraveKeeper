@@ -3,12 +3,12 @@ package com.quantumlytangled.gravekeeper.block;
 import com.quantumlytangled.gravekeeper.core.GraveKeeperConfig;
 import com.quantumlytangled.gravekeeper.core.CreationDate;
 import com.quantumlytangled.gravekeeper.core.InventorySlot;
-import com.quantumlytangled.gravekeeper.core.InventoryType;
 import com.quantumlytangled.gravekeeper.util.InventoryHandler;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -67,7 +67,8 @@ public class TileDeathChest extends TileEntity {
     ownerName = player.getDisplayNameString();
     ownerUUID = player.getUniqueID();
     this.creationDate = creationDate;
-    this.inventorySlots = inventorySlots;
+    this.inventorySlots = inventorySlots.stream().filter(inventorySlot -> !inventorySlot.isSoulbound)
+        .collect(Collectors.toList());
     markDirty();
   }
 
@@ -172,7 +173,7 @@ public class TileDeathChest extends TileEntity {
   }
 
   private void doReturnToOwner(@Nonnull final EntityPlayerMP player) {
-    final List<ItemStack> overflow = InventoryHandler.restoreOrOverflow(player, inventorySlots);
+    final List<ItemStack> overflow = InventoryHandler.restoreOrOverflow(player, inventorySlots, false);
     
     for (final ItemStack itemStack : overflow) {
       if (player.inventory.addItemStackToInventory(itemStack.copy())) {
