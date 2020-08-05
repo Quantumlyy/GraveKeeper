@@ -48,7 +48,7 @@ public class GraveKeeperConfig {
 
   public static int SEARCH_MIN_ALTITUDE = 0;
   public static int SEARCH_RADIUS_ABOVE_M = 10;
-  public static int SEARCH_RADIUS_BELOW_M = -10;
+  public static int SEARCH_RADIUS_BELOW_M = -1;
   public static int SEARCH_RADIUS_HORIZONTAL_M = 5;
   public static int SPAWN_DIMENSION_ID = 0;
   public static int USE_BED_OR_SPAWN_LOCATION_BELOW_Y = 0;
@@ -85,7 +85,7 @@ public class GraveKeeperConfig {
         .get("general", "expire_time", EXPIRE_TIME_SECONDS, String.join("\n", new String[] {
             "Time in seconds after which other players will be able to collect ones grave",
             "Use 0 to have an instant expiration and anyone is able to pick up the grave instantly",
-            "Use -1 or lower to remove expiration and only the owner will ever be able to pick up the chest"
+            "Use -1 or lower to remove expiration and only the owner will ever be able to pick up the grave"
         }))
         .getInt(7200);
     EXPIRE_TIME_SECONDS = Math.max(-1, EXPIRE_TIME_SECONDS);
@@ -139,7 +139,7 @@ public class GraveKeeperConfig {
     SEARCH_RADIUS_BELOW_M = Math.abs(config
         .get("grave_location", "search_radius_below_m", SEARCH_RADIUS_BELOW_M,
             "How far to search around vertically below for a free spot to place the grave.")
-        .getInt(-10));
+        .getInt(-1));
     SEARCH_RADIUS_HORIZONTAL_M = config
         .get("grave_location", "search_radius_horizontal_m", SEARCH_RADIUS_HORIZONTAL_M,
             "How far to search around horizontally for a free spot to place the grave.")
