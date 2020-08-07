@@ -67,7 +67,9 @@ public class TileDeathChest extends TileEntity {
     ownerName = player.getDisplayNameString();
     ownerUUID = player.getUniqueID();
     this.creationDate = creationDate;
-    this.inventorySlots = inventorySlots.stream().filter(inventorySlot -> !inventorySlot.isSoulbound)
+    this.inventorySlots = inventorySlots.stream()
+        .filter(inventorySlot -> !inventorySlot.isCharmed
+                              && !inventorySlot.isSoulbound )
         .collect(Collectors.toList());
     markDirty();
   }

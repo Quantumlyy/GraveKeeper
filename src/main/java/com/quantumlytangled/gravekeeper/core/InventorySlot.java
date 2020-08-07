@@ -9,12 +9,15 @@ public class InventorySlot {
   public final ItemStack itemStack;
   public final int slot;
   public final InventoryType type;
+  public boolean isCharmed;
   public boolean isSoulbound;
   
-  public InventorySlot(@Nonnull final ItemStack itemStack, final int slot, @Nonnull final InventoryType type, final boolean isSoulbound) {
+  public InventorySlot(@Nonnull final ItemStack itemStack, final int slot, @Nonnull final InventoryType type,
+      final boolean isCharmed, final boolean isSoulbound) {
     this.itemStack = itemStack.copy();
     this.slot = slot;
     this.type = type;
+    this.isCharmed = isCharmed;
     this.isSoulbound = isSoulbound;
   }
   
@@ -22,6 +25,7 @@ public class InventorySlot {
     this.itemStack = new ItemStack(tagSlot);
     this.slot = tagSlot.getInteger("slot");
     this.type = InventoryType.valueOf(tagSlot.getString("type"));
+    this.isCharmed = tagSlot.hasKey("isCharmed") && tagSlot.getBoolean("isCharmed");
     this.isSoulbound = tagSlot.hasKey("isSoulbound") && tagSlot.getBoolean("isSoulbound");
   }
   
@@ -31,7 +35,12 @@ public class InventorySlot {
     
     tagInventorySlot.setString("type", type.name());
     tagInventorySlot.setInteger("slot", slot);
-    tagInventorySlot.setBoolean("isSoulbound", isSoulbound);
+    if (isCharmed) {
+      tagInventorySlot.setBoolean("isCharmed", true);
+    }
+    if (isSoulbound) {
+      tagInventorySlot.setBoolean("isSoulbound", true);
+    }
     itemStack.writeToNBT(tagInventorySlot);
     
     return tagInventorySlot;

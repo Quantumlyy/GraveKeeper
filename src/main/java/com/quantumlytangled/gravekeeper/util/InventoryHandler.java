@@ -36,15 +36,15 @@ public class InventoryHandler {
     
     // check for charms
     // note: we directly access explicitly the main inventory wrapper in case it's not enabled for saving in the grave.
-    final SoulboundHandler.Mode soulboundMode = computeSoulboundMode(player, CompatMain.getInstance());
+    final CharmHandler.Mode charmMode = computeCharmMode(player, CompatMain.getInstance());
     if (GraveKeeperConfig.DEBUG_LOGS) {
-      Registration.logger.info(String.format("Soulbound mode is %s",
-          soulboundMode));
+      Registration.logger.info(String.format("Charm mode is %s",
+          charmMode));
     }
     
     // collect all items
     for (final ICompatInventory compatInventory : compatInventories.values()) {
-      collectOnDeath(player, soulboundMode, inventorySlots, compatInventory);
+      collectOnDeath(player, charmMode, inventorySlots, compatInventory);
     }
     
     // restore soulbound items
@@ -67,21 +67,21 @@ public class InventoryHandler {
     return inventorySlots;
   }
   
-  private static SoulboundHandler.Mode computeSoulboundMode(@Nonnull final EntityPlayerMP player,
+  private static CharmHandler.Mode computeCharmMode(@Nonnull final EntityPlayerMP player,
       @Nonnull final ICompatInventory compatInventory) {
     final NonNullList<ItemStack> itemStacks = compatInventory.getAllContents(player);
-    SoulboundHandler.Mode soulboundMode = null;
+    CharmHandler.Mode charmMode = null;
     for (final ItemStack itemStack : itemStacks) {
       if (itemStack.isEmpty()) {
         continue;
       }
-      soulboundMode = SoulboundHandler.updateMode(soulboundMode, itemStack);
+      charmMode = CharmHandler.updateMode(charmMode, itemStack);
     }
-    return soulboundMode;
+    return charmMode;
   }
   
   private static void collectOnDeath(@Nonnull final EntityPlayerMP player,
-      final SoulboundHandler.Mode soulboundMode,
+      final CharmHandler.Mode charmMode,
       @Nonnull final List<InventorySlot> inventorySlots,
       @Nonnull final ICompatInventory compatInventory) {
     // compute how many further items are allowed for soulbound
@@ -99,8 +99,16 @@ public class InventoryHandler {
       if (itemStack.isEmpty()) {
         continue;
       }
-      final boolean isSoulbound = countSoulboundRemaining > 0
-                               && SoulboundHandler.isSoulbinded(soulboundMode, player.inventory.currentItem, compatInventory.getType(), index, itemStack);
+      final boolean isCharmed = CharmHandler.isCharmed(charmMode, player.inventory.currentItem, compatInventory.getType(), index, itemStack);
+      if (isCharmed) {
+        if (GraveKeeperConfig.DEBUG_LOGS) {
+          Registration.logger.info(String.format("Keeping charmed item %s with NBT %s",
+              itemStack, itemStack.getTagCompound() ));
+        }
+      }
+      final boolean isSoulbound = !isCharmed
+                               && countSoulboundRemaining > 0
+                               && SoulboundHandler.isSoulbound(itemStack);
       if (isSoulbound) {
         countSoulboundRemaining--;
         if (GraveKeeperConfig.DEBUG_LOGS) {
@@ -108,9 +116,10 @@ public class InventoryHandler {
               itemStack, itemStack.getTagCompound() ));
         }
       }
-      final InventorySlot inventorySlot = new InventorySlot(itemStack, index, compatInventory.getType(), isSoulbound);
+      final InventorySlot inventorySlot = new InventorySlot(itemStack, index, compatInventory.getType(), isCharmed, isSoulbound);
       inventorySlots.add(inventorySlot);
-      if ( !isSoulbound
+      if ( ( !isCharmed
+          && !isSoulbound )
         || ( GraveKeeperConfig.MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY
           && inventorySlot.type != InventoryType.ARMOUR
           && inventorySlot.type != InventoryType.MAIN ) ) {
@@ -125,7 +134,8 @@ public class InventoryHandler {
     final List<ItemStack> overflow = new ArrayList<>();
     for (final InventorySlot inventorySlot : inventorySlots) {
       if ( !doRestoreSoulbound
-        && inventorySlot.isSoulbound ) {
+        && ( inventorySlot.isCharmed
+          || inventorySlot.isSoulbound ) ) {
         continue;
       }
       InventoryHandler.restoreOrOverflow(player, inventorySlot, overflow);
