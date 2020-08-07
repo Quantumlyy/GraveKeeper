@@ -2,15 +2,14 @@ package com.quantumlytangled.gravekeeper.util;
 
 import javax.annotation.Nonnull;
 import com.quantumlytangled.gravekeeper.GraveKeeper;
-import com.quantumlytangled.gravekeeper.compatability.CompatArmor;
 import com.quantumlytangled.gravekeeper.compatability.CompatMain;
-import com.quantumlytangled.gravekeeper.compatability.CompatOffHand;
 import com.quantumlytangled.gravekeeper.compatability.ICompatInventory;
 import com.quantumlytangled.gravekeeper.core.GraveKeeperConfig;
 import com.quantumlytangled.gravekeeper.core.InventorySlot;
 import com.quantumlytangled.gravekeeper.core.InventoryType;
 import com.quantumlytangled.gravekeeper.core.Registration;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -24,41 +23,28 @@ public class InventoryHandler {
   
   // Version id
   private static final int VERSION = 1;
+
+  private static final LinkedHashMap<InventoryType, ICompatInventory> compatInventories = new LinkedHashMap<>(10);
   
-  // Vanilla wrappers
-  public static ICompatInventory compatArmor = CompatArmor.getInstance();
-  public static ICompatInventory compatMain = CompatMain.getInstance();
-  public static ICompatInventory compatOffHand = CompatOffHand.getInstance();
-  
-  // Modded wrappers
-  public static ICompatInventory compatBaubles = null;
-  public static ICompatInventory compatGalacticCraft = null;
-  public static ICompatInventory compatTechGuns = null;
+  public static void addCompatibilityWrapper(@Nonnull final ICompatInventory compatInventory) {
+    InventoryHandler.compatInventories.put(compatInventory.getType(), compatInventory);
+  }
   
   @Nonnull
   public static List<InventorySlot> collectOnDeath(@Nonnull final EntityPlayerMP player) {
     final List<InventorySlot> inventorySlots = new ArrayList<>();
     
     // check for charms
-    final SoulboundHandler.Mode soulboundMode = computeSoulboundMode(player, compatMain);
+    // note: we directly access explicitly the main inventory wrapper in case it's not enabled for saving in the grave.
+    final SoulboundHandler.Mode soulboundMode = computeSoulboundMode(player, CompatMain.getInstance());
     if (GraveKeeperConfig.DEBUG_LOGS) {
       Registration.logger.info(String.format("Soulbound mode is %s",
           soulboundMode));
     }
     
     // collect all items
-    collectOnDeath(player, soulboundMode, inventorySlots, compatArmor);
-    collectOnDeath(player, soulboundMode, inventorySlots, compatOffHand);
-    collectOnDeath(player, soulboundMode, inventorySlots, compatMain);
-    
-    if (compatBaubles != null) {
-      collectOnDeath(player, soulboundMode, inventorySlots, compatBaubles);
-    }
-    if (compatGalacticCraft != null) {
-      collectOnDeath(player, soulboundMode, inventorySlots, compatGalacticCraft);
-    }
-    if (compatTechGuns != null) {
-      collectOnDeath(player, soulboundMode, inventorySlots, compatTechGuns);
+    for (final ICompatInventory compatInventory : compatInventories.values()) {
+      collectOnDeath(player, soulboundMode, inventorySlots, compatInventory);
     }
     
     // restore soulbound items
@@ -127,7 +113,7 @@ public class InventoryHandler {
       if ( !isSoulbound
         || ( GraveKeeperConfig.MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY
           && inventorySlot.type != InventoryType.ARMOUR
-          && inventorySlot.type != InventoryType.MAIN )) {
+          && inventorySlot.type != InventoryType.MAIN ) ) {
         compatInventory.removeItem(player, index);
       }
     }
@@ -149,33 +135,7 @@ public class InventoryHandler {
   
   private static void restoreOrOverflow(@Nonnull final EntityPlayerMP player, @Nonnull final InventorySlot inventorySlot, @Nonnull final List<ItemStack> overflow) {
     // get wrapper, falling back to main inventory in case the related mod was removed
-    final ICompatInventory compatInventory;
-    switch (inventorySlot.type) {
-      case MAIN:
-      default:
-        compatInventory = compatMain;
-        break;
-
-      case ARMOUR:
-        compatInventory = compatArmor;
-        break;
-
-      case OFFHAND:
-        compatInventory = compatOffHand;
-        break;
-
-      case BAUBLES:
-        compatInventory = compatBaubles != null ? compatBaubles : compatMain;
-        break;
-
-      case GALACTICRAFT:
-        compatInventory = compatGalacticCraft != null ? compatGalacticCraft : compatMain;
-        break;
-
-      case TECHGUNS:
-        compatInventory = compatTechGuns != null ? compatTechGuns : compatMain;
-        break;
-    }
+    final ICompatInventory compatInventory = compatInventories.getOrDefault(inventorySlot.type, CompatMain.getInstance());
     
     final ItemStack itemStackLeft = compatInventory.setItemReturnOverflow(player, inventorySlot.slot, inventorySlot.itemStack);
     if (!itemStackLeft.isEmpty()) {

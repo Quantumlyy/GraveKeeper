@@ -1,8 +1,11 @@
 package com.quantumlytangled.gravekeeper.core;
 
 import com.quantumlytangled.gravekeeper.GraveKeeper;
+import com.quantumlytangled.gravekeeper.compatability.CompatArmor;
 import com.quantumlytangled.gravekeeper.compatability.CompatBaubles;
 import com.quantumlytangled.gravekeeper.compatability.CompatGalacticCraftCore;
+import com.quantumlytangled.gravekeeper.compatability.CompatMain;
+import com.quantumlytangled.gravekeeper.compatability.CompatOffHand;
 import com.quantumlytangled.gravekeeper.compatability.CompatTechGuns;
 import com.quantumlytangled.gravekeeper.util.InventoryHandler;
 import java.io.File;
@@ -15,14 +18,18 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 
 public class GraveKeeperConfig {
-
+  
   public static boolean IGNORE_KEEP_INVENTORY = false;
   public static boolean DEBUG_LOGS = false;
-
+  public static String[] COMPATIBILITY_ORDER = new String[] {
+      "minecraft:armour", "minecraft:main", "minecraft:offhand",
+      "baubles", "galacticraftcore", "techguns"
+  };
+  
   public static int EXPIRE_TIME_SECONDS = 7200;
   public static boolean INSTANT_FOREIGN_COLLECTION = false;
   public static boolean OWNER_ONLY_COLLECTION = false;
-
+  
   public static boolean ANY_ENCHANT_IS_SOULBOUND = false;
   public static boolean MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY = true;
   
@@ -35,7 +42,7 @@ public class GraveKeeperConfig {
   private static String[] SOULBOUND_ENCHANTMENT_NAMES = new String[] {
       "enderio:soulbound",
       "cofhcore:soulbound" };
-
+  
   public static List<Item> SOULBOUND_CHARM_ARMOR_HELD_ITEMS = null;
   public static List<Item> SOULBOUND_CHARM_ARMOR_HOTBAR_ITEMS = null;
   public static List<Item> SOULBOUND_CHARM_FULL_ITEMS = null;
@@ -45,33 +52,79 @@ public class GraveKeeperConfig {
       "Botania_keepIvy" };
   
   public static int KEEP_SOULBOUND_AMOUNT = 5;
-
+  
   public static int SEARCH_MIN_ALTITUDE = 0;
   public static int SEARCH_RADIUS_ABOVE_M = 10;
   public static int SEARCH_RADIUS_BELOW_M = -1;
   public static int SEARCH_RADIUS_HORIZONTAL_M = 5;
   public static int SPAWN_DIMENSION_ID = 0;
   public static int USE_BED_OR_SPAWN_LOCATION_BELOW_Y = 0;
-
+  
   public static void onFMLpreInitialization(final File fileConfigDirectory) {
-
+    
     loadConfig(new File(fileConfigDirectory, GraveKeeper.MODID + ".yml"));
+    
+    final ArrayList<String> compatibilityAdded = new ArrayList<>(10);
+    for (final String nameCompatibility : COMPATIBILITY_ORDER) {
+      if (compatibilityAdded.contains(nameCompatibility)) {
+        Registration.logger.error(String.format("Skipping duplicated compatibility name %s",
+            nameCompatibility ));
+        continue;
+      }
+      
+      switch (nameCompatibility) {
+        case "minecraft:armour":
+          InventoryHandler.addCompatibilityWrapper(CompatArmor.getInstance());
+          compatibilityAdded.add(nameCompatibility);
+          break;
+          
+        case "minecraft:main":
+          InventoryHandler.addCompatibilityWrapper(CompatMain.getInstance());
+          compatibilityAdded.add(nameCompatibility);
+          break;
+          
+        case "minecraft:offhand":
+          InventoryHandler.addCompatibilityWrapper(CompatOffHand.getInstance());
+          compatibilityAdded.add(nameCompatibility);
+          break;
+          
+        default:
+          if (!Loader.isModLoaded(nameCompatibility)) {
+            Registration.logger.info(String.format("Skipping compatibility for non-loaded mod %s",
+                nameCompatibility ));
+            continue;
+          }
+          switch (nameCompatibility) {
+            case "baubles":
+              InventoryHandler.addCompatibilityWrapper(CompatBaubles.getInstance());
+              compatibilityAdded.add(nameCompatibility);
+              break;
 
-    if (Loader.isModLoaded("baubles")) {
-      InventoryHandler.compatBaubles = CompatBaubles.getInstance();
-    }
-    if (Loader.isModLoaded("galacticraftcore")) {
-      InventoryHandler.compatGalacticCraft = CompatGalacticCraftCore.getInstance();
-    }
-    if (Loader.isModLoaded("techguns")) {
-      InventoryHandler.compatTechGuns = CompatTechGuns.getInstance();
+            case "galacticraftcore":
+              InventoryHandler.addCompatibilityWrapper(CompatGalacticCraftCore.getInstance());
+              compatibilityAdded.add(nameCompatibility);
+              break;
+
+            case "techguns":
+              InventoryHandler.addCompatibilityWrapper(CompatTechGuns.getInstance());
+              compatibilityAdded.add(nameCompatibility);
+              break;
+
+            default:
+              Registration.logger.error(String.format("Skipping unknown compatibility name %s",
+                    nameCompatibility ));
+              break;
+          }
+          // continue;
+          break;
+      }
     }
   }
-
+  
   public static void loadConfig(final File file) {
     final Configuration config = new Configuration(file);
     config.load();
-
+    
     IGNORE_KEEP_INVENTORY = config
         .get("general", "ignore_keep_inventory", IGNORE_KEEP_INVENTORY,
             "Whether the chests should still spawn when keepInventory is enabled")
@@ -80,7 +133,15 @@ public class GraveKeeperConfig {
         .get("general", "enable_debug_logs", DEBUG_LOGS,
             "Enable console logs for debugging purpose")
         .getBoolean(false);
-
+    COMPATIBILITY_ORDER = config
+        .get("general", "inventory_sorting", COMPATIBILITY_ORDER, String.join("\n", new String[] {
+            "Define which inventories are enabled and in which order they're processed. Missing mods are ignored when creating a grave.",
+            "Use this to adjust soulbind priority between inventory type. Remove inventories you don't want to be saved in a grave.",
+            "Note: Traveler's backpack are only saved if you disable block placement in the related mod.",
+            "Valid vanilla values are: minecraft:armour, minecraft:main & minecraft:offhand.",
+            "Valid modded values are: baubles, galacticraftcore, techguns." }))
+        .getStringList();
+    
     EXPIRE_TIME_SECONDS = config
         .get("general", "expire_time", EXPIRE_TIME_SECONDS, String.join("\n", new String[] {
             "Time in seconds after which other players will be able to collect ones grave",
@@ -117,7 +178,7 @@ public class GraveKeeperConfig {
         .get("soulbound", "soulbound_charm_full_names", SOULBOUND_CHARM_FULL_NAMES,
             "List of item names that will soulbound armor and held item")
         .getStringList();
-
+    
     SOULBOUND_ENCHANTMENT_NAMES = config
         .get("soulbound", "soulbound_enchantment_names", SOULBOUND_ENCHANTMENT_NAMES,
             "List of enchantment names that are considered as soulbinding")
@@ -163,7 +224,7 @@ public class GraveKeeperConfig {
     
     config.save();
   }
-
+  
   public static void onFMLpostInitialization() {
     // resolve registry names
     SOULBOUND_CHARM_ARMOR_HELD_ITEMS = new ArrayList<>(SOULBOUND_CHARM_ARMOR_HELD_NAMES.length);

@@ -96,11 +96,11 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    //provided "techguns:Techguns:${config.Techguns_version}"
+    // provided "botania:Botania:${config.Botania_version}"
     provided "com.azanor.baubles:Baubles:${config.Baubles_version}"
     provided "GC-1.12-dev:GalacticraftCore-Dev:${config.Galacticraft_version}.${config.Galacticraft_build}"
+    // provided "techguns:Techguns:${config.Techguns_version}"
     provided curse.resolve("techguns", "${config.Techguns_fileid}")
-    // provided "botania:Botania:${config.Botania_version}"
 }
 
 processResources {

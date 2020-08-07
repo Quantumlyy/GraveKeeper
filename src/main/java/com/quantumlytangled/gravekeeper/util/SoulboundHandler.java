@@ -14,17 +14,17 @@ public class SoulboundHandler {
   
   public enum Mode {
     NONE,
-    ARMOR_HELD,
-    ARMOR_HOTBAR,
+    ARMOUR_HELD,
+    ARMOUR_HOTBAR,
     FULL
   }
   
   public static Mode updateMode(@Nullable final Mode modeCurrent, @Nonnull final ItemStack itemStack) {
     final Mode modeItem;
     if (GraveKeeperConfig.SOULBOUND_CHARM_ARMOR_HELD_ITEMS.contains(itemStack.getItem())) {
-      modeItem = Mode.ARMOR_HELD;
+      modeItem = Mode.ARMOUR_HELD;
     } else if (GraveKeeperConfig.SOULBOUND_CHARM_ARMOR_HOTBAR_ITEMS.contains(itemStack.getItem())) {
-      modeItem = Mode.ARMOR_HOTBAR;
+      modeItem = Mode.ARMOUR_HOTBAR;
     } else if (GraveKeeperConfig.SOULBOUND_CHARM_FULL_ITEMS.contains(itemStack.getItem())) {
       modeItem = Mode.FULL;
     } else {
@@ -41,19 +41,19 @@ public class SoulboundHandler {
       default:
         break;
         
-      case ARMOR_HELD:
+      case ARMOUR_HELD:
         if (inventoryType == InventoryType.ARMOUR) {
           return true;
         }
         if ( inventoryType == InventoryType.MAIN
-            && slot == slotHeld ) {
+          && slot == slotHeld ) {
           return true;
         }
         break;
         
-      case ARMOR_HOTBAR:
+      case ARMOUR_HOTBAR:
         if ( inventoryType == InventoryType.MAIN
-          && slot <= 9 ) {
+          && slot < 9 ) {
           return true;
         }
         break;

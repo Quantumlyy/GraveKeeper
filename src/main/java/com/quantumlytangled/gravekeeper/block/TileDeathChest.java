@@ -26,20 +26,20 @@ import net.minecraft.util.text.event.HoverEvent.Action;
 import net.minecraftforge.common.util.Constants;
 
 public class TileDeathChest extends TileEntity {
-
+  
   private String dataIdentifier = "";
-
+  
   private String ownerName = "";
   private UUID ownerUUID = null;
-
+  
   private long creationDate = 0;
-
+  
   private List<InventorySlot> inventorySlots = new ArrayList<>();
-
+  
   public TileDeathChest() {
     super();
   }
-
+  
   public void processInteraction(@Nonnull final EntityPlayerMP player) {
     final boolean isCreative = player.isCreative();
     final boolean isOwner = player.getUniqueID().equals(ownerUUID);
@@ -60,7 +60,7 @@ public class TileDeathChest extends TileEntity {
       doInspection(player, false, false, timeRemaining);
     }
   }
-
+  
   public void setData(@Nonnull final EntityPlayer player, @Nonnull final String identifier,
       final long creationDate, @Nonnull final List<InventorySlot> inventorySlots) {
     dataIdentifier = identifier;
@@ -71,7 +71,7 @@ public class TileDeathChest extends TileEntity {
         .collect(Collectors.toList());
     markDirty();
   }
-
+  
   @Override
   public void readFromNBT(@Nonnull NBTTagCompound tagCompound) {
     super.readFromNBT(tagCompound);
@@ -81,23 +81,23 @@ public class TileDeathChest extends TileEntity {
       final NBTTagCompound nbtInventorySlot = nbtInventorySlots.getCompoundTagAt(index);
       inventorySlots.add(new InventorySlot(nbtInventorySlot));
     }
-
+    
     dataIdentifier = tagCompound.getString("DataIdentifier");
     ownerName = tagCompound.getString("OwnerName");
     ownerUUID = tagCompound.getUniqueId("OwnerUUID");
     creationDate = tagCompound.getLong("CreationDate");
   }
-
+  
   @Nonnull
   @Override
   public NBTTagCompound writeToNBT(@Nonnull final NBTTagCompound tagCompound) {
     super.writeToNBT(tagCompound);
-
+    
     final NBTTagList nbtInventorySlots = new NBTTagList();
     for (final InventorySlot inventorySlot : inventorySlots) {
       nbtInventorySlots.appendTag(inventorySlot.writeToNBT());
     }
-
+    
     tagCompound.setString("DataIdentifier", dataIdentifier);
     tagCompound.setString("OwnerName", ownerName);
     if (ownerUUID != null) {
@@ -105,10 +105,10 @@ public class TileDeathChest extends TileEntity {
     }
     tagCompound.setLong("CreationDate", creationDate);
     tagCompound.setTag("InventorySlots", nbtInventorySlots);
-
+    
     return tagCompound;
   }
-
+  
   private void doInspection(@Nonnull final EntityPlayer player, final boolean isCreative, final boolean isOwner, final long timeRemaining) {
     final ITextComponent textOwner = new TextComponentString(ownerName == null ? "-null-" : ownerName);
     textOwner.getStyle()
@@ -164,14 +164,14 @@ public class TileDeathChest extends TileEntity {
       player.sendMessage(textMessageToSend);
     }
   }
-
+  
   protected void doDropContent() {
     for (InventorySlot inventory : inventorySlots) {
       final EntityItem entityItem = new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, inventory.itemStack);
       world.spawnEntity(entityItem);
     }
   }
-
+  
   private void doReturnToOwner(@Nonnull final EntityPlayerMP player) {
     final List<ItemStack> overflow = InventoryHandler.restoreOrOverflow(player, inventorySlots, false);
     
@@ -181,7 +181,7 @@ public class TileDeathChest extends TileEntity {
       }
       world.spawnEntity(new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemStack));
     }
-
+    
     world.removeTileEntity(pos);
     world.setBlockToAir(pos);
   }
