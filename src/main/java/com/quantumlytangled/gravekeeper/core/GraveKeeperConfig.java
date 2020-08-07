@@ -3,10 +3,13 @@ package com.quantumlytangled.gravekeeper.core;
 import com.quantumlytangled.gravekeeper.GraveKeeper;
 import com.quantumlytangled.gravekeeper.compatability.CompatArmor;
 import com.quantumlytangled.gravekeeper.compatability.CompatBaubles;
+import com.quantumlytangled.gravekeeper.compatability.CompatCosmeticArmorReworked;
 import com.quantumlytangled.gravekeeper.compatability.CompatGalacticCraftCore;
 import com.quantumlytangled.gravekeeper.compatability.CompatMain;
 import com.quantumlytangled.gravekeeper.compatability.CompatOffHand;
 import com.quantumlytangled.gravekeeper.compatability.CompatTechGuns;
+import com.quantumlytangled.gravekeeper.compatability.CompatAetherLegacy;
+import com.quantumlytangled.gravekeeper.compatability.CompatTravelersBackpack;
 import com.quantumlytangled.gravekeeper.util.InventoryHandler;
 import java.io.File;
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ public class GraveKeeperConfig {
   public static boolean DEBUG_LOGS = false;
   public static String[] COMPATIBILITY_ORDER = new String[] {
       "minecraft:armour", "minecraft:main", "minecraft:offhand",
-      "baubles", "galacticraftcore", "techguns"
+      "aether_legacy", "baubles", "cosmeticarmorreworked", "galacticraftcore", "techguns", "travelersbackpack"
   };
   
   public static int EXPIRE_TIME_SECONDS = 7200;
@@ -95,8 +98,18 @@ public class GraveKeeperConfig {
             continue;
           }
           switch (nameCompatibility) {
+            case "aether_legacy":
+              InventoryHandler.addCompatibilityWrapper(CompatAetherLegacy.getInstance());
+              compatibilityAdded.add(nameCompatibility);
+              break;
+            
             case "baubles":
               InventoryHandler.addCompatibilityWrapper(CompatBaubles.getInstance());
+              compatibilityAdded.add(nameCompatibility);
+              break;
+
+            case "cosmeticarmorreworked":
+              InventoryHandler.addCompatibilityWrapper(CompatCosmeticArmorReworked.getInstance());
               compatibilityAdded.add(nameCompatibility);
               break;
 
@@ -109,7 +122,12 @@ public class GraveKeeperConfig {
               InventoryHandler.addCompatibilityWrapper(CompatTechGuns.getInstance());
               compatibilityAdded.add(nameCompatibility);
               break;
-
+            
+            case "travelersbackpack":
+              InventoryHandler.addCompatibilityWrapper(CompatTravelersBackpack.getInstance());
+              compatibilityAdded.add(nameCompatibility);
+              break;
+            
             default:
               Registration.logger.error(String.format("Skipping unknown compatibility name %s",
                     nameCompatibility ));
@@ -139,7 +157,7 @@ public class GraveKeeperConfig {
             "Use this to adjust soulbind priority between inventory type. Remove inventories you don't want to be saved in a grave.",
             "Note: Traveler's backpack are only saved if you disable block placement in the related mod.",
             "Valid vanilla values are: minecraft:armour, minecraft:main & minecraft:offhand.",
-            "Valid modded values are: baubles, galacticraftcore, techguns." }))
+            "Valid modded values are: aether_legacy, baubles, cosmeticarmorreworked, galacticraftcore, techguns, travelersbackpack." }))
         .getStringList();
     
     EXPIRE_TIME_SECONDS = config

@@ -95,12 +95,15 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+    
+    provided curse.resolve("the-aether", "${config.AetherLegacy_fileid}")
     // provided "botania:Botania:${config.Botania_version}"
     provided "com.azanor.baubles:Baubles:${config.Baubles_version}"
+    provided curse.resolve("cosmetic-armor-reworked", "${config.CosmeticArmorReworked_fileid}")
     provided "GC-1.12-dev:GalacticraftCore-Dev:${config.Galacticraft_version}.${config.Galacticraft_build}"
     // provided "techguns:Techguns:${config.Techguns_version}"
     provided curse.resolve("techguns", "${config.Techguns_fileid}")
+    provided curse.resolve("travelers-backpack", "${config.TravelersBackpack_fileid}")
 }
 
 processResources {
