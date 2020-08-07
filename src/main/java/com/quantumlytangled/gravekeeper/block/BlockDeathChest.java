@@ -18,6 +18,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -57,7 +58,17 @@ public class BlockDeathChest extends Block {
     tileDeathChest.processInteraction((EntityPlayerMP) player);
     return true;
   }
-
+  
+  @Override
+  public void onBlockExploded(@Nonnull final World world, @Nonnull final BlockPos blockPos, @Nonnull final Explosion explosion) {
+    // do NOT call super, do NOT break the block
+    
+    final EntityPlayer player = world.getClosestPlayer(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D, 6, false);
+    
+    Registration.logger.warn(String.format("Death chest exploded at %s (%d %d %d) due to %s in proximity of player %s",
+        WorldPosition.format(world), blockPos.getX(), blockPos.getY(), blockPos.getZ(), explosion, player ));
+  }
+  
   @Override
   public void breakBlock(@Nonnull final World world, @Nonnull final BlockPos blockPos, @Nonnull final IBlockState blockState) {
     if (world.isRemote) {
