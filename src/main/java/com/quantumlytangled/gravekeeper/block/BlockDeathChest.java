@@ -2,6 +2,7 @@ package com.quantumlytangled.gravekeeper.block;
 
 import com.quantumlytangled.gravekeeper.GraveKeeper;
 import com.quantumlytangled.gravekeeper.core.Registration;
+import com.quantumlytangled.gravekeeper.core.WorldPosition;
 import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;
@@ -73,7 +74,7 @@ public class BlockDeathChest extends Block {
     
     final EntityPlayer player = world.getClosestPlayer(blockPos.getX() + 0.5D, blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D, 6, false);
     Registration.logger.warn(String.format("Death chest broken at %s (%d %d %d) in proximity of player %s",
-        world.getProviderName(), blockPos.getX(), blockPos.getY(), blockPos.getZ(), player ));
+        WorldPosition.format(world), blockPos.getX(), blockPos.getY(), blockPos.getZ(), player ));
 
     tileDeathChest.doDropContent();
   }
