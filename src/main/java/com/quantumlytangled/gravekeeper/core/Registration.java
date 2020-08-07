@@ -6,6 +6,7 @@ import com.quantumlytangled.gravekeeper.block.TileDeathChest;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -146,7 +147,16 @@ public final class Registration {
       logger.warn(String.format("Failed to create inventory backup for player %s",
           player ));
     }
-
+    
+    final boolean anyGraveContent = inventorySlots.stream()
+        .anyMatch( inventorySlot -> !inventorySlot.isCharmed
+                && !inventorySlot.isSoulbound );
+    if (!anyGraveContent) {
+      logger.warn(String.format("No item to save, ignoring death of player %s",
+          player ));
+      return;
+    }
+    
     // find a position and place the grave
     double pX = player.posX;
     double pY = player.posY;
@@ -164,13 +174,13 @@ public final class Registration {
     final TileDeathChest tileDeathChest = (TileDeathChest) tileEntity;
     
     tileDeathChest.setData(player, identifier, creationDate.seconds, inventorySlots);
-
+    
     // log to console
     logger.info(String.format("Generated DeathChest for %s (%s) in DIM%d at (%d %d %d).",
         playerName, playerUUID,
         worldPositionChest.world.provider.getDimension(),
         worldPositionChest.blockPos.getX(), worldPositionChest.blockPos.getY(), worldPositionChest.blockPos.getZ() ));
-
+    
     // inform player
     final ITextComponent textLocation = new TextComponentString(worldPositionChest.format());
     textLocation.getStyle().setColor(TextFormatting.AQUA).setBold(true);
