@@ -8,6 +8,7 @@ import com.quantumlytangled.gravekeeper.core.GraveKeeperConfig;
 import com.quantumlytangled.gravekeeper.core.InventorySlot;
 import com.quantumlytangled.gravekeeper.core.InventoryType;
 import com.quantumlytangled.gravekeeper.core.Registration;
+import com.quantumlytangled.gravekeeper.util.CharmHandler.Mode;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -66,11 +67,12 @@ public class InventoryHandler {
     
     return inventorySlots;
   }
-  
+
+  @Nonnull
   private static CharmHandler.Mode computeCharmMode(@Nonnull final EntityPlayerMP player,
       @Nonnull final ICompatInventory compatInventory) {
     final NonNullList<ItemStack> itemStacks = compatInventory.getAllContents(player);
-    CharmHandler.Mode charmMode = null;
+    CharmHandler.Mode charmMode = Mode.NONE;
     for (final ItemStack itemStack : itemStacks) {
       if (itemStack.isEmpty()) {
         continue;
@@ -81,7 +83,7 @@ public class InventoryHandler {
   }
   
   private static void collectOnDeath(@Nonnull final EntityPlayerMP player,
-      final CharmHandler.Mode charmMode,
+      @Nonnull final CharmHandler.Mode charmMode,
       @Nonnull final List<InventorySlot> inventorySlots,
       @Nonnull final ICompatInventory compatInventory) {
     // compute how many further items are allowed for soulbound

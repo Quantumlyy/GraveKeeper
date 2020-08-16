@@ -3,7 +3,6 @@ package com.quantumlytangled.gravekeeper.util;
 import com.quantumlytangled.gravekeeper.core.GraveKeeperConfig;
 import com.quantumlytangled.gravekeeper.core.InventoryType;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 
 public class CharmHandler {
@@ -15,7 +14,7 @@ public class CharmHandler {
     FULL
   }
   
-  public static Mode updateMode(@Nullable final Mode modeCurrent, @Nonnull final ItemStack itemStack) {
+  public static Mode updateMode(@Nonnull final Mode modeCurrent, @Nonnull final ItemStack itemStack) {
     final Mode modeItem;
     if (GraveKeeperConfig.CHARM_ARMOR_HELD_ITEMS.contains(itemStack.getItem())) {
       modeItem = Mode.ARMOUR_HELD;
@@ -26,7 +25,7 @@ public class CharmHandler {
     } else {
       modeItem = Mode.NONE;
     }
-    return modeCurrent != null && modeCurrent.ordinal() > modeItem.ordinal() ? modeCurrent : modeItem;
+    return modeCurrent.ordinal() > modeItem.ordinal() ? modeCurrent : modeItem;
   }
   
   public static boolean isCharmed(@Nonnull final Mode mode, final int slotHeld,
