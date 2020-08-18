@@ -42,7 +42,9 @@ public class TileDeathChest extends TileEntity {
   
   public void processInteraction(@Nonnull final EntityPlayerMP player) {
     final boolean isCreative = player.isCreative();
-    final boolean isOwner = player.getUniqueID().equals(ownerUUID);
+    final boolean isOwner = ownerUUID == null
+                         || (ownerUUID.getLeastSignificantBits() == 0L && ownerUUID.getMostSignificantBits() == 0L)
+                         || player.getUniqueID().equals(ownerUUID);
     final long timeRemaining = CreationDate.getRemainingSeconds(creationDate);
     if ( isCreative
       || player.isSneaking() ) {
