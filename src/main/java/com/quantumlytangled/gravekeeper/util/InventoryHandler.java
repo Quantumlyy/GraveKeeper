@@ -37,7 +37,7 @@ public class InventoryHandler {
     
     // check for charms
     // note: we directly access explicitly the main inventory wrapper in case it's not enabled for saving in the grave.
-    final CharmHandler.Mode charmMode = computeCharmMode(player, CompatMain.getInstance());
+    final CharmHandler.Mode charmMode = computeCharmMode(player);
     if (GraveKeeperConfig.DEBUG_LOGS) {
       Registration.logger.info(String.format("Charm mode is %s",
           charmMode));
@@ -67,17 +67,21 @@ public class InventoryHandler {
     
     return inventorySlots;
   }
-
+  
   @Nonnull
-  private static CharmHandler.Mode computeCharmMode(@Nonnull final EntityPlayerMP player,
-      @Nonnull final ICompatInventory compatInventory) {
-    final NonNullList<ItemStack> itemStacks = compatInventory.getAllContents(player);
+  private static CharmHandler.Mode computeCharmMode(@Nonnull final EntityPlayerMP player) {
     CharmHandler.Mode charmMode = Mode.NONE;
-    for (final ItemStack itemStack : itemStacks) {
-      if (itemStack.isEmpty()) {
+    for (ICompatInventory compatInventory : compatInventories.values()) {
+      if ( compatInventory.getType() != InventoryType.BAUBLES
+        && compatInventory.getType() != InventoryType.MAIN ) {
         continue;
       }
-      charmMode = CharmHandler.updateMode(charmMode, itemStack);
+      for (final ItemStack itemStack : compatInventory.getAllContents(player)) {
+        if (itemStack.isEmpty()) {
+          continue;
+        }
+        charmMode = CharmHandler.updateMode(charmMode, itemStack);
+      }
     }
     return charmMode;
   }
@@ -120,11 +124,11 @@ public class InventoryHandler {
       }
       final InventorySlot inventorySlot = new InventorySlot(itemStack, index, compatInventory.getType(), isCharmed, isSoulbound);
       inventorySlots.add(inventorySlot);
-      if ( ( !isCharmed
-          && !isSoulbound )
-        || ( GraveKeeperConfig.MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY
-          && inventorySlot.type != InventoryType.ARMOUR
-          && inventorySlot.type != InventoryType.MAIN ) ) {
+      if ( !isCharmed
+        && ( !isSoulbound
+          || ( GraveKeeperConfig.MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY
+            && inventorySlot.type != InventoryType.ARMOUR
+            && inventorySlot.type != InventoryType.MAIN ) ) ) {
         compatInventory.removeItem(player, index);
       }
     }

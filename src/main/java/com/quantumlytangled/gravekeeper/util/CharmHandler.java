@@ -66,7 +66,8 @@ public class CharmHandler {
         break;
     }
     // check for charm itself
-    return inventoryType == InventoryType.MAIN
+    return ( inventoryType == InventoryType.MAIN
+          || inventoryType == InventoryType.BAUBLES )
         && GraveKeeperConfig.CHARM_ITEMS.contains(itemStack.getItem());
   }
   
