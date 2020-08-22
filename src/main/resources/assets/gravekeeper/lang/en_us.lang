@@ -3,6 +3,7 @@ tile.gravekeeper.death_chest.name=Death Chest
 
 item.gravekeeper.death_certificate.name=Death Certificate
 
+gravekeeper.command.list_header=%1$d grave backups were found for %2$s:
 gravekeeper.command.restored_sender=A grave backup was successfully restored to %1$s.
 gravekeeper.command.restored_target=A grave backup has been restored to you, check around you in case your inventory is full...
 

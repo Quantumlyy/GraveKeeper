@@ -103,6 +103,7 @@ public class GraveKeeper {
   
   @EventHandler
   public void onFMLServerStarting(@Nonnull final FMLServerStartingEvent event) {
+    event.registerServerCommand(new CommandList());
     event.registerServerCommand(new CommandRestore());
   }
 }

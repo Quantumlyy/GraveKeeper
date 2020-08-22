@@ -38,6 +38,17 @@ public class NBTFile {
         return null;
       }
       
+      return read(file);
+    } catch (final Exception exception) {
+      exception.printStackTrace(GraveKeeper.printStreamError);
+    }
+
+    return null;
+  }
+  
+  @Nullable
+  public static NBTTagCompound read(@Nonnull final File file) {
+    try {
       final FileInputStream fileinputstream = new FileInputStream(file);
       final NBTTagCompound tagCompound = CompressedStreamTools.readCompressed(fileinputstream);
       

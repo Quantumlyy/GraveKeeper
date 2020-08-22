@@ -51,6 +51,10 @@ public class WorldPosition {
     this.world = world;
   }
   
+  public boolean isSameWorld(@Nonnull final World world) {
+    return dimensionId == world.provider.getDimension();
+  }
+  
   @Nonnull
   public NBTTagCompound writeToNBT(@Nonnull final NBTTagCompound tagCompound) {
     tagCompound.setInteger("dimensionId", world.provider.getDimension());
