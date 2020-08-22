@@ -25,10 +25,10 @@ public class GravePosition {
     }
     
     // adjust the starting altitude within the world bounds
-    if (worldPositionResult.blockPos.getY() >= worldPositionResult.world.getHeight()) {
+    if (worldPositionResult.blockPos.getY() >= worldPositionResult.getWorld().getHeight()) {
       worldPositionResult.blockPos = new BlockPos(
           worldPositionResult.blockPos.getX(),
-          worldPositionResult.world.getHeight() - 1,
+          worldPositionResult.getWorld().getHeight() - 1,
           worldPositionResult.blockPos.getZ() );
     } else if (worldPositionResult.blockPos.getY() < GraveKeeperConfig.SEARCH_MIN_ALTITUDE) {
       worldPositionResult.blockPos = new BlockPos(
@@ -38,7 +38,7 @@ public class GravePosition {
     }
     
     // stop here if we start on a good spot
-    if (isFreeSpot(worldPositionResult.world, worldPositionResult.blockPos, true, false)) {
+    if (isFreeSpot(worldPositionResult.getWorld(), worldPositionResult.blockPos, true, false)) {
       return worldPositionResult;
     }
     
@@ -50,7 +50,7 @@ public class GravePosition {
     // (at this point, we're either flying or in an area filled with block (for example, a cave collapsing with sand or a lava lake)
     
     // look for the ground if we are in the air, look above us otherwise
-    final boolean isFlying = isFreeSpot(worldPositionResult.world, worldPositionResult.blockPos, false, false);
+    final boolean isFlying = isFreeSpot(worldPositionResult.getWorld(), worldPositionResult.blockPos, false, false);
     if (updateVertically(worldPositionResult, isFlying)) {
       return worldPositionResult;
     }
@@ -72,8 +72,8 @@ public class GravePosition {
     }
     
     // we did our best, admins will fix it up from there <3
-    final IBlockState blockState = worldPositionResult.world.getBlockState(worldPositionResult.blockPos);
-    final TileEntity tileEntity = worldPositionResult.world.getTileEntity(worldPositionResult.blockPos);
+    final IBlockState blockState = worldPositionResult.getWorld().getBlockState(worldPositionResult.blockPos);
+    final TileEntity tileEntity = worldPositionResult.getWorld().getTileEntity(worldPositionResult.blockPos);
     Registration.logger.warn(String.format("Can't find free slot for grave, deleting %s with tile entity %s at %s",
         blockState, tileEntity, worldPositionResult.blockPos ));
     if (tileEntity != null) {
@@ -99,12 +99,12 @@ public class GravePosition {
       if (world != null) {
         // try bed location in spawn dimension
         blockPosBed = entityPlayer.getBedLocation(GraveKeeperConfig.SPAWN_DIMENSION_ID);
-        worldPositionResult.world = world;
+        worldPositionResult.setWorld(world);
         if (blockPosBed != null) {// (bed found in spawn dimension)
           worldPositionResult.blockPos = blockPosBed.up().south();
         } else {// (still no bed location)
           // use spawn location, its always defined, worse case it'll be at the center of the world border
-          worldPositionResult.blockPos = worldPositionResult.world.getSpawnPoint().up();
+          worldPositionResult.blockPos = worldPositionResult.getWorld().getSpawnPoint().up();
         }
         
       } else {
@@ -127,7 +127,7 @@ public class GravePosition {
     final int yMin = Math.max(worldPositionResult.blockPos.getY() - GraveKeeperConfig.SEARCH_RADIUS_BELOW_M,
                               GraveKeeperConfig.SEARCH_MIN_ALTITUDE);
     final int yMax = Math.min(worldPositionResult.blockPos.getY() + GraveKeeperConfig.SEARCH_RADIUS_ABOVE_M,
-                              worldPositionResult.world.getHeight() - 1 );
+                              worldPositionResult.getWorld().getHeight() - 1 );
     final int zMin = worldPositionResult.blockPos.getZ() - GraveKeeperConfig.SEARCH_RADIUS_HORIZONTAL_M;
     final int zMax = worldPositionResult.blockPos.getZ() + GraveKeeperConfig.SEARCH_RADIUS_HORIZONTAL_M;
     
@@ -155,7 +155,7 @@ public class GravePosition {
             continue;
           }
           mutableBlockPos.setPos(x, y, z);
-          if (isFreeSpot(worldPositionResult.world, mutableBlockPos, true, false)) {
+          if (isFreeSpot(worldPositionResult.getWorld(), mutableBlockPos, true, false)) {
             final int distanceCurrent = (int) Math.round(mutableBlockPos.distanceSqToCenter(
                 worldPositionResult.blockPos.getX() + 0.5D,
                 worldPositionResult.blockPos.getY() + 0.5D,
@@ -166,7 +166,7 @@ public class GravePosition {
                 mutableBlockPos.getX() + 0.5D,
                 mutableBlockPos.getY() + 0.5D,
                 mutableBlockPos.getZ() + 0.5D);
-            final RayTraceResult rayTraceResult = worldPositionResult.world.rayTraceBlocks(vStarting, vTarget);
+            final RayTraceResult rayTraceResult = worldPositionResult.getWorld().rayTraceBlocks(vStarting, vTarget);
             final boolean isHidden = rayTraceResult == null || !rayTraceResult.getBlockPos().equals(mutableBlockPos);
             if (isHidden) {
               if (distanceCurrent < distanceClosestHidden) {
@@ -223,9 +223,9 @@ public class GravePosition {
     final MutableBlockPos mutableBlockPos = new MutableBlockPos(worldPositionResult.blockPos);
     int y = worldPositionResult.blockPos.getY();
     while (y >= GraveKeeperConfig.SEARCH_MIN_ALTITUDE
-         && y < worldPositionResult.world.getHeight() - 1 ) {
+         && y < worldPositionResult.getWorld().getHeight() - 1 ) {
       mutableBlockPos.setY(y);
-      if (isFreeSpot(worldPositionResult.world, mutableBlockPos, true, true)) {
+      if (isFreeSpot(worldPositionResult.getWorld(), mutableBlockPos, true, true)) {
         if (GraveKeeperConfig.DEBUG_LOGS) {
           Registration.logger.info(String.format("Found vertical block at (%d %d %d)",
               mutableBlockPos.getX(), mutableBlockPos.getY(), mutableBlockPos.getZ() ));

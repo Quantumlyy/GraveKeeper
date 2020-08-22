@@ -127,17 +127,17 @@ public class CommandRestore extends CommandBase {
               identifier )).setStyle(new Style().setColor(TextFormatting.RED)) ));
       return;
     }
-    final List<InventorySlot> inventorySlots;
+    final GraveData graveData;
     try {
       final String stringFilePath = String.format("%s/%s.dat", stringDirectory, identifier);
-      final NBTTagCompound nbtInventorySlots = NBTFile.read(stringFilePath);
-      if (nbtInventorySlots == null) {
+      final NBTTagCompound nbtGraveData = NBTFile.read(stringFilePath);
+      if (nbtGraveData == null) {
         commandSender.sendMessage(getPrefix().appendSibling(
             new TextComponentString(String.format("Unable to read archived inventory for identifier %s",
                 identifier )).setStyle(new Style().setColor(TextFormatting.RED)) ));
         return;
       }
-      inventorySlots = InventoryHandler.readFromNBT(nbtInventorySlots);
+      graveData = new GraveData(nbtGraveData);
     } catch (final Exception exception) {
       exception.printStackTrace(Registration.printStreamError);
       commandSender.sendMessage(getPrefix().appendSibling(
@@ -145,10 +145,10 @@ public class CommandRestore extends CommandBase {
               identifier )).setStyle(new Style().setColor(TextFormatting.RED)) ));
       return;
     }
-    // assert inventorySlots != null;
+    // assert graveData != null;
     
     // restore
-    final List<ItemStack> overflow = InventoryHandler.restoreOrOverflow(entityPlayer, inventorySlots, entityPlayer.isCreative());
+    final List<ItemStack> overflow = InventoryHandler.restoreOrOverflow(entityPlayer, graveData.inventorySlots, entityPlayer.isCreative());
     for (final ItemStack itemStack : overflow) {
       if (entityPlayer.inventory.addItemStackToInventory(itemStack.copy())) {
         continue;

@@ -6,7 +6,6 @@ import com.quantumlytangled.gravekeeper.block.TileDeathChest;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -128,6 +127,12 @@ public final class Registration {
       return;
     }
     
+    // find a grave position
+    final WorldPosition worldPositionPlayer = new WorldPosition(player.world,
+        new BlockPos(MathHelper.floor(player.posX), MathHelper.floor(player.posY), MathHelper.floor(player.posZ)));
+    final WorldPosition worldPositionGrave = GravePosition.get(player, worldPositionPlayer.blockPos);
+    final GraveData graveData = new GraveData(inventorySlots, worldPositionPlayer, worldPositionGrave);
+    
     // archive grave content
     final String stringDirectory = String.format("%s/data/%s/%s",
         player.world.getSaveHandler().getWorldDirectory().getPath(),
@@ -136,9 +141,9 @@ public final class Registration {
     final File fileDirectory = new File(stringDirectory);
     try {
       FileUtils.forceMkdir(fileDirectory);
-      final NBTTagCompound nbtInventorySlots = InventoryHandler.writeToNBT(inventorySlots);
+      final NBTTagCompound nbtGraveData = graveData.writeToNBT();
       final String stringFilePath = String.format("%s/%s.dat", stringDirectory, identifier);
-      NBTFile.write(stringFilePath, nbtInventorySlots);
+      NBTFile.write(stringFilePath, nbtGraveData);
       logger.info(String.format("Archived DeathChest content for %s, restore it with /gkrestore %s",
           playerName,
           identifier ));
@@ -157,18 +162,13 @@ public final class Registration {
       return;
     }
     
-    // find a position and place the grave
-    double pX = player.posX;
-    double pY = player.posY;
-    double pZ = player.posZ;
-    final WorldPosition worldPositionChest = GravePosition.get(player, new BlockPos(MathHelper.floor(pX), MathHelper.floor(pY), MathHelper.floor(pZ)));
+    // place the grave
+    worldPositionGrave.getWorld().setBlockState(worldPositionGrave.blockPos, blockDeathChest.getDefaultState());
     
-    worldPositionChest.world.setBlockState(worldPositionChest.blockPos, blockDeathChest.getDefaultState());
-    
-    final TileEntity tileEntity = worldPositionChest.world.getTileEntity(worldPositionChest.blockPos);
+    final TileEntity tileEntity = worldPositionGrave.getWorld().getTileEntity(worldPositionGrave.blockPos);
     if (!(tileEntity instanceof TileDeathChest)) {
       logger.error(String.format("Missing tile entity %s, unable to save player %s inventory in world %s at %s",
-          tileEntity, playerName, worldPositionChest.world, worldPositionChest.blockPos ));
+          tileEntity, playerName, worldPositionGrave.getWorld(), worldPositionGrave.blockPos ));
       return;
     }
     final TileDeathChest tileDeathChest = (TileDeathChest) tileEntity;
@@ -178,11 +178,11 @@ public final class Registration {
     // log to console
     logger.info(String.format("Generated DeathChest for %s (%s) in DIM%d at (%d %d %d).",
         playerName, playerUUID,
-        worldPositionChest.world.provider.getDimension(),
-        worldPositionChest.blockPos.getX(), worldPositionChest.blockPos.getY(), worldPositionChest.blockPos.getZ() ));
+        worldPositionGrave.getWorld().provider.getDimension(),
+        worldPositionGrave.blockPos.getX(), worldPositionGrave.blockPos.getY(), worldPositionGrave.blockPos.getZ() ));
     
     // inform player
-    final ITextComponent textLocation = new TextComponentString(worldPositionChest.format());
+    final ITextComponent textLocation = new TextComponentString(worldPositionGrave.format());
     textLocation.getStyle().setColor(TextFormatting.AQUA).setBold(true);
     final ITextComponent textMessage = new TextComponentTranslation("gravekeeper.chat.grave_placed",
         textLocation );
