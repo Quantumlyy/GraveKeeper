@@ -4,18 +4,19 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
+import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
 
 public class CreationDate {
-
+  
   public long seconds;
   public String string;
-
-  CreationDate() {
+  
+  public CreationDate() {
     final ZonedDateTime utcTimeStamp = ZonedDateTime.now(ZoneOffset.UTC);
     seconds = utcTimeStamp.getLong(ChronoField.INSTANT_SECONDS);
     string = utcTimeStamp.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss.SSS"));
   }
-
+  
   public static long getRemainingSeconds(long creationDate) {
     if (GraveKeeperConfig.INSTANT_FOREIGN_COLLECTION) {
       return 0L;

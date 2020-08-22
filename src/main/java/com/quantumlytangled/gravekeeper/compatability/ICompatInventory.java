@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import com.quantumlytangled.gravekeeper.core.InventoryType;
+import com.quantumlytangled.gravekeeper.util.InventoryType;
 
 public interface ICompatInventory {
 

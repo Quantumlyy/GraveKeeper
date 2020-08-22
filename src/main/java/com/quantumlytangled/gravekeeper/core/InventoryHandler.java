@@ -1,13 +1,14 @@
-package com.quantumlytangled.gravekeeper.util;
+package com.quantumlytangled.gravekeeper.core;
 
 import javax.annotation.Nonnull;
+import com.quantumlytangled.gravekeeper.GraveKeeper;
+import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
 import com.quantumlytangled.gravekeeper.compatability.CompatMain;
 import com.quantumlytangled.gravekeeper.compatability.ICompatInventory;
-import com.quantumlytangled.gravekeeper.core.GraveKeeperConfig;
-import com.quantumlytangled.gravekeeper.core.InventorySlot;
-import com.quantumlytangled.gravekeeper.core.InventoryType;
-import com.quantumlytangled.gravekeeper.core.Registration;
-import com.quantumlytangled.gravekeeper.util.CharmHandler.Mode;
+import com.quantumlytangled.gravekeeper.core.CharmHandler.Mode;
+import com.quantumlytangled.gravekeeper.util.InventorySlot;
+import com.quantumlytangled.gravekeeper.util.InventoryType;
+import com.quantumlytangled.gravekeeper.util.SoulboundHandler;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,7 +32,7 @@ public class InventoryHandler {
     // note: we directly access explicitly the main inventory wrapper in case it's not enabled for saving in the grave.
     final CharmHandler.Mode charmMode = computeCharmMode(player);
     if (GraveKeeperConfig.DEBUG_LOGS) {
-      Registration.logger.info(String.format("Charm mode is %s",
+      GraveKeeper.logger.info(String.format("Charm mode is %s",
           charmMode));
     }
     
@@ -50,7 +51,7 @@ public class InventoryHandler {
             continue;
           }
           // main inventory is overflowing => cancel soulbound so we keep that item in the grave
-          Registration.logger.warn(String.format("Failed to move soulbinded item to main inventory (is it full?): %s",
+          GraveKeeper.logger.warn(String.format("Failed to move soulbinded item to main inventory (is it full?): %s",
                   inventorySlot.itemStack ));
           inventorySlot.isSoulbound = false;
         }
@@ -100,7 +101,7 @@ public class InventoryHandler {
       final boolean isCharmed = CharmHandler.isCharmed(charmMode, player.inventory.currentItem, compatInventory.getType(), index, itemStack);
       if (isCharmed) {
         if (GraveKeeperConfig.DEBUG_LOGS) {
-          Registration.logger.info(String.format("Keeping charmed item %s with NBT %s",
+          GraveKeeper.logger.info(String.format("Keeping charmed item %s with NBT %s",
               itemStack, itemStack.getTagCompound() ));
         }
       }
@@ -110,7 +111,7 @@ public class InventoryHandler {
       if (isSoulbound) {
         countSoulboundRemaining--;
         if (GraveKeeperConfig.DEBUG_LOGS) {
-          Registration.logger.info(String.format("Keeping soulbound item %s with NBT %s",
+          GraveKeeper.logger.info(String.format("Keeping soulbound item %s with NBT %s",
               itemStack, itemStack.getTagCompound() ));
         }
       }

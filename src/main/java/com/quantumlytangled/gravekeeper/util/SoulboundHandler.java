@@ -6,7 +6,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import com.quantumlytangled.gravekeeper.core.GraveKeeperConfig;
+import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
 
 public class SoulboundHandler {
   
@@ -34,5 +34,5 @@ public class SoulboundHandler {
     }
     return false;
   }
-
+  
 }

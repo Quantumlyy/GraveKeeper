@@ -1,4 +1,4 @@
-package com.quantumlytangled.gravekeeper.core;
+package com.quantumlytangled.gravekeeper.command;
 
 import javax.annotation.Nonnull;
 
@@ -18,33 +18,34 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import com.quantumlytangled.gravekeeper.GraveKeeper;
-import com.quantumlytangled.gravekeeper.util.InventoryHandler;
+import com.quantumlytangled.gravekeeper.core.GraveData;
+import com.quantumlytangled.gravekeeper.core.InventoryHandler;
 import com.quantumlytangled.gravekeeper.util.NBTFile;
 
 public class CommandRestore extends CommandBase {
-
+  
   public ITextComponent getPrefix() {
     return new TextComponentString("/" + getName()).setStyle(new Style().setColor(TextFormatting.GOLD))
         .appendSibling(new TextComponentString(" "));
   }
-
+  
   @Nonnull
   @Override
   public String getName() {
     return "gkrestore";
   }
-
+  
   @Override
   public int getRequiredPermissionLevel() {
     return 2;
   }
-
+  
   @Nonnull
   @Override
   public String getUsage(@Nonnull final ICommandSender commandSender) {
     return "/gkrestore <identifier>: restore an online player's inventory\n/gkrestore <playerName> <identifier>: restore an inventory to another online player";
   }
-
+  
   @Override
   public void execute(@Nonnull final MinecraftServer server, @Nonnull final ICommandSender commandSender, @Nonnull final String[] args) {
     // set defaults
@@ -139,7 +140,7 @@ public class CommandRestore extends CommandBase {
       }
       graveData = new GraveData(nbtGraveData);
     } catch (final Exception exception) {
-      exception.printStackTrace(Registration.printStreamError);
+      exception.printStackTrace(GraveKeeper.printStreamError);
       commandSender.sendMessage(getPrefix().appendSibling(
           new TextComponentString(String.format("Error trying to read archived inventory for identifier %s, check console for details",
               identifier )).setStyle(new Style().setColor(TextFormatting.RED)) ));
@@ -160,7 +161,7 @@ public class CommandRestore extends CommandBase {
     final ITextComponent textSender = new TextComponentTranslation("gravekeeper.command.restored_sender", entityPlayer.getDisplayName());
     textSender.getStyle().setColor(TextFormatting.GREEN);
     commandSender.sendMessage(textSender);
-    Registration.logger.info(textSender.getUnformattedText());
+    GraveKeeper.logger.info(textSender.getUnformattedText());
     
     if (commandSender != entityPlayer) {
       final ITextComponent textTarget = new TextComponentTranslation("gravekeeper.command.restored_target");

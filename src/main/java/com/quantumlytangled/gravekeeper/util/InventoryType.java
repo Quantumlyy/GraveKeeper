@@ -1,4 +1,4 @@
-package com.quantumlytangled.gravekeeper.core;
+package com.quantumlytangled.gravekeeper.util;
 
 public enum InventoryType {
   MAIN,

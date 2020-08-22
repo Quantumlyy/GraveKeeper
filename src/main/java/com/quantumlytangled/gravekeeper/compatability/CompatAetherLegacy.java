@@ -3,7 +3,7 @@ package com.quantumlytangled.gravekeeper.compatability;
 import com.legacy.aether.api.AetherAPI;
 import com.legacy.aether.api.player.IPlayerAether;
 import com.legacy.aether.api.player.util.IAccessoryInventory;
-import com.quantumlytangled.gravekeeper.core.InventoryType;
+import com.quantumlytangled.gravekeeper.util.InventoryType;
 import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

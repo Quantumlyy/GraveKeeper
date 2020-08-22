@@ -3,7 +3,7 @@ package com.quantumlytangled.gravekeeper.compatability;
 import javax.annotation.Nonnull;
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
-import com.quantumlytangled.gravekeeper.core.InventoryType;
+import com.quantumlytangled.gravekeeper.util.InventoryType;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;

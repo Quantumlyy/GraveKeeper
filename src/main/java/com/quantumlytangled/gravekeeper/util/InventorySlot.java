@@ -1,4 +1,4 @@
-package com.quantumlytangled.gravekeeper.core;
+package com.quantumlytangled.gravekeeper.util;
 
 import javax.annotation.Nonnull;
 import net.minecraft.item.ItemStack;

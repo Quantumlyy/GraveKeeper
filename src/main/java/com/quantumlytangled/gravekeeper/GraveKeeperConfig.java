@@ -1,6 +1,5 @@
-package com.quantumlytangled.gravekeeper.core;
+package com.quantumlytangled.gravekeeper;
 
-import com.quantumlytangled.gravekeeper.GraveKeeper;
 import com.quantumlytangled.gravekeeper.compatability.CompatArmor;
 import com.quantumlytangled.gravekeeper.compatability.CompatBaubles;
 import com.quantumlytangled.gravekeeper.compatability.CompatCosmeticArmorReworked;
@@ -10,7 +9,7 @@ import com.quantumlytangled.gravekeeper.compatability.CompatOffHand;
 import com.quantumlytangled.gravekeeper.compatability.CompatTechGuns;
 import com.quantumlytangled.gravekeeper.compatability.CompatAetherLegacy;
 import com.quantumlytangled.gravekeeper.compatability.CompatTravelersBackpack;
-import com.quantumlytangled.gravekeeper.util.InventoryHandler;
+import com.quantumlytangled.gravekeeper.core.InventoryHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +69,7 @@ public class GraveKeeperConfig {
     final ArrayList<String> compatibilityAdded = new ArrayList<>(10);
     for (final String nameCompatibility : COMPATIBILITY_ORDER) {
       if (compatibilityAdded.contains(nameCompatibility)) {
-        Registration.logger.error(String.format("Skipping duplicated compatibility name %s",
+        GraveKeeper.logger.error(String.format("Skipping duplicated compatibility name %s",
             nameCompatibility ));
         continue;
       }
@@ -93,7 +92,7 @@ public class GraveKeeperConfig {
           
         default:
           if (!Loader.isModLoaded(nameCompatibility)) {
-            Registration.logger.info(String.format("Skipping compatibility for non-loaded mod %s",
+            GraveKeeper.logger.info(String.format("Skipping compatibility for non-loaded mod %s",
                 nameCompatibility ));
             continue;
           }
@@ -129,7 +128,7 @@ public class GraveKeeperConfig {
               break;
             
             default:
-              Registration.logger.error(String.format("Skipping unknown compatibility name %s",
+              GraveKeeper.logger.error(String.format("Skipping unknown compatibility name %s",
                     nameCompatibility ));
               break;
           }

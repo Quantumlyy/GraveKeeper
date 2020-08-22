@@ -1,9 +1,9 @@
 package com.quantumlytangled.gravekeeper.block;
 
-import com.quantumlytangled.gravekeeper.core.GraveKeeperConfig;
+import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
 import com.quantumlytangled.gravekeeper.core.CreationDate;
-import com.quantumlytangled.gravekeeper.core.InventorySlot;
-import com.quantumlytangled.gravekeeper.util.InventoryHandler;
+import com.quantumlytangled.gravekeeper.util.InventorySlot;
+import com.quantumlytangled.gravekeeper.core.InventoryHandler;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public class TileDeathChest extends TileEntity {
   @Override
   public void readFromNBT(@Nonnull NBTTagCompound tagCompound) {
     super.readFromNBT(tagCompound);
-
+    
     final NBTTagList nbtInventorySlots = tagCompound.getTagList("InventorySlots", Constants.NBT.TAG_COMPOUND);
     for (int index = 0; index < nbtInventorySlots.tagCount(); index++) {
       final NBTTagCompound nbtInventorySlot = nbtInventorySlots.getCompoundTagAt(index);

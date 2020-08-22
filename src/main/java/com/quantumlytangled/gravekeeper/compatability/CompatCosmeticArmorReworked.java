@@ -1,6 +1,6 @@
 package com.quantumlytangled.gravekeeper.compatability;
 
-import com.quantumlytangled.gravekeeper.core.InventoryType;
+import com.quantumlytangled.gravekeeper.util.InventoryType;
 import lain.mods.cos.CosmeticArmorReworked;
 import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;

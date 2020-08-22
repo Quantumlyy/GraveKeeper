@@ -1,6 +1,6 @@
 package com.quantumlytangled.gravekeeper.compatability;
 
-import com.quantumlytangled.gravekeeper.core.InventoryType;
+import com.quantumlytangled.gravekeeper.util.InventoryType;
 import com.tiviacz.travelersbackpack.capability.CapabilityUtils;
 import com.tiviacz.travelersbackpack.capability.ITravelersBackpack;
 import com.tiviacz.travelersbackpack.handlers.ConfigHandler;

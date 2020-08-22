@@ -1,4 +1,4 @@
-package com.quantumlytangled.gravekeeper.core;
+package com.quantumlytangled.gravekeeper.util;
 
 import javax.annotation.Nonnull;
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,6 +9,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import com.quantumlytangled.gravekeeper.GraveKeeper;
+import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
 
 public class WorldPosition {
   
@@ -17,14 +19,14 @@ public class WorldPosition {
   private World world;
   public BlockPos blockPos;
   
-  WorldPosition(@Nonnull final World world, @Nonnull final BlockPos blockPos) {
+  public WorldPosition(@Nonnull final World world, @Nonnull final BlockPos blockPos) {
     this.dimensionId = -666;
     this.worldName = null;
     this.world = world;
     this.blockPos = blockPos;
   }
   
-  WorldPosition(final int dimensionId, @Nonnull final String worldName, @Nonnull final BlockPos blockPos) {
+  public WorldPosition(final int dimensionId, @Nonnull final String worldName, @Nonnull final BlockPos blockPos) {
     this.dimensionId = dimensionId;
     this.worldName = worldName;
     this.blockPos = blockPos;
@@ -35,7 +37,7 @@ public class WorldPosition {
     if (world == null) {
       world = getOrCreateWorldServer(dimensionId);
       if (world == null) {
-        Registration.logger.warn(String.format("Failed to load DIM%d (%s), defaulting to the overworld",
+        GraveKeeper.logger.warn(String.format("Failed to load DIM%d (%s), defaulting to the overworld",
             dimensionId, worldName ));
         world = getOrCreateWorldServer(0);
       }
@@ -88,7 +90,7 @@ public class WorldPosition {
     try {
       saveFolder = world.provider.getSaveFolder();
     } catch (final Exception exception) {
-      exception.printStackTrace(Registration.printStreamError);
+      exception.printStackTrace(GraveKeeper.printStreamError);
       saveFolder = "<Exception DIM" + world.provider.getDimension() + ">";
     }
     if (saveFolder == null || saveFolder.isEmpty()) {
@@ -120,11 +122,11 @@ public class WorldPosition {
               worldServer.provider.getDimension(), dimensionId ));
         }
       } catch (final Exception exception) {
-        Registration.logger.error(String.format("%s: Failed to initialize dimension %d",
+        GraveKeeper.logger.error(String.format("%s: Failed to initialize dimension %d",
             exception.getMessage(),
             dimensionId));
         if (GraveKeeperConfig.DEBUG_LOGS) {
-          exception.printStackTrace(Registration.printStreamError);
+          exception.printStackTrace(GraveKeeper.printStreamError);
         }
         worldServer = null;
       }

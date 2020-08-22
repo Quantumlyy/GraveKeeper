@@ -11,9 +11,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import com.quantumlytangled.gravekeeper.GraveKeeper;
+import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
+import com.quantumlytangled.gravekeeper.util.WorldPosition;
 
 public class GravePosition {
-
+  
   // update proposed chest position and return target world
   @Nonnull
   public static WorldPosition get(@Nonnull final EntityPlayer entityPlayer, @Nonnull final BlockPos blockPosInitial) {
@@ -56,7 +59,7 @@ public class GravePosition {
     }
     
     // look in the opposite direction
-    Registration.logger.info(String.format("Player has no safe spot for its grave, releasing direction: %s %s",
+    GraveKeeper.logger.info(String.format("Player has no safe spot for its grave, releasing direction: %s %s",
         entityPlayer, worldPositionResult.blockPos ));
     if (updateVertically(worldPositionResult, isFlying)) {
       return worldPositionResult;
@@ -65,7 +68,7 @@ public class GravePosition {
     // flying in the void? just forget the solid block constrains
     if (isFlying) {
       if (GraveKeeperConfig.DEBUG_LOGS) {
-        Registration.logger.info(String.format("Assuming void area, defaulting to (%d %d %d)",
+        GraveKeeper.logger.info(String.format("Assuming void area, defaulting to (%d %d %d)",
             worldPositionResult.blockPos.getX(), worldPositionResult.blockPos.getY(), worldPositionResult.blockPos.getZ() ));
       }
       return worldPositionResult;
@@ -74,15 +77,15 @@ public class GravePosition {
     // we did our best, admins will fix it up from there <3
     final IBlockState blockState = worldPositionResult.getWorld().getBlockState(worldPositionResult.blockPos);
     final TileEntity tileEntity = worldPositionResult.getWorld().getTileEntity(worldPositionResult.blockPos);
-    Registration.logger.warn(String.format("Can't find free slot for grave, deleting %s with tile entity %s at %s",
+    GraveKeeper.logger.warn(String.format("Can't find free slot for grave, deleting %s with tile entity %s at %s",
         blockState, tileEntity, worldPositionResult.blockPos ));
     if (tileEntity != null) {
       try {
         final NBTTagCompound nbtTagCompound = tileEntity.writeToNBT(new NBTTagCompound());
-        Registration.logger.info(String.format("NBT is %s",
+        GraveKeeper.logger.info(String.format("NBT is %s",
             nbtTagCompound));
       } catch(final Exception exception) {
-        exception.printStackTrace(Registration.printStreamError);
+        exception.printStackTrace(GraveKeeper.printStreamError);
       }
     }
     return worldPositionResult;
@@ -108,7 +111,7 @@ public class GravePosition {
         }
         
       } else {
-        Registration.logger.warn(String.format("Failed to load spawn dimension with id %s, check console for details and review your configuration accordingly.",
+        GraveKeeper.logger.warn(String.format("Failed to load spawn dimension with id %s, check console for details and review your configuration accordingly.",
                                                GraveKeeperConfig.SPAWN_DIMENSION_ID));
       }
     }
@@ -117,7 +120,7 @@ public class GravePosition {
   // note: only updates worldPositionResult when returning true
   private static boolean updateWithNearbyFreeSpot(@Nonnull final WorldPosition worldPositionResult) {
     if (GraveKeeperConfig.DEBUG_LOGS) {
-      Registration.logger.info(String.format("Starting position is %s, searching nearby",
+      GraveKeeper.logger.info(String.format("Starting position is %s, searching nearby",
           worldPositionResult.blockPos ));
     }
     
@@ -171,7 +174,7 @@ public class GravePosition {
             if (isHidden) {
               if (distanceCurrent < distanceClosestHidden) {
                 if (GraveKeeperConfig.DEBUG_LOGS) {
-                  Registration.logger.info(String.format("New hidden free spot is closer: %d -> %d",
+                  GraveKeeper.logger.info(String.format("New hidden free spot is closer: %d -> %d",
                       distanceClosestHidden, distanceCurrent ));
                 }
                 distanceClosestHidden = distanceCurrent;
@@ -180,7 +183,7 @@ public class GravePosition {
 
             } else if (distanceCurrent < distanceClosestVisible) {
               if (GraveKeeperConfig.DEBUG_LOGS) {
-                Registration.logger.info(String.format("New visible free spot is closer: %d -> %d",
+                GraveKeeper.logger.info(String.format("New visible free spot is closer: %d -> %d",
                     distanceClosestVisible, distanceCurrent ));
               }
               distanceClosestVisible = distanceCurrent;
@@ -194,7 +197,7 @@ public class GravePosition {
     // return the closest visible, then closest hidden location
     if (distanceClosestVisible != Integer.MAX_VALUE) {
       if (GraveKeeperConfig.DEBUG_LOGS) {
-        Registration.logger.info(String.format("Found closest visible block %d m away at (%d %d %d)",
+        GraveKeeper.logger.info(String.format("Found closest visible block %d m away at (%d %d %d)",
             distanceClosestVisible,
             blockPosVisible.getX(), blockPosVisible.getY(), blockPosVisible.getZ() ));
       }
@@ -203,7 +206,7 @@ public class GravePosition {
     }
     if (distanceClosestHidden != Integer.MAX_VALUE) {
       if (GraveKeeperConfig.DEBUG_LOGS) {
-        Registration.logger.info(String.format("Found closest hidden block %d m away at (%d %d %d)",
+        GraveKeeper.logger.info(String.format("Found closest hidden block %d m away at (%d %d %d)",
             distanceClosestHidden,
             blockPosHidden.getX(), blockPosHidden.getY(), blockPosHidden.getZ() ));
       }
@@ -216,7 +219,7 @@ public class GravePosition {
   // note: only updates worldPositionResult when returning true
   private static boolean updateVertically(@Nonnull final WorldPosition worldPositionResult, final boolean isFlying) {
     if (GraveKeeperConfig.DEBUG_LOGS) {
-      Registration.logger.info(String.format("Starting position is %s, searching %s",
+      GraveKeeper.logger.info(String.format("Starting position is %s, searching %s",
           worldPositionResult.blockPos, isFlying ? "down below" : "up above" ));
     }
 
@@ -227,7 +230,7 @@ public class GravePosition {
       mutableBlockPos.setY(y);
       if (isFreeSpot(worldPositionResult.getWorld(), mutableBlockPos, true, true)) {
         if (GraveKeeperConfig.DEBUG_LOGS) {
-          Registration.logger.info(String.format("Found vertical block at (%d %d %d)",
+          GraveKeeper.logger.info(String.format("Found vertical block at (%d %d %d)",
               mutableBlockPos.getX(), mutableBlockPos.getY(), mutableBlockPos.getZ() ));
         }
         worldPositionResult.blockPos = mutableBlockPos.toImmutable();
@@ -271,7 +274,7 @@ public class GravePosition {
                                     || blockState.getBlock().isReplaceable(world, blockPos) );
     if ( isAirOrReplaceable
       && GraveKeeperConfig.DEBUG_LOGS ) {
-      Registration.logger.info(String.format("Found free spot at (%d %d %d)",
+      GraveKeeper.logger.info(String.format("Found free spot at (%d %d %d)",
           blockPos.getY(), blockPos.getY(), blockPos.getZ()));
     }
     return isAirOrReplaceable;

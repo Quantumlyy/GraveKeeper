@@ -1,8 +1,8 @@
 package com.quantumlytangled.gravekeeper.core;
 
 import com.quantumlytangled.gravekeeper.GraveKeeper;
-import com.quantumlytangled.gravekeeper.core.InventorySlot;
-import com.quantumlytangled.gravekeeper.core.WorldPosition;
+import com.quantumlytangled.gravekeeper.util.InventorySlot;
+import com.quantumlytangled.gravekeeper.util.WorldPosition;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -20,7 +20,7 @@ public class GraveData {
   public final List<InventorySlot> inventorySlots;
   public final WorldPosition worldPositionPlayer;
   public final WorldPosition worldPositionGrave;
-
+  
   public GraveData(@Nonnull final List<InventorySlot> inventorySlots, @Nonnull final WorldPosition worldPositionPlayer, @Nonnull final WorldPosition worldPositionGrave) {
     this.inventorySlots = inventorySlots;
     this.worldPositionPlayer = worldPositionPlayer;
