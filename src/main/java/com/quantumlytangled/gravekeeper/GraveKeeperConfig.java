@@ -12,6 +12,7 @@ import com.quantumlytangled.gravekeeper.compatability.CompatTravelersBackpack;
 import com.quantumlytangled.gravekeeper.core.InventoryHandler;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.enchantment.Enchantment;
@@ -63,6 +64,7 @@ public class GraveKeeperConfig {
   public static int KEEP_SOULBOUND_AMOUNT = 5;
 
   public static List<Enchantment> SOULBOUND_ENCHANTMENTS = null;
+  public static Map<String, Boolean> SOULBOUND_TAGS = null;
 
   public static int SEARCH_MIN_ALTITUDE = 0;
   public static int SEARCH_RADIUS_ABOVE_M = 10;
@@ -298,6 +300,12 @@ public class GraveKeeperConfig {
       if (enchantment != null) {
         SOULBOUND_ENCHANTMENTS.add(enchantment);
       }
+    }
+
+    SOULBOUND_TAGS = new HashMap<>();
+    for (final String tagValue : SOULBOUND_TAG_VALUE) {
+      final String[] tagSplit = tagValue.split(":");
+      SOULBOUND_TAGS.put(tagSplit[0], Boolean.parseBoolean(tagSplit[1]));
     }
   }
 }
