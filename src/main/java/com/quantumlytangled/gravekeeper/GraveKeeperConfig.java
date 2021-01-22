@@ -13,6 +13,7 @@ import com.quantumlytangled.gravekeeper.core.InventoryHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -55,7 +56,7 @@ public class GraveKeeperConfig {
       "cofhcore:soulbound",
       "aoa3:intervention"
   };
-  public static String[] SOULBOUND_TAG_BOOLEAN = new String[]{
+  public static String[] SOULBOUND_TAG_VALUE = new String[]{
       "Botania_keepIvy:1",
       "spectreAnchor:0"
   };
@@ -215,9 +216,9 @@ public class GraveKeeperConfig {
         .get("soulbound", "soulbound_enchantment_names", SOULBOUND_ENCHANTMENT_NAMES,
             "List of enchantment names that are considered as soulbinding")
         .getStringList();
-    SOULBOUND_TAG_BOOLEAN = config
-        .get("soulbound", "soulbound_tag_boolean", SOULBOUND_TAG_BOOLEAN,
-            "List of NBT boolean that are considered as soulbinding when set to true")
+    SOULBOUND_TAG_VALUE = config
+        .get("soulbound", "soulbound_tag_value", SOULBOUND_TAG_VALUE,
+            "List of NBT values that are considered as soulbinding when it equals the value after the \":\"")
         .getStringList();
 
     SEARCH_MIN_ALTITUDE = Math.abs(config
