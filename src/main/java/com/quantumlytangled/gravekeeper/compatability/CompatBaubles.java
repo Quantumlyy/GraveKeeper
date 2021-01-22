@@ -1,9 +1,9 @@
 package com.quantumlytangled.gravekeeper.compatability;
 
-import javax.annotation.Nonnull;
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
 import com.quantumlytangled.gravekeeper.util.InventoryType;
+import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -24,7 +24,8 @@ public class CompatBaubles implements ICompatInventory {
   @Override
   public NonNullList<ItemStack> getAllContents(@Nonnull final EntityPlayerMP player) {
     final IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
-    final NonNullList<ItemStack> invContents = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
+    final NonNullList<ItemStack> invContents = NonNullList
+        .withSize(handler.getSlots(), ItemStack.EMPTY);
     for (int index = 0; index < handler.getSlots(); index++) {
       invContents.set(index, handler.getStackInSlot(index));
     }
@@ -39,12 +40,13 @@ public class CompatBaubles implements ICompatInventory {
   }
 
   @Override
-  public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
+  public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot,
+      @Nonnull final ItemStack itemStack) {
     final IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
-    if ( slot >= 0
-      && slot < handler.getSlots()
-      && handler.getStackInSlot(slot).isEmpty()
-      && handler.isItemValidForSlot(slot, itemStack, player) ) {
+    if (slot >= 0
+        && slot < handler.getSlots()
+        && handler.getStackInSlot(slot).isEmpty()
+        && handler.isItemValidForSlot(slot, itemStack, player)) {
       handler.setStackInSlot(slot, itemStack);
       return ItemStack.EMPTY;
     }

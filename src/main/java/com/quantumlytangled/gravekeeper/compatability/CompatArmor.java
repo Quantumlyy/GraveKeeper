@@ -1,10 +1,10 @@
 package com.quantumlytangled.gravekeeper.compatability;
 
+import com.quantumlytangled.gravekeeper.util.InventoryType;
 import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import com.quantumlytangled.gravekeeper.util.InventoryType;
 
 public class CompatArmor implements ICompatInventory {
 
@@ -30,11 +30,12 @@ public class CompatArmor implements ICompatInventory {
   }
 
   @Override
-  public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
-    if ( slot >= 0
-      && slot < player.inventory.armorInventory.size()
-      && player.inventory.armorInventory.get(slot).isEmpty()
-      /* items are always valid */ ) {
+  public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot,
+      @Nonnull final ItemStack itemStack) {
+    if (slot >= 0
+        && slot < player.inventory.armorInventory.size()
+        && player.inventory.armorInventory.get(slot).isEmpty()
+      /* items are always valid */) {
       player.inventory.armorInventory.set(slot, itemStack);
       return ItemStack.EMPTY;
     }

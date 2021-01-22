@@ -33,26 +33,26 @@ import net.minecraftforge.fml.relauncher.Side;
     name = GraveKeeper.NAME,
     version = GraveKeeper.VERSION)
 public class GraveKeeper {
-  
+
   public static final String MODID = "gravekeeper";
   public static final String NAME = "GraveKeeper";
   public static final String VERSION = "@VERSION@";
-  
+
   @Instance(GraveKeeper.MODID)
   public static GraveKeeper INSTANCE;
-  
+
   public static Logger logger;
   public static LoggerPrintStream printStreamError;
   public static LoggerPrintStream printStreamWarn;
   public static LoggerPrintStream printStreamInfo;
   public static Block blockDeathChest;
   public static Item itemDeathCertificate;
-  
+
   public GraveKeeper() {
     MinecraftForge.EVENT_BUS.register(this);
     MinecraftForge.EVENT_BUS.register(new DeathHandler());
   }
-  
+
   @EventHandler
   private void preInit(@Nonnull final FMLPreInitializationEvent event) {
     logger = event.getModLog();
@@ -69,19 +69,19 @@ public class GraveKeeper {
         .setTranslationKey("gravekeeper.death_certificate")
         .setCreativeTab(CreativeTabs.TOOLS);
   }
-  
+
   @EventHandler
   private void preInit(@Nonnull final FMLPostInitializationEvent event) {
     GraveKeeperConfig.onFMLpostInitialization();
   }
-  
+
   @SubscribeEvent
   public void registerBlocks(@Nonnull final RegistryEvent.Register<Block> event) {
     event.getRegistry().register(blockDeathChest);
     GameRegistry.registerTileEntity(TileDeathChest.class,
         new ResourceLocation(GraveKeeper.MODID, "death_chest"));
   }
-  
+
   @SubscribeEvent
   public void onRegisterItems(@Nonnull final RegistryEvent.Register<Item> event) {
     final ItemBlock itemBlock = new ItemBlock(blockDeathChest);
@@ -90,17 +90,19 @@ public class GraveKeeper {
     itemBlock.setRegistryName(blockDeathChest.getRegistryName()).setCreativeTab(CreativeTabs.TOOLS);
     event.getRegistry().register(itemBlock);
     if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-      ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(resourceLocation, "inventory"));
+      ModelLoader.setCustomModelResourceLocation(itemBlock, 0,
+          new ModelResourceLocation(resourceLocation, "inventory"));
     }
-    
+
     resourceLocation = itemDeathCertificate.getRegistryName();
     assert resourceLocation != null;
     event.getRegistry().register(itemDeathCertificate);
     if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-      ModelLoader.setCustomModelResourceLocation(itemDeathCertificate, 0, new ModelResourceLocation(resourceLocation, "inventory"));
+      ModelLoader.setCustomModelResourceLocation(itemDeathCertificate, 0,
+          new ModelResourceLocation(resourceLocation, "inventory"));
     }
   }
-  
+
   @EventHandler
   public void onFMLServerStarting(@Nonnull final FMLServerStartingEvent event) {
     event.registerServerCommand(new CommandList());
