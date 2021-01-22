@@ -56,7 +56,8 @@ public class GraveKeeperConfig {
       "aoa3:intervention"
   };
   public static String[] SOULBOUND_TAG_BOOLEAN = new String[]{
-      "Botania_keepIvy"
+      "Botania_keepIvy:1",
+      "spectreAnchor:0"
   };
   public static int KEEP_SOULBOUND_AMOUNT = 5;
 
