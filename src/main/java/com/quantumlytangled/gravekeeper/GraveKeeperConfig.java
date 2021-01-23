@@ -12,11 +12,11 @@ import com.quantumlytangled.gravekeeper.compatability.CompatTravelersBackpack;
 import com.quantumlytangled.gravekeeper.core.InventoryHandler;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
@@ -34,7 +34,25 @@ public class GraveKeeperConfig {
   public static int EXPIRE_TIME_SECONDS = 7200;
   public static boolean INSTANT_FOREIGN_COLLECTION = false;
   public static boolean OWNER_ONLY_COLLECTION = false;
-
+  public static List<Item> CHARM_ARMOR_HELD_ITEMS = null;
+  public static List<Item> CHARM_ARMOR_HOTBAR_ITEMS = null;
+  public static List<Item> CHARM_FULL_ITEMS = null;
+  public static List<Item> CHARM_ITEMS = null;
+  public static boolean ANY_ENCHANT_IS_SOULBOUND = false;
+  public static boolean MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY = true;
+  public static String[] SOULBOUND_TAG_VALUE = new String[]{
+      "{ \"Botania_keepIvy\": \"1\" }",
+      "{ \"spectreAnchor\": \"0\" }"
+  };
+  public static int KEEP_SOULBOUND_AMOUNT = 5;
+  public static List<Enchantment> SOULBOUND_ENCHANTMENTS = null;
+  public static List<NBTTagCompound> SOULBOUND_TAGS = null;
+  public static int SEARCH_MIN_ALTITUDE = 0;
+  public static int SEARCH_RADIUS_ABOVE_M = 10;
+  public static int SEARCH_RADIUS_BELOW_M = -1;
+  public static int SEARCH_RADIUS_HORIZONTAL_M = 5;
+  public static int SPAWN_DIMENSION_ID = 0;
+  public static int USE_BED_OR_SPAWN_LOCATION_BELOW_Y = 0;
   private static String[] CHARM_ARMOR_HELD_NAMES = new String[]{
       "twilightforest:charm_of_keeping_1"
   };
@@ -44,34 +62,11 @@ public class GraveKeeperConfig {
   private static String[] CHARM_FULL_NAMES = new String[]{
       "twilightforest:charm_of_keeping_3"
   };
-
-  public static List<Item> CHARM_ARMOR_HELD_ITEMS = null;
-  public static List<Item> CHARM_ARMOR_HOTBAR_ITEMS = null;
-  public static List<Item> CHARM_FULL_ITEMS = null;
-  public static List<Item> CHARM_ITEMS = null;
-
-  public static boolean ANY_ENCHANT_IS_SOULBOUND = false;
-  public static boolean MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY = true;
   private static String[] SOULBOUND_ENCHANTMENT_NAMES = new String[]{
       "enderio:soulbound",
       "cofhcore:soulbound",
       "aoa3:intervention"
   };
-  public static String[] SOULBOUND_TAG_VALUE = new String[]{
-      "Botania_keepIvy:1",
-      "spectreAnchor:0"
-  };
-  public static int KEEP_SOULBOUND_AMOUNT = 5;
-
-  public static List<Enchantment> SOULBOUND_ENCHANTMENTS = null;
-  public static Map<String, Boolean> SOULBOUND_TAGS = null;
-
-  public static int SEARCH_MIN_ALTITUDE = 0;
-  public static int SEARCH_RADIUS_ABOVE_M = 10;
-  public static int SEARCH_RADIUS_BELOW_M = -1;
-  public static int SEARCH_RADIUS_HORIZONTAL_M = 5;
-  public static int SPAWN_DIMENSION_ID = 0;
-  public static int USE_BED_OR_SPAWN_LOCATION_BELOW_Y = 0;
 
   public static void onFMLpreInitialization(final File fileConfigDirectory) {
 
@@ -302,10 +297,14 @@ public class GraveKeeperConfig {
       }
     }
 
-    SOULBOUND_TAGS = new HashMap<>();
-    for (final String tagValue : SOULBOUND_TAG_VALUE) {
-      final String[] tagSplit = tagValue.split(":");
-      SOULBOUND_TAGS.put(tagSplit[0], Boolean.parseBoolean(tagSplit[1]));
+    SOULBOUND_TAGS = new ArrayList<>(SOULBOUND_TAG_VALUE.length);
+    for (final String tagEntry : SOULBOUND_TAG_VALUE) {
+      try {
+        final NBTTagCompound tagCompound = JsonToNBT.getTagFromJson(tagEntry);
+        SOULBOUND_TAGS.add(tagCompound);
+      } catch (final Exception exception) {
+        exception.printStackTrace(GraveKeeper.printStreamError);
+      }
     }
   }
 }
