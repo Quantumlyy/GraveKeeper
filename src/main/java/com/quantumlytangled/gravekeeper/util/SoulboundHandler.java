@@ -25,11 +25,11 @@ public class SoulboundHandler {
     // check for NBT tags
     final NBTTagCompound tagCompound = itemStack.getTagCompound();
     if (tagCompound != null) {
-      for (final NBTTagCompound tagEntry : GraveKeeperConfig.SOULBOUND_TAGS) {
+      for (final NBTTagCompound tagElement : GraveKeeperConfig.SOULBOUND_TAGS) {
         boolean isSoulbound = true;
-        for (final String tagKey : tagEntry.getKeySet()) {
+        for (final String tagKey : tagElement.getKeySet()) {
           if (!tagCompound.hasKey(tagKey)
-              || !tagCompound.getTag(tagKey).equals(tagEntry.getTag(tagKey))) {
+              || !tagCompound.getTag(tagKey).equals(tagElement.getTag(tagKey))) {
             isSoulbound = false;
             break;
           }
