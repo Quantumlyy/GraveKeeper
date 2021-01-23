@@ -300,11 +300,12 @@ public class GraveKeeperConfig {
     }
 
     SOULBOUND_TAGS = new ArrayList<>(SOULBOUND_TAG_STRINGS.length);
-    for (final String tagEntry : SOULBOUND_TAG_STRINGS) {
+    for (final String stringTag : SOULBOUND_TAG_STRINGS) {
       try {
-        final NBTTagCompound tagCompound = JsonToNBT.getTagFromJson(tagEntry);
+        final NBTTagCompound tagCompound = JsonToNBT.getTagFromJson(stringTag);
         SOULBOUND_TAGS.add(tagCompound);
       } catch (final Exception exception) {
+        GraveKeeper.logger.error(String.format("Error parsing '%s'", stringTag));
         exception.printStackTrace(GraveKeeper.printStreamError);
       }
     }
