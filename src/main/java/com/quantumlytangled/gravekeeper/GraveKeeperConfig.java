@@ -60,8 +60,8 @@ public class GraveKeeperConfig {
       "aoa3:intervention"
   };
   public static String[] SOULBOUND_TAG_STRINGS = new String[]{
-      "{ \"Botania_keepIvy\": \"1\" }",
-      "{ \"spectreAnchor\": \"0\" }"
+      "{ \"Botania_keepIvy\": 1b }",
+      "{ \"spectreAnchor\": 0b }"
   };
 
   public static List<Enchantment> SOULBOUND_ENCHANTMENTS = null;
