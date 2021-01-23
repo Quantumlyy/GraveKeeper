@@ -34,25 +34,7 @@ public class GraveKeeperConfig {
   public static int EXPIRE_TIME_SECONDS = 7200;
   public static boolean INSTANT_FOREIGN_COLLECTION = false;
   public static boolean OWNER_ONLY_COLLECTION = false;
-  public static List<Item> CHARM_ARMOR_HELD_ITEMS = null;
-  public static List<Item> CHARM_ARMOR_HOTBAR_ITEMS = null;
-  public static List<Item> CHARM_FULL_ITEMS = null;
-  public static List<Item> CHARM_ITEMS = null;
-  public static boolean ANY_ENCHANT_IS_SOULBOUND = false;
-  public static boolean MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY = true;
-  public static String[] SOULBOUND_TAG_STRINGS = new String[]{
-      "{ \"Botania_keepIvy\": \"1\" }",
-      "{ \"spectreAnchor\": \"0\" }"
-  };
-  public static int KEEP_SOULBOUND_AMOUNT = 5;
-  public static List<Enchantment> SOULBOUND_ENCHANTMENTS = null;
-  public static List<NBTTagCompound> SOULBOUND_TAGS = null;
-  public static int SEARCH_MIN_ALTITUDE = 0;
-  public static int SEARCH_RADIUS_ABOVE_M = 10;
-  public static int SEARCH_RADIUS_BELOW_M = -1;
-  public static int SEARCH_RADIUS_HORIZONTAL_M = 5;
-  public static int SPAWN_DIMENSION_ID = 0;
-  public static int USE_BED_OR_SPAWN_LOCATION_BELOW_Y = 0;
+
   private static String[] CHARM_ARMOR_HELD_NAMES = new String[]{
       "twilightforest:charm_of_keeping_1"
   };
@@ -62,11 +44,35 @@ public class GraveKeeperConfig {
   private static String[] CHARM_FULL_NAMES = new String[]{
       "twilightforest:charm_of_keeping_3"
   };
+
+  public static List<Item> CHARM_ARMOR_HELD_ITEMS = null;
+  public static List<Item> CHARM_ARMOR_HOTBAR_ITEMS = null;
+  public static List<Item> CHARM_FULL_ITEMS = null;
+  public static List<Item> CHARM_ITEMS = null;
+
+  public static boolean MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY = true;
+  public static int KEEP_SOULBOUND_AMOUNT = 5;
+  public static boolean ANY_ENCHANT_IS_SOULBOUND = false;
+
   private static String[] SOULBOUND_ENCHANTMENT_NAMES = new String[]{
       "enderio:soulbound",
       "cofhcore:soulbound",
       "aoa3:intervention"
   };
+  public static String[] SOULBOUND_TAG_STRINGS = new String[]{
+      "{ \"Botania_keepIvy\": \"1\" }",
+      "{ \"spectreAnchor\": \"0\" }"
+  };
+
+  public static List<Enchantment> SOULBOUND_ENCHANTMENTS = null;
+  public static List<NBTTagCompound> SOULBOUND_TAGS = null;
+
+  public static int SEARCH_MIN_ALTITUDE = 0;
+  public static int SEARCH_RADIUS_ABOVE_M = 10;
+  public static int SEARCH_RADIUS_BELOW_M = -1;
+  public static int SEARCH_RADIUS_HORIZONTAL_M = 5;
+  public static int SPAWN_DIMENSION_ID = 0;
+  public static int USE_BED_OR_SPAWN_LOCATION_BELOW_Y = 0;
 
   public static void onFMLpreInitialization(final File fileConfigDirectory) {
 
