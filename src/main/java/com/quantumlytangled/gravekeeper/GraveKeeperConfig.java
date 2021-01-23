@@ -220,10 +220,8 @@ public class GraveKeeperConfig {
             "List of enchantment names that are considered as soulbinding")
         .getStringList();
     SOULBOUND_TAG_STRINGS = config
-        .get("soulbound", "soulbound_tag_strings", SOULBOUND_TAG_STRINGS, String.join("\n", new String[]{
-            "List of JSON based NBT values that are considered as soulbinding when found on an item.",
-            "The list is handled in an OR fashion. Meaning that if any of the provided list entries matches the item will be considered souldbinding."
-        }))
+        .get("soulbound", "soulbound_tags", SOULBOUND_TAG_STRINGS,
+            "List of JSON based alternate NBT values that are considered as soulbinding when found on an item.")
         .getStringList();
 
     SEARCH_MIN_ALTITUDE = Math.abs(config
