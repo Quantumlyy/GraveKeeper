@@ -40,7 +40,7 @@ public class GraveKeeperConfig {
   public static List<Item> CHARM_ITEMS = null;
   public static boolean ANY_ENCHANT_IS_SOULBOUND = false;
   public static boolean MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY = true;
-  public static String[] SOULBOUND_TAG_VALUE = new String[]{
+  public static String[] SOULBOUND_TAG_STRINGS = new String[]{
       "{ \"Botania_keepIvy\": \"1\" }",
       "{ \"spectreAnchor\": \"0\" }"
   };
@@ -213,9 +213,11 @@ public class GraveKeeperConfig {
         .get("soulbound", "soulbound_enchantment_names", SOULBOUND_ENCHANTMENT_NAMES,
             "List of enchantment names that are considered as soulbinding")
         .getStringList();
-    SOULBOUND_TAG_VALUE = config
-        .get("soulbound", "soulbound_tag_value", SOULBOUND_TAG_VALUE,
-            "List of NBT values that are considered as soulbinding when it equals the value after the \":\"")
+    SOULBOUND_TAG_STRINGS = config
+        .get("soulbound", "soulbound_tag_strings", SOULBOUND_TAG_STRINGS, String.join("\n", new String[]{
+            "List of JSON based NBT values that are considered as soulbinding when found on an item.",
+            "The list is handled in an OR fashion. Meaning that if any of the provided list entries matches the item will be considered souldbinding."
+        }))
         .getStringList();
 
     SEARCH_MIN_ALTITUDE = Math.abs(config
@@ -297,8 +299,8 @@ public class GraveKeeperConfig {
       }
     }
 
-    SOULBOUND_TAGS = new ArrayList<>(SOULBOUND_TAG_VALUE.length);
-    for (final String tagEntry : SOULBOUND_TAG_VALUE) {
+    SOULBOUND_TAGS = new ArrayList<>(SOULBOUND_TAG_STRINGS.length);
+    for (final String tagEntry : SOULBOUND_TAG_STRINGS) {
       try {
         final NBTTagCompound tagCompound = JsonToNBT.getTagFromJson(tagEntry);
         SOULBOUND_TAGS.add(tagCompound);
