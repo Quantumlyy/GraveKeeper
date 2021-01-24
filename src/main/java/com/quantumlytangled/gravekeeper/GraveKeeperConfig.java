@@ -51,7 +51,8 @@ public class GraveKeeperConfig {
   public static boolean MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY = true;
   private static String[] SOULBOUND_ENCHANTMENT_NAMES = new String[] {
       "enderio:soulbound",
-      "cofhcore:soulbound"
+      "cofhcore:soulbound",
+      "aoa3:intervention"
   };
   public static String[] SOULBOUND_TAG_BOOLEAN = new String[] {
       "Botania_keepIvy"
