@@ -20,7 +20,7 @@ public class SoulboundHandler {
         return true;
       }
     }
-	
+	  
     // check for NBT tags
     final NBTTagCompound tagCompound = itemStack.getTagCompound();
     if (tagCompound != null) {
@@ -39,7 +39,7 @@ public class SoulboundHandler {
         }
       }
     }
-	
+	  
     return false;
   }
 	
