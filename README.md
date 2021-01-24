@@ -1,5 +1,6 @@
 # Grave Keeper for 1.12.2
 [![Grave Keeper Curse statistics](http://cf.way2muchnoise.eu/grave-keeper.svg)](http://minecraft.curseforge.com/projects/grave-keeper)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/af861565dd554b47bf0c1d58599287fa)](https://www.codacy.com/gh/QuantumlyTangled/GraveKeeper/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=QuantumlyTangled/GraveKeeper&amp;utm_campaign=Badge_Grade)
 
 A grave modification for Minecraft with a special attention to integration and balance with other mods. Currently in progress.
 
@@ -12,14 +13,13 @@ See the official Discord [here](https://discord.gg/0ZanfS3S9yu3Wf2M).
 ## Installation
 
 1.  Download GraveKeeper.jar from the [Curse website](https://www.curseforge.com/minecraft/mc-mods/grave-keeper) and put it in your mods folder.
-
 2.  Get some soulbound items, die, enjoy.
 
 ## Developping
 
 To setup you development environment:
 1.  From the GraveKeeper mod folder, type:
-```
+```shell
 ./gradlew setupDecompWorkspace
 ```
 2.  Start IdeaJ.

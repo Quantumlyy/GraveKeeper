@@ -1,7 +1,7 @@
 package com.quantumlytangled.gravekeeper.util;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
+import javax.annotation.Nonnull;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
@@ -14,11 +14,10 @@ public class SoulboundHandler {
     // check for enchantments
     final Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(itemStack);
     for (final Enchantment enchantment : enchantments.keySet()) {
-      if (enchantment != null) {
-        if ( GraveKeeperConfig.ANY_ENCHANT_IS_SOULBOUND
-          || GraveKeeperConfig.SOULBOUND_ENCHANTMENTS.contains(enchantment) ) {
-          return true;
-        }
+      if ( enchantment != null
+        && ( GraveKeeperConfig.ANY_ENCHANT_IS_SOULBOUND
+          || GraveKeeperConfig.SOULBOUND_ENCHANTMENTS.contains(enchantment) ) ) {
+        return true;
       }
     }
     
@@ -28,8 +27,8 @@ public class SoulboundHandler {
       for (final NBTTagCompound tagElement : GraveKeeperConfig.SOULBOUND_TAGS) {
         boolean isSoulbound = true;
         for (final String tagKey : tagElement.getKeySet()) {
-          if (!tagCompound.hasKey(tagKey)
-              || !tagCompound.getTag(tagKey).equals(tagElement.getTag(tagKey))) {
+          if ( !tagCompound.hasKey(tagKey)
+            || !tagCompound.getTag(tagKey).equals(tagElement.getTag(tagKey)) ) {
             isSoulbound = false;
             break;
           }

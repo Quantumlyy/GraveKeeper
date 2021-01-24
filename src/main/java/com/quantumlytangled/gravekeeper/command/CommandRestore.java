@@ -163,7 +163,7 @@ public class CommandRestore extends CommandBase {
     commandSender.sendMessage(textSender);
     GraveKeeper.logger.info(textSender.getUnformattedText());
     
-    if (commandSender != entityPlayer) {
+    if (!commandSender.equals(entityPlayer)) {
       final ITextComponent textTarget = new TextComponentTranslation("gravekeeper.command.restored_target");
       textTarget.getStyle().setColor(TextFormatting.GREEN);
       entityPlayer.sendMessage(textTarget);
