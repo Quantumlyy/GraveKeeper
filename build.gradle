@@ -104,6 +104,7 @@ dependencies {
     // provided "techguns:Techguns:${config.Techguns_version}"
     provided curse.resolve("techguns", "${config.Techguns_fileid}")
     provided curse.resolve("travelers-backpack", "${config.TravelersBackpack_fileid}")
+    provided curse.resolve("random-things", "${config.RandomThings_fileid}")
 }
 
 processResources {
