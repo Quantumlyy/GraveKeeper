@@ -1,5 +1,6 @@
 package com.quantumlytangled.gravekeeper;
 
+import com.quantumlytangled.gravekeeper.compatability.CompatAetherLegacy;
 import com.quantumlytangled.gravekeeper.compatability.CompatArmor;
 import com.quantumlytangled.gravekeeper.compatability.CompatBaubles;
 import com.quantumlytangled.gravekeeper.compatability.CompatCosmeticArmorReworked;
@@ -7,7 +8,6 @@ import com.quantumlytangled.gravekeeper.compatability.CompatGalacticCraftCore;
 import com.quantumlytangled.gravekeeper.compatability.CompatMain;
 import com.quantumlytangled.gravekeeper.compatability.CompatOffHand;
 import com.quantumlytangled.gravekeeper.compatability.CompatTechGuns;
-import com.quantumlytangled.gravekeeper.compatability.CompatAetherLegacy;
 import com.quantumlytangled.gravekeeper.compatability.CompatTravelersBackpack;
 import com.quantumlytangled.gravekeeper.core.InventoryHandler;
 import java.io.File;
@@ -33,11 +33,14 @@ public class GraveKeeperConfig {
   public static boolean OWNER_ONLY_COLLECTION = false;
   
   private static String[] CHARM_ARMOR_HELD_NAMES = new String[] {
-      "twilightforest:charm_of_keeping_1" };
+      "twilightforest:charm_of_keeping_1"
+  };
   private static String[] CHARM_ARMOR_HOTBAR_NAMES = new String[] {
-      "twilightforest:charm_of_keeping_2" };
+      "twilightforest:charm_of_keeping_2"
+  };
   private static String[] CHARM_FULL_NAMES = new String[] {
-      "twilightforest:charm_of_keeping_3" };
+      "twilightforest:charm_of_keeping_3"
+  };
   
   public static List<Item> CHARM_ARMOR_HELD_ITEMS = null;
   public static List<Item> CHARM_ARMOR_HOTBAR_ITEMS = null;
@@ -48,9 +51,11 @@ public class GraveKeeperConfig {
   public static boolean MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY = true;
   private static String[] SOULBOUND_ENCHANTMENT_NAMES = new String[] {
       "enderio:soulbound",
-      "cofhcore:soulbound" };
+      "cofhcore:soulbound"
+  };
   public static String[] SOULBOUND_TAG_BOOLEAN = new String[] {
-      "Botania_keepIvy" };
+      "Botania_keepIvy"
+  };
   public static int KEEP_SOULBOUND_AMOUNT = 5;
   
   public static List<Enchantment> SOULBOUND_ENCHANTMENTS = null;
