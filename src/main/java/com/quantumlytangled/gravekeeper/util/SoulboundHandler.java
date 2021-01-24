@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
 
 public class SoulboundHandler {
-
+	
   public static boolean isSoulbound(@Nonnull final ItemStack itemStack) {
     // check for enchantments
     final Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(itemStack);
@@ -20,7 +20,7 @@ public class SoulboundHandler {
         return true;
       }
     }
-
+	
     // check for NBT tags
     final NBTTagCompound tagCompound = itemStack.getTagCompound();
     if (tagCompound != null) {
@@ -39,8 +39,8 @@ public class SoulboundHandler {
         }
       }
     }
-
+	
     return false;
   }
-
+	
 }
