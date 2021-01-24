@@ -12,14 +12,13 @@ See the official Discord [here](https://discord.gg/0ZanfS3S9yu3Wf2M).
 ## Installation
 
 1.  Download GraveKeeper.jar from the [Curse website](https://www.curseforge.com/minecraft/mc-mods/grave-keeper) and put it in your mods folder.
-
 2.  Get some soulbound items, die, enjoy.
 
 ## Developping
 
 To setup you development environment:
 1.  From the GraveKeeper mod folder, type:
-```
+```shell
 ./gradlew setupDecompWorkspace
 ```
 2.  Start IdeaJ.
