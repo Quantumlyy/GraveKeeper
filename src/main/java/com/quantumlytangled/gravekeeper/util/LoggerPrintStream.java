@@ -1,9 +1,10 @@
 package com.quantumlytangled.gravekeeper.util;
 
+import com.quantumlytangled.gravekeeper.GraveKeeper;
+
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import com.quantumlytangled.gravekeeper.GraveKeeper;
 import org.apache.logging.log4j.Level;
 
 // PrintStream wrapper for the mod logger, useful for exception stack dumps
@@ -22,14 +23,12 @@ public class LoggerPrintStream extends PrintStream {
 	}
 	
 	@Override
-	public void println(final String message)
-	{
+	public void println(final String message) {
 		this.logString(message);
 	}
 	
 	@Override
-	public void println(final Object object)
-	{
+	public void println(final Object object) {
 		this.logString(String.valueOf(object));
 	}
 	

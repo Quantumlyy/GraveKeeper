@@ -1,21 +1,23 @@
 package com.quantumlytangled.gravekeeper;
 
+import com.quantumlytangled.gravekeeper.core.DeathHandler;
+import com.quantumlytangled.gravekeeper.util.LoggerPrintStream;
+
 import javax.annotation.Nonnull;
+
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-import com.quantumlytangled.gravekeeper.core.DeathHandler;
-import com.quantumlytangled.gravekeeper.util.LoggerPrintStream;
-
 @Mod(GraveKeeper.MODID)
 public class GraveKeeper {
+	
 	public static final String MODID = "gravekeeper";
 	public static final String NAME = "GraveKeeper";
 	public static final String VERSION = "@VERSION@";
@@ -32,12 +34,13 @@ public class GraveKeeper {
 			throw new IllegalStateException();
 		}
 		INSTANCE = this;
+    
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
 		
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new DeathHandler());
 	}
-	
-	@SubscribeEvent
+
 	private void commonSetup(@Nonnull final FMLCommonSetupEvent event) {
 	}
 	
