@@ -8,11 +8,11 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class CompatOffhand implements ICompatInventory {
+public class CompatOffHand implements ICompatInventory {
   
-  private static final CompatOffhand INSTANCE = new CompatOffhand();
+  private static final CompatOffHand INSTANCE = new CompatOffHand();
   
-  public static CompatOffhand getInstance() {
+  public static CompatOffHand getInstance() {
     return INSTANCE;
   }
   
