@@ -6,11 +6,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import com.quantumlytangled.gravekeeper.util.InventoryType;
 
-public class CompatArmor implements ICompatInventory {
+public class CompatArmour implements ICompatInventory {
 
-  private static final CompatArmor INSTANCE = new CompatArmor();
+  private static final CompatArmour INSTANCE = new CompatArmour();
 
-  public static CompatArmor getInstance() {
+  public static CompatArmour getInstance() {
     return INSTANCE;
   }
 
