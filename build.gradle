@@ -28,7 +28,7 @@ configFile.withReader {
 
 group = "com.quantumlytangled.gravekeeper" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 version = "${config.minecraft_version}-${config.MAJORMOD}.${config.MAJORAPI}.${config.MINOR}.${config.PATCH}"
-archivesBaseName = "GraveKeeper"
+archivesBaseName = "${config.modid}"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -39,7 +39,7 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: config.mappings_channel, version: config.mappings_version
+    mappings channel: "${config.mappings_channel}", version: "${config.mappings_version}"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -57,7 +57,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                GraveKeeper {
+                gravekeeper {
                     source sourceSets.main
                 }
             }
@@ -70,7 +70,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                GraveKeeper {
+                gravekeeper {
                     source sourceSets.main
                 }
             }
@@ -89,7 +89,7 @@ minecraft {
             args '--mod', 'GraveKeeper', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                GraveKeeper {
+                gravekeeper {
                     source sourceSets.main
                 }
             }
