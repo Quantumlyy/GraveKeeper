@@ -1,4 +1,4 @@
-package com.quantumlytangled.gravekeeper.compatability;
+package com.quantumlytangled.gravekeeper.compatibility;
 
 import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -6,36 +6,36 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import com.quantumlytangled.gravekeeper.util.InventoryType;
 
-public class CompatOffHand implements ICompatInventory {
+public class CompatMain implements ICompatInventory {
 
-  private static final CompatOffHand INSTANCE = new CompatOffHand();
+  private static final CompatMain INSTANCE = new CompatMain();
 
-  public static CompatOffHand getInstance() {
+  public static CompatMain getInstance() {
     return INSTANCE;
   }
 
   @Override
   public InventoryType getType() {
-    return InventoryType.OFFHAND;
+    return InventoryType.MAIN;
   }
 
   @Override
   public NonNullList<ItemStack> getAllContents(@Nonnull final EntityPlayerMP player) {
-    return player.inventory.offHandInventory;
+    return player.inventory.mainInventory;
   }
 
   @Override
   public void removeItem(@Nonnull final EntityPlayerMP player, final int slot) {
-    player.inventory.offHandInventory.set(slot, ItemStack.EMPTY);
+    player.inventory.mainInventory.set(slot, ItemStack.EMPTY);
   }
 
   @Override
   public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
     if ( slot >= 0
-      && slot < player.inventory.offHandInventory.size()
-      && player.inventory.offHandInventory.get(slot).isEmpty()
+      && slot < player.inventory.mainInventory.size()
+      && player.inventory.mainInventory.get(slot).isEmpty()
       /* items are always valid */ ) {
-      player.inventory.offHandInventory.set(slot, itemStack);
+      player.inventory.mainInventory.set(slot, itemStack);
       return ItemStack.EMPTY;
     }
     return itemStack;

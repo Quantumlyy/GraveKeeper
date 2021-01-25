@@ -1,4 +1,4 @@
-package com.quantumlytangled.gravekeeper.compatability;
+package com.quantumlytangled.gravekeeper.compatibility;
 
 import com.quantumlytangled.gravekeeper.util.InventoryType;
 import com.tiviacz.travelersbackpack.capability.CapabilityUtils;
