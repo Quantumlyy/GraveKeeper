@@ -1,4 +1,4 @@
-package com.quantumlytangled.gravekeeper.compatability;
+package com.quantumlytangled.gravekeeper.compatibility;
 
 import com.legacy.aether.api.AetherAPI;
 import com.legacy.aether.api.player.IPlayerAether;

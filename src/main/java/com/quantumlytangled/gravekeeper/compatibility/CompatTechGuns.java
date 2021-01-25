@@ -1,47 +1,47 @@
-package com.quantumlytangled.gravekeeper.compatability;
+package com.quantumlytangled.gravekeeper.compatibility;
 
 import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
 import com.quantumlytangled.gravekeeper.util.InventoryType;
-import micdoodle8.mods.galacticraft.api.inventory.AccessInventoryGC;
-import micdoodle8.mods.galacticraft.api.inventory.IInventoryGC;
+import techguns.capabilities.TGExtendedPlayer;
 
-public class CompatGalacticCraftCore implements ICompatInventory {
-  
-  private static final CompatGalacticCraftCore INSTANCE = new CompatGalacticCraftCore();
-  
-  public static CompatGalacticCraftCore getInstance() {
-      return INSTANCE;
+public class CompatTechGuns implements ICompatInventory {
+
+  private static final CompatTechGuns INSTANCE = new CompatTechGuns();
+
+  public static CompatTechGuns getInstance() {
+    return INSTANCE;
   }
 
   @Override
   public InventoryType getType() {
-    return InventoryType.GALACTICRAFT;
+    return InventoryType.TECHGUNS;
   }
 
   @Override
   public NonNullList<ItemStack> getAllContents(@Nonnull final EntityPlayerMP player) {
-    final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
-    final NonNullList<ItemStack> invContents = NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
-    for (int i = 0; i < inventory.getSizeInventory(); i++) {
-      invContents.set(i, inventory.getStackInSlot(i));
+    final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
+    final NonNullList<ItemStack> itemStacks = NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
+    for (int index = 0; index < inventory.getSizeInventory(); index++) {
+      itemStacks.set(index, inventory.getStackInSlot(index));
     }
-    
-    return invContents;
+
+    return itemStacks;
   }
 
   @Override
   public void removeItem(@Nonnull final EntityPlayerMP player, final int slot) {
-    final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
+    final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
     inventory.setInventorySlotContents(slot, ItemStack.EMPTY);
   }
 
   @Override
   public ItemStack setItemReturnOverflow(@Nonnull final EntityPlayerMP player, final int slot, @Nonnull final ItemStack itemStack) {
-    final IInventoryGC inventory = AccessInventoryGC.getGCInventoryForPlayer(player);
+    final IInventory inventory = TGExtendedPlayer.get(player).tg_inventory;
     if ( slot >= 0
       && slot < inventory.getSizeInventory()
       && inventory.getStackInSlot(slot).isEmpty()

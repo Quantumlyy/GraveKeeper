@@ -1,4 +1,4 @@
-package com.quantumlytangled.gravekeeper.compatability;
+package com.quantumlytangled.gravekeeper.compatibility;
 
 import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;
