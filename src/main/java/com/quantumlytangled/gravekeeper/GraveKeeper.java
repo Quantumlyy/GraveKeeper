@@ -5,7 +5,12 @@ import com.quantumlytangled.gravekeeper.util.LoggerPrintStream;
 
 import javax.annotation.Nonnull;
 
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -36,9 +41,13 @@ public class GraveKeeper {
 		INSTANCE = this;
     
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+    
+    ModLoadingContext.get().registerConfig(Type.COMMON, GraveKeeperConfig.COMMON_CONFIG);
 		
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new DeathHandler());
+    
+    GraveKeeperConfig.loadConfig(GraveKeeperConfig.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MODID + "-common.toml"));
 	}
 
 	private void commonSetup(@Nonnull final FMLCommonSetupEvent event) {
