@@ -6,13 +6,24 @@ import com.electronwill.nightconfig.core.io.WritingMode;
 
 import java.nio.file.Path;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.enchantment.Enchantment;
+
+import net.minecraft.nbt.CompoundNBT;
+
+import net.minecraft.nbt.JsonToNBT;
+
+import net.minecraft.util.ResourceLocation;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber
 public class GraveKeeperConfig {
@@ -51,6 +62,9 @@ public class GraveKeeperConfig {
   public static boolean INSTANT_FOREIGN_COLLECTION = false;
   public static boolean OWNER_ONLY_COLLECTION = false;
   public static int USE_BED_OR_SPAWN_LOCATION_BELOW_Y_VALUE = 0;
+  
+  public static List<Enchantment> SOULBOUND_ENCHANTMENTS = null;
+  public static List<CompoundNBT> SOULBOUND_TAGS = null;
   
   static {
     COMMON_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
@@ -181,6 +195,27 @@ public class GraveKeeperConfig {
       USE_BED_OR_SPAWN_LOCATION_BELOW_Y_VALUE = Integer.MAX_VALUE;
     } else {
       USE_BED_OR_SPAWN_LOCATION_BELOW_Y_VALUE = USE_BED_OR_SPAWN_LOCATION_BELOW_Y.get();
+    }
+  
+    final List<? extends String> soulboundEnchantmentNames = SOULBOUND_ENCHANTMENT_NAMES.get();
+    SOULBOUND_ENCHANTMENTS = new ArrayList<>(soulboundEnchantmentNames.size());
+    for (final String name : soulboundEnchantmentNames) {
+      final RegistryObject<Enchantment> enchantment = RegistryObject.of(new ResourceLocation(name), ForgeRegistries.ENCHANTMENTS);
+      if (enchantment.get() != null) {
+        SOULBOUND_ENCHANTMENTS.add(enchantment.get());
+      }
+    }
+  
+    final List<? extends String> soulboundTagsStrings = SOULBOUND_TAG_STRINGS.get();
+    SOULBOUND_TAGS = new ArrayList<>(soulboundTagsStrings.size());
+    for (final String stringTag : soulboundTagsStrings) {
+      try {
+        final CompoundNBT tagCompound = JsonToNBT.getTagFromJson(stringTag);
+        SOULBOUND_TAGS.add(tagCompound);
+      } catch (final Exception exception) {
+        GraveKeeper.logger.error(String.format("Error parsing '%s'", stringTag));
+        exception.printStackTrace(GraveKeeper.printStreamError);
+      }
     }
   }
   
