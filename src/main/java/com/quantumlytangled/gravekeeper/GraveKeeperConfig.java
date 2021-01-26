@@ -6,6 +6,9 @@ import com.electronwill.nightconfig.core.io.WritingMode;
 
 import java.nio.file.Path;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,7 +18,6 @@ import net.minecraftforge.fml.config.ModConfig;
 public class GraveKeeperConfig {
   
   public static final String CATEGORY_GENERAL = "general";
-  public static final String CATEGORY_CHARM = "charm";
   public static final String CATEGORY_SOULBOUND = "soulbound";
   public static final String CATEGORY_GRAVE_LOCATION = "grave_location";
   
@@ -27,15 +29,15 @@ public class GraveKeeperConfig {
   
   public static ForgeConfigSpec.BooleanValue IGNORE_KEEP_INVENTORY;
   public static ForgeConfigSpec.BooleanValue DEBUG_LOGS;
-  // COMPATIBILITY_ORDER
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> COMPATIBILITY_ORDER;
   
   public static ForgeConfigSpec.IntValue EXPIRE_TIME_SECONDS;
   
   public static ForgeConfigSpec.IntValue KEEP_SOULBOUND_AMOUNT;
   public static ForgeConfigSpec.BooleanValue ANY_ENCHANT_IS_SOULBOUND;
   public static ForgeConfigSpec.BooleanValue MOVE_SOULBOUND_ITEMS_TO_MAIN_INVENTORY;
-  // SOULBOUND_ENCHANTMENT_NAMES
-  // SOULBOUND_TAG_STRINGS
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> SOULBOUND_ENCHANTMENT_NAMES;
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> SOULBOUND_TAG_STRINGS;
   
   public static ForgeConfigSpec.IntValue SPAWN_DIMENSION_ID;
   public static ForgeConfigSpec.IntValue USE_BED_OR_SPAWN_LOCATION_BELOW_Y;
@@ -73,6 +75,15 @@ public class GraveKeeperConfig {
     DEBUG_LOGS = COMMON_BUILDER
                      .comment("Enable console logs for debugging purpose.")
                      .define("enableDebugLogs", false);
+    COMPATIBILITY_ORDER = COMMON_BUILDER
+                              .comment(String.join("\n", new String[] {
+                                  "Define which inventories are enabled and in which order they're processed. Missing mods are ignored when creating a grave.",
+                                  "Use this to adjust soulbind priority between inventory type. Remove inventories you don't want to be saved in a grave.",
+                                  "Note: Traveler's backpack are only saved if you disable block placement in the related mod.",
+                                  "Valid vanilla values are: minecraft:armour, minecraft:main & minecraft:offhand.",
+                                  "Valid modded values are: NONE"
+                              }))
+                              .defineList("inventorySorting", Arrays.asList("minecraft:armour", "minecraft:main", "minecraft:offhand"), s -> s instanceof String);
     EXPIRE_TIME_SECONDS = COMMON_BUILDER
                      .comment(String.join("\n", new String[] {
                          "Time in seconds after which other players will be able to collect ones grave",
@@ -93,8 +104,15 @@ public class GraveKeeperConfig {
                                                  .comment(String.join("\n", new String[] {
                                                      "Enable to workaround for soul binding mods that don't support modded inventories.",
                                                      "For example: CoFH doesn't support Baubles, Twilight Forest doesn't support TechGuns,",
-                                                     "EnderIO doesn't support AetherLegacy, etc." }))
+                                                     "EnderIO doesn't support AetherLegacy, etc."
+                                                 }))
                                                  .define("moveSoulboundItemsToMainInventory", true);
+    SOULBOUND_ENCHANTMENT_NAMES = COMMON_BUILDER
+                                      .comment("List of enchantment names that are considered as soulbinding")
+                                      .defineList("enchantmentName", Arrays.asList("enderio:soulbound"), s -> s instanceof String);
+    SOULBOUND_TAG_STRINGS = COMMON_BUILDER
+                                      .comment("List of JSON based alternate NBT values that are considered as soulbinding when found on an item.")
+                                      .defineList("tags", Arrays.asList("{ \"Botania_keepIvy\": 1b }", "{ \"spectreAnchor\": 0b }"), s -> s instanceof String);
   }
   
   private static void setupCommonConfigGraveLocation() {
@@ -106,7 +124,8 @@ public class GraveKeeperConfig {
                                                 "Use Bed or spawn location when death happens with Y below this value.",
                                                 "Use -1000 or lower to disable it, use 1000 or higher to force permanently.",
                                                 "We first check bed in current dimension, then bed in spawn dimension, then we use the actual spawn.",
-                                                "Note: default spawn is center of the world at Y = 0." }))
+                                                "Note: default spawn is center of the world at Y = 0."
+                                            }))
                                             .defineInRange("useBedOrSpawnLocationBelowY", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
   
     COMMON_BUILDER.comment("Grave search settings").push(SUBCATEGORY_SEARCH);
