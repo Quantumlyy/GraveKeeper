@@ -105,6 +105,8 @@ dependencies {
     provided curse.resolve("techguns", "${config.Techguns_fileid}")
     provided curse.resolve("travelers-backpack", "${config.TravelersBackpack_fileid}")
     provided curse.resolve("random-things", "${config.RandomThings_fileid}")
+    provided "slimeknights.mantle:Mantle:${config.Mantle_version}"
+    provided "slimeknights:TConstruct:${config.TCon_version}"
 }
 
 processResources {
