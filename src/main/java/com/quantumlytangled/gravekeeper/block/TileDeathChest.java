@@ -1,9 +1,11 @@
 package com.quantumlytangled.gravekeeper.block;
 
+import com.quantumlytangled.gravekeeper.GraveKeeper;
 import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
 import com.quantumlytangled.gravekeeper.core.CreationDate;
 import com.quantumlytangled.gravekeeper.util.InventorySlot;
 import com.quantumlytangled.gravekeeper.core.InventoryHandler;
+import com.quantumlytangled.gravekeeper.util.WorldPosition;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,8 @@ public class TileDeathChest extends TileEntity {
     } else if ( ( GraveKeeperConfig.INSTANT_FOREIGN_COLLECTION
                || timeRemaining <= 0L )
              && !GraveKeeperConfig.OWNER_ONLY_COLLECTION ) {
+	    GraveKeeper.logger.warn(String.format("Death chest dropping content at %s (%d %d %d) by player %s",
+	                                          WorldPosition.format(world), pos.getX(), pos.getY(), pos.getZ(), player));
       doDropContent();
       
     } else {
@@ -169,24 +173,41 @@ public class TileDeathChest extends TileEntity {
     }
   }
   
+  protected void dropItem(final ItemStack itemStack) {
+	  try {
+		  final EntityItem entityItem = new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemStack);
+		  world.spawnEntity(entityItem);
+	  } catch (final Exception exception) {
+		  exception.printStackTrace();
+		  GraveKeeper.logger.info(String.format("Failed to drop item %s",
+		                                        itemStack ));
+	  }
+  }
+  
   protected void doDropContent() {
     for (InventorySlot inventory : inventorySlots) {
-      final EntityItem entityItem = new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, inventory.itemStack);
-      world.spawnEntity(entityItem);
+    	dropItem(inventory.itemStack);
     }
+    // clear inventory as a preventive measure
+	  inventorySlots.clear();
+		
+	  world.removeTileEntity(pos);
+	  world.setBlockToAir(pos);
   }
   
   private void doReturnToOwner(@Nonnull final EntityPlayerMP player) {
     final List<ItemStack> overflow = InventoryHandler.restoreOrOverflow(player, inventorySlots, false);
     
     for (final ItemStack itemStack : overflow) {
-      if (player.inventory.addItemStackToInventory(itemStack.copy())) {
+      if (player.inventory.addItemStackToInventory(itemStack)) {
         continue;
       }
-      world.spawnEntity(new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemStack));
+		  dropItem(itemStack);
     }
-    
-    world.removeTileEntity(pos);
+	  // clear inventory as a preventive measure
+	  inventorySlots.clear();
+		
+	  world.removeTileEntity(pos);
     world.setBlockToAir(pos);
   }
 }
