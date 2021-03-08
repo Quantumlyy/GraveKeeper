@@ -46,18 +46,17 @@ public class TileDeathChest extends TileEntity {
                          || (ownerUUID.getLeastSignificantBits() == 0L && ownerUUID.getMostSignificantBits() == 0L)
                          || player.getUniqueID().equals(ownerUUID);
     final long timeRemaining = CreationDate.getRemainingSeconds(creationDate);
+    
     if ( isCreative
       || player.isSneaking() ) {
       doInspection(player, isCreative, isOwner, timeRemaining);
       
     } else if (isOwner) {
       doReturnToOwner(player);
-      
     } else if ( ( GraveKeeperConfig.INSTANT_FOREIGN_COLLECTION
                || timeRemaining <= 0L )
              && !GraveKeeperConfig.OWNER_ONLY_COLLECTION ) {
       doDropContent();
-      
     } else {
       doInspection(player, false, false, timeRemaining);
     }
@@ -174,6 +173,9 @@ public class TileDeathChest extends TileEntity {
       final EntityItem entityItem = new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, inventory.itemStack);
       world.spawnEntity(entityItem);
     }
+	
+	  world.removeTileEntity(pos);
+	  world.setBlockToAir(pos);
   }
   
   private void doReturnToOwner(@Nonnull final EntityPlayerMP player) {
