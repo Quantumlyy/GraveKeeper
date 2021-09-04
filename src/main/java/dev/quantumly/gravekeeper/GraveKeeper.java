@@ -1,12 +1,11 @@
-package com.quantumlytangled.gravekeeper;
+package dev.quantumly.gravekeeper;
 
-import com.quantumlytangled.gravekeeper.core.DeathHandler;
-import com.quantumlytangled.gravekeeper.util.LoggerPrintStream;
+import dev.quantumly.gravekeeper.core.DeathHandler;
+import dev.quantumly.gravekeeper.util.LoggerPrintStream;
 
 import javax.annotation.Nonnull;
 
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 

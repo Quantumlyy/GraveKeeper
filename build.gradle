@@ -26,7 +26,7 @@ configFile.withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-group = "com.quantumlytangled.gravekeeper" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "dev.quantumly.gravekeeper" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 version = "${config.minecraft_version}-${config.MAJORMOD}.${config.MAJORAPI}.${config.MINOR}.${config.PATCH}"
 archivesBaseName = "${config.modid}"
 
@@ -131,11 +131,11 @@ jar {
     manifest {
         attributes([
             "Specification-Title": "Grave Keeper",
-            "Specification-Vendor": "QuantumlyTangled",
+            "Specification-Vendor": "Quantumly",
             "Specification-Version": "${version}",
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"QuantumlyTangled",
+            "Implementation-Vendor" :"Quantumly",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }

@@ -1,6 +1,6 @@
-package com.quantumlytangled.gravekeeper.util;
+package dev.quantumly.gravekeeper.util;
 
-import com.quantumlytangled.gravekeeper.GraveKeeper;
+import dev.quantumly.gravekeeper.GraveKeeper;
 
 import java.io.File;
 import java.io.FileInputStream;

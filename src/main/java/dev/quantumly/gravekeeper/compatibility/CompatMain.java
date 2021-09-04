@@ -1,6 +1,6 @@
-package com.quantumlytangled.gravekeeper.compatibility;
+package dev.quantumly.gravekeeper.compatibility;
 
-import com.quantumlytangled.gravekeeper.util.InventoryType;
+import dev.quantumly.gravekeeper.util.InventoryType;
 
 import javax.annotation.Nonnull;
 
