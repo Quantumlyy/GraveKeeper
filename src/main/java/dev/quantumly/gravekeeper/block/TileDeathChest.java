@@ -2,14 +2,17 @@ package dev.quantumly.gravekeeper.block;
 
 import dev.quantumly.gravekeeper.GraveKeeperConfig;
 import dev.quantumly.gravekeeper.core.CreationDate;
+import dev.quantumly.gravekeeper.core.InventoryHandler;
 import dev.quantumly.gravekeeper.util.InventorySlot;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -17,10 +20,15 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.util.text.event.HoverEvent.Action;
+
+import net.minecraftforge.common.util.Constants;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
@@ -37,17 +45,17 @@ public class TileDeathChest extends TileEntity {
   private List<InventorySlot> inventorySlots = new ArrayList<>();
   
   public TileDeathChest() {
-    super(TileEntityType.A);
+    super(TileEntityType.BED);
   }
   
   public void processInteraction(@Nonnull final ServerPlayerEntity player) {
     final boolean isCreative = player.isCreative();
     final boolean isOwner = ownerUUID == null
                             || (ownerUUID.getLeastSignificantBits() == 0L && ownerUUID.getMostSignificantBits() == 0L)
-                            || player.getUniqueID().equals(ownerUUID);
+                            || player.getUUID().equals(ownerUUID);
     final long timeRemaining = CreationDate.getRemainingSeconds(creationDate);
     if ( isCreative
-         || player.isSneaking() ) {
+         || player.isShiftKeyDown() ) {
       doInspection(player, isCreative, isOwner, timeRemaining);
       
     } else if (isOwner) {
@@ -67,35 +75,35 @@ public class TileDeathChest extends TileEntity {
                       final long creationDate, @Nonnull final List<InventorySlot> inventorySlots) {
     dataIdentifier = identifier;
     ownerName = player.getDisplayName().toString();
-    ownerUUID = player.getUniqueID();
+    ownerUUID = player.getUUID();
     this.creationDate = creationDate;
     this.inventorySlots = inventorySlots.stream()
                                         .filter(inventorySlot -> !inventorySlot.isCharmed
                                                                  && !inventorySlot.isSoulbound )
                                         .collect(Collectors.toList());
-    markDirty();
+    setChanged();
   }
   
   @Override
-  public void readFromNBT(@Nonnull CompoundNBT tagCompound) {
-    super.read(tagCompound);
+  public void load(@Nonnull BlockState state, @Nonnull CompoundNBT tagCompound) {
+    super.load(state, tagCompound);
     
-    final NBTTagList nbtInventorySlots = tagCompound.getTagList("InventorySlots", Constants.NBT.TAG_COMPOUND);
-    for (int index = 0; index < nbtInventorySlots.tagCount(); index++) {
-      final NBTTagCompound nbtInventorySlot = nbtInventorySlots.getCompoundTagAt(index);
+    final ListNBT nbtInventorySlots = tagCompound.getList("InventorySlots", Constants.NBT.TAG_COMPOUND);
+    for (int index = 0; index < nbtInventorySlots.size(); index++) {
+      final CompoundNBT nbtInventorySlot = nbtInventorySlots.getCompound(index);
       inventorySlots.add(new InventorySlot(nbtInventorySlot));
     }
     
     dataIdentifier = tagCompound.getString("DataIdentifier");
     ownerName = tagCompound.getString("OwnerName");
-    ownerUUID = tagCompound.getUniqueId("OwnerUUID");
+    ownerUUID = tagCompound.getUUID("OwnerUUID");
     creationDate = tagCompound.getLong("CreationDate");
   }
   
   @Nonnull
   @Override
-  public CompoundNBT writeToNBT(@Nonnull final CompoundNBT tagCompound) {
-    super.writeToNBT(tagCompound);
+  public CompoundNBT save(@Nonnull final CompoundNBT tagCompound) {
+    super.save(tagCompound);
     
     final ListNBT nbtInventorySlots = new ListNBT();
     for (final InventorySlot inventorySlot : inventorySlots) {
@@ -105,7 +113,7 @@ public class TileDeathChest extends TileEntity {
     tagCompound.putString("DataIdentifier", dataIdentifier);
     tagCompound.putString("OwnerName", ownerName);
     if (ownerUUID != null) {
-      tagCompound.putUniqueId("OwnerUUID", ownerUUID);
+      tagCompound.putUUID("OwnerUUID", ownerUUID);
     }
     tagCompound.putLong("CreationDate", creationDate);
     tagCompound.put("InventorySlots", nbtInventorySlots);
@@ -114,64 +122,64 @@ public class TileDeathChest extends TileEntity {
   }
   
   private void doInspection(@Nonnull final ServerPlayerEntity player, final boolean isCreative, final boolean isOwner, final long timeRemaining) {
-    final ITextComponent textOwner = new TextComponentString(ownerName == null ? "-null-" : ownerName);
+    final ITextComponent textOwner = new StringTextComponent(ownerName == null ? "-null-" : ownerName);
     textOwner.getStyle()
-             .setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new TextComponentString(ownerUUID == null ? "-null-" : ownerUUID.toString())))
-             .setColor(TextFormatting.AQUA);
+             .withHoverEvent(new HoverEvent(Action.SHOW_TEXT, new StringTextComponent(ownerUUID == null ? "-null-" : ownerUUID.toString())))
+             .withColor(TextFormatting.AQUA);
     
-    final ITextComponent textDuration = new TextComponentString(DurationFormatUtils.formatDurationWords(Math.abs(timeRemaining * 1000L), true, true));
+    final ITextComponent textDuration = new StringTextComponent(DurationFormatUtils.formatDurationWords(Math.abs(timeRemaining * 1000L), true, true));
     textDuration.getStyle()
-                .setColor(TextFormatting.RED);
+                .withColor(TextFormatting.RED);
     
-    final ITextComponent textSize = new TextComponentString(String.format("%d", inventorySlots.size()));
+    final ITextComponent textSize = new StringTextComponent(String.format("%d", inventorySlots.size()));
     textSize.getStyle()
-            .setColor(TextFormatting.AQUA);
+            .withColor(TextFormatting.AQUA);
     
     ITextComponent textMessageToSend;
     if (isOwner) {
       if (timeRemaining <= 0L) {
-        textMessageToSend = new TextComponentTranslation("gravekeeper.chat.inspect.elapsed_yours",
+        textMessageToSend = new TranslationTextComponent("gravekeeper.chat.inspect.elapsed_yours",
                                                          textOwner, textDuration, textSize );
-        textMessageToSend.getStyle().setColor(TextFormatting.GREEN);
+        textMessageToSend.getStyle().withColor(TextFormatting.GREEN);
       } else if (!GraveKeeperConfig.OWNER_ONLY_COLLECTION) {
-        textMessageToSend = new TextComponentTranslation("gravekeeper.chat.inspect.delayed_yours",
+        textMessageToSend = new TranslationTextComponent("gravekeeper.chat.inspect.delayed_yours",
                                                          textOwner, textDuration, textSize );
-        textMessageToSend.getStyle().setColor(TextFormatting.GREEN);
+        textMessageToSend.getStyle().withColor(TextFormatting.GREEN);
       } else {
-        textMessageToSend = new TextComponentTranslation("gravekeeper.chat.inspect.guarded_yours",
+        textMessageToSend = new TranslationTextComponent("gravekeeper.chat.inspect.guarded_yours",
                                                          textOwner, textDuration, textSize );
-        textMessageToSend.getStyle().setColor(TextFormatting.GREEN);
+        textMessageToSend.getStyle().withColor(TextFormatting.GREEN);
       }
     } else {
       if (timeRemaining <= 0L) {
-        textMessageToSend = new TextComponentTranslation("gravekeeper.chat.inspect.elapsed_other",
+        textMessageToSend = new TranslationTextComponent("gravekeeper.chat.inspect.elapsed_other",
                                                          textOwner, textDuration, textSize );
-        textMessageToSend.getStyle().setColor(TextFormatting.GREEN);
+        textMessageToSend.getStyle().withColor(TextFormatting.GREEN);
       } else if (!GraveKeeperConfig.OWNER_ONLY_COLLECTION) {
-        textMessageToSend = new TextComponentTranslation("gravekeeper.chat.inspect.delayed_other",
+        textMessageToSend = new TranslationTextComponent("gravekeeper.chat.inspect.delayed_other",
                                                          textOwner, textDuration, textSize );
-        textMessageToSend.getStyle().setColor(TextFormatting.GOLD);
+        textMessageToSend.getStyle().withColor(TextFormatting.GOLD);
       } else {
-        textMessageToSend = new TextComponentTranslation("gravekeeper.chat.inspect.guarded_other",
+        textMessageToSend = new TranslationTextComponent("gravekeeper.chat.inspect.guarded_other",
                                                          textOwner, textDuration, textSize );
-        textMessageToSend.getStyle().setColor(TextFormatting.GOLD);
+        textMessageToSend.getStyle().withColor(TextFormatting.GOLD);
       }
     }
-    player.sendMessage(textMessageToSend);
+    player.sendMessage(textMessageToSend, Util.NIL_UUID);
     
     if ( isCreative
          && ( isOwner
               || timeRemaining <= 0L )) {
-      textMessageToSend = new TextComponentTranslation("gravekeeper.chat.inspect.survival_required",
+      textMessageToSend = new TranslationTextComponent("gravekeeper.chat.inspect.survival_required",
                                                        textOwner, textDuration, textSize );
-      textMessageToSend.getStyle().setColor(TextFormatting.RED);
-      player.sendMessage(textMessageToSend);
+      textMessageToSend.getStyle().withColor(TextFormatting.RED);
+      player.sendMessage(textMessageToSend, Util.NIL_UUID);
     }
   }
   
   protected void doDropContent() {
     for (InventorySlot inventory : inventorySlots) {
-      final ItemEntity entityItem = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, inventory.itemStack);
+      final ItemEntity entityItem = new ItemEntity(world, worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D, inventory.itemStack);
       world.addEntity(entityItem);
     }
   }
@@ -180,13 +188,13 @@ public class TileDeathChest extends TileEntity {
     final List<ItemStack> overflow = InventoryHandler.restoreOrOverflow(player, inventorySlots, false);
     
     for (final ItemStack itemStack : overflow) {
-      if (player.inventory.addItemStackToInventory(itemStack.copy())) {
+      if (player.inventory.add(itemStack.copy())) {
         continue;
       }
-      world.addEntity(new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemStack));
+      world.addEntity(new ItemEntity(world, worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D, itemStack));
     }
     
-    world.removeTileEntity(pos);
-    world.setBlockToAir(pos);
+    world.removeTileEntity(worldPosition);
+    world.setBlockToAir(worldPosition);
   }
 }
