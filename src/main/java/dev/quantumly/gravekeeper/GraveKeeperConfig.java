@@ -201,9 +201,7 @@ public class GraveKeeperConfig {
     SOULBOUND_ENCHANTMENTS = new ArrayList<>(soulboundEnchantmentNames.size());
     for (final String name : soulboundEnchantmentNames) {
       final Enchantment enchantment = RegistryObject.of(new ResourceLocation(name), ForgeRegistries.ENCHANTMENTS).get();
-      if (enchantment != null) {
-        SOULBOUND_ENCHANTMENTS.add(enchantment);
-      }
+      SOULBOUND_ENCHANTMENTS.add(enchantment);
     }
   
     final List<? extends String> soulboundTagsStrings = SOULBOUND_TAG_STRINGS.get();
