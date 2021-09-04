@@ -28,7 +28,7 @@ public class SoulboundHandler {
     if (tagCompound != null) {
       for (final CompoundNBT tagElement : GraveKeeperConfig.SOULBOUND_TAGS) {
         boolean isSoulbound = true;
-        for (final String tagKey : tagElement.keySet()) {
+        for (final String tagKey : tagElement.getAllKeys()) {
           if ( tagCompound.get(tagKey) == null
                || !Objects.equals(tagCompound.get(tagKey), tagElement.get(tagKey))) {
             isSoulbound = false;

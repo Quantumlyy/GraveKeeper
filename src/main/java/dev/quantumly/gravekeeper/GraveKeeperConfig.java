@@ -208,7 +208,7 @@ public class GraveKeeperConfig {
     SOULBOUND_TAGS = new ArrayList<>(soulboundTagsStrings.size());
     for (final String stringTag : soulboundTagsStrings) {
       try {
-        final CompoundNBT tagCompound = JsonToNBT.getTagFromJson(stringTag);
+        final CompoundNBT tagCompound = JsonToNBT.parseTag(stringTag);
         SOULBOUND_TAGS.add(tagCompound);
       } catch (final Exception exception) {
         GraveKeeper.logger.error(String.format("Error parsing '%s'", stringTag));

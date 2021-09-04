@@ -66,7 +66,7 @@ public class TileDeathChest extends TileEntity {
   public void setData(@Nonnull final ServerPlayerEntity player, @Nonnull final String identifier,
                       final long creationDate, @Nonnull final List<InventorySlot> inventorySlots) {
     dataIdentifier = identifier;
-    ownerName = player.getDisplayNameString();
+    ownerName = player.getDisplayName().toString();
     ownerUUID = player.getUniqueID();
     this.creationDate = creationDate;
     this.inventorySlots = inventorySlots.stream()
@@ -78,7 +78,7 @@ public class TileDeathChest extends TileEntity {
   
   @Override
   public void readFromNBT(@Nonnull CompoundNBT tagCompound) {
-    super.readFromNBT(tagCompound);
+    super.read(tagCompound);
     
     final NBTTagList nbtInventorySlots = tagCompound.getTagList("InventorySlots", Constants.NBT.TAG_COMPOUND);
     for (int index = 0; index < nbtInventorySlots.tagCount(); index++) {

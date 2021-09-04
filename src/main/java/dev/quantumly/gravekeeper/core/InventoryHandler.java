@@ -42,7 +42,7 @@ public class InventoryHandler {
         if ( inventorySlot.isSoulbound
              && inventorySlot.type != InventoryType.ARMOUR
              && inventorySlot.type != InventoryType.MAIN ) {
-          if (player.inventory.addItemStackToInventory(inventorySlot.itemStack.copy())) {
+          if (player.inventory.add(inventorySlot.itemStack.copy())) {
             continue;
           }
           // main inventory is overflowing => cancel soulbound so we keep that item in the grave

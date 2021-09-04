@@ -23,21 +23,21 @@ public class CompatOffHand implements ICompatInventory {
   
   @Override
   public NonNullList<ItemStack> getAllContents(@Nonnull final ServerPlayerEntity player) {
-    return player.inventory.offHandInventory;
+    return player.inventory.offhand;
   }
   
   @Override
   public void removeItem(@Nonnull final ServerPlayerEntity player, final int slot) {
-    player.inventory.offHandInventory.set(slot, ItemStack.EMPTY);
+    getAllContents(player).set(slot, ItemStack.EMPTY);
   }
   
   @Override
   public ItemStack setItemReturnOverflow(@Nonnull final ServerPlayerEntity player, final int slot, @Nonnull final ItemStack itemStack) {
     if ( slot >= 0
-      && slot < player.inventory.offHandInventory.size()
-      && player.inventory.offHandInventory.get(slot).isEmpty()
+      && slot < getAllContents(player).size()
+      && getAllContents(player).get(slot).isEmpty()
       /* items are always valid */ ) {
-      player.inventory.offHandInventory.set(slot, itemStack);
+      getAllContents(player).set(slot, itemStack);
       return ItemStack.EMPTY;
     }
     return itemStack;

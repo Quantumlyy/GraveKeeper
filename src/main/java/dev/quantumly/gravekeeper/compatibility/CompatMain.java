@@ -23,21 +23,21 @@ public class CompatMain implements ICompatInventory {
   
   @Override
   public NonNullList<ItemStack> getAllContents(@Nonnull final ServerPlayerEntity player) {
-    return player.inventory.mainInventory;
+    return player.inventory.items;
   }
   
   @Override
   public void removeItem(@Nonnull final ServerPlayerEntity player, final int slot) {
-    player.inventory.mainInventory.set(slot, ItemStack.EMPTY);
+    getAllContents(player).set(slot, ItemStack.EMPTY);
   }
   
   @Override
   public ItemStack setItemReturnOverflow(@Nonnull final ServerPlayerEntity player, final int slot, @Nonnull final ItemStack itemStack) {
     if ( slot >= 0
-      && slot < player.inventory.mainInventory.size()
-      && player.inventory.mainInventory.get(slot).isEmpty()
+      && slot < getAllContents(player).size()
+      && getAllContents(player).get(slot).isEmpty()
       /* items are always valid */ ) {
-      player.inventory.mainInventory.set(slot, itemStack);
+      getAllContents(player).set(slot, itemStack);
       return ItemStack.EMPTY;
     }
     return itemStack;

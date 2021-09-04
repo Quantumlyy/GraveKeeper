@@ -21,7 +21,7 @@ public class InventorySlot {
   }
   
   public InventorySlot(@Nonnull final CompoundNBT tagSlot) {
-    this.itemStack = ItemStack.read(tagSlot);
+    this.itemStack = ItemStack.of(tagSlot);
     this.slot = tagSlot.getInt("slot");
     this.type = InventoryType.valueOf(tagSlot.getString("type"));
     this.isSoulbound = tagSlot.get("isSoulbound") != null && tagSlot.getBoolean("isSoulbound");
@@ -36,7 +36,7 @@ public class InventorySlot {
     if (isSoulbound) {
       tagInventorySlot.putBoolean("isSoulbound", true);
     }
-    itemStack.write(tagInventorySlot);
+    itemStack.save(tagInventorySlot);
     
     return tagInventorySlot;
   }
