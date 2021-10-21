@@ -1,8 +1,9 @@
 package com.quantumlytangled.gravekeeper.core;
 
-import com.quantumlytangled.gravekeeper.GraveKeeper;
 import com.quantumlytangled.gravekeeper.util.InventorySlot;
 import com.quantumlytangled.gravekeeper.util.WorldPosition;
+import com.quantumlytangled.gravekeeper.GraveKeeper;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;

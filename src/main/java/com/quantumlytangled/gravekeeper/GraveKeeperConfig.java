@@ -5,11 +5,12 @@ import com.quantumlytangled.gravekeeper.compatibility.CompatArmour;
 import com.quantumlytangled.gravekeeper.compatibility.CompatBaubles;
 import com.quantumlytangled.gravekeeper.compatibility.CompatCosmeticArmorReworked;
 import com.quantumlytangled.gravekeeper.compatibility.CompatGalacticCraftCore;
+import com.quantumlytangled.gravekeeper.core.InventoryHandler;
 import com.quantumlytangled.gravekeeper.compatibility.CompatMain;
 import com.quantumlytangled.gravekeeper.compatibility.CompatOffHand;
 import com.quantumlytangled.gravekeeper.compatibility.CompatTechGuns;
 import com.quantumlytangled.gravekeeper.compatibility.CompatTravelersBackpack;
-import com.quantumlytangled.gravekeeper.core.InventoryHandler;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

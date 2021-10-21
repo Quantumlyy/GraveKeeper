@@ -1,5 +1,7 @@
 package com.quantumlytangled.gravekeeper.core;
 
+import com.quantumlytangled.gravekeeper.util.WorldPosition;
+
 import javax.annotation.Nonnull;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +15,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import com.quantumlytangled.gravekeeper.GraveKeeper;
 import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
-import com.quantumlytangled.gravekeeper.util.WorldPosition;
 
 public class GravePosition {
   

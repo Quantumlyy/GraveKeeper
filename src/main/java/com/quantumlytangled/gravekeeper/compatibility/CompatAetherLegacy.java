@@ -1,8 +1,8 @@
 package com.quantumlytangled.gravekeeper.compatibility;
 
-import com.legacy.aether.api.AetherAPI;
-import com.legacy.aether.api.player.IPlayerAether;
-import com.legacy.aether.api.player.util.IAccessoryInventory;
+import com.gildedgames.the_aether.api.AetherAPI;
+import com.gildedgames.the_aether.api.player.IPlayerAether;
+import com.gildedgames.the_aether.api.player.util.IAccessoryInventory;
 import com.quantumlytangled.gravekeeper.util.InventoryType;
 import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;

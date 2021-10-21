@@ -1,5 +1,8 @@
 package com.quantumlytangled.gravekeeper.core;
 
+import com.quantumlytangled.gravekeeper.util.InventoryType;
+import com.quantumlytangled.gravekeeper.util.SoulboundHandler;
+
 import javax.annotation.Nonnull;
 import com.quantumlytangled.gravekeeper.GraveKeeper;
 import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
@@ -7,8 +10,7 @@ import com.quantumlytangled.gravekeeper.compatibility.CompatMain;
 import com.quantumlytangled.gravekeeper.compatibility.ICompatInventory;
 import com.quantumlytangled.gravekeeper.core.CharmHandler.Mode;
 import com.quantumlytangled.gravekeeper.util.InventorySlot;
-import com.quantumlytangled.gravekeeper.util.InventoryType;
-import com.quantumlytangled.gravekeeper.util.SoulboundHandler;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -106,8 +108,8 @@ public class InventoryHandler {
         }
       }
       final boolean isSoulbound = !isCharmed
-                               && countSoulboundRemaining > 0
-                               && SoulboundHandler.isSoulbound(itemStack);
+                                  && countSoulboundRemaining > 0
+                                  && SoulboundHandler.isSoulbound(itemStack);
       if (isSoulbound) {
         countSoulboundRemaining--;
         if (GraveKeeperConfig.DEBUG_LOGS) {

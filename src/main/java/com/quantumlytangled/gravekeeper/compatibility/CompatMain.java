@@ -1,10 +1,11 @@
 package com.quantumlytangled.gravekeeper.compatibility;
 
+import com.quantumlytangled.gravekeeper.util.InventoryType;
+
 import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import com.quantumlytangled.gravekeeper.util.InventoryType;
 
 public class CompatMain implements ICompatInventory {
 

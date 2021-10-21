@@ -1,7 +1,8 @@
 package com.quantumlytangled.gravekeeper.block;
 
-import com.quantumlytangled.gravekeeper.GraveKeeper;
 import com.quantumlytangled.gravekeeper.util.WorldPosition;
+import com.quantumlytangled.gravekeeper.GraveKeeper;
+
 import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;

@@ -1,5 +1,12 @@
 package com.quantumlytangled.gravekeeper;
 
+import com.quantumlytangled.gravekeeper.block.BlockDeathChest;
+import com.quantumlytangled.gravekeeper.block.TileDeathChest;
+import com.quantumlytangled.gravekeeper.command.CommandList;
+import com.quantumlytangled.gravekeeper.command.CommandRestore;
+import com.quantumlytangled.gravekeeper.core.DeathHandler;
+import com.quantumlytangled.gravekeeper.util.LoggerPrintStream;
+
 import javax.annotation.Nonnull;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -7,12 +14,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
-import com.quantumlytangled.gravekeeper.block.BlockDeathChest;
-import com.quantumlytangled.gravekeeper.block.TileDeathChest;
-import com.quantumlytangled.gravekeeper.command.CommandList;
-import com.quantumlytangled.gravekeeper.command.CommandRestore;
-import com.quantumlytangled.gravekeeper.core.DeathHandler;
-import com.quantumlytangled.gravekeeper.util.LoggerPrintStream;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import net.minecraftforge.client.model.ModelLoader;
@@ -79,7 +81,7 @@ public class GraveKeeper {
   public void registerBlocks(@Nonnull final RegistryEvent.Register<Block> event) {
     event.getRegistry().register(blockDeathChest);
     GameRegistry.registerTileEntity(TileDeathChest.class,
-        new ResourceLocation(GraveKeeper.MODID, "death_chest"));
+                                    new ResourceLocation(GraveKeeper.MODID, "death_chest"));
   }
   
   @SubscribeEvent

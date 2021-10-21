@@ -1,7 +1,8 @@
 package com.quantumlytangled.gravekeeper.core;
 
-import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
 import com.quantumlytangled.gravekeeper.util.InventoryType;
+import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
+
 import javax.annotation.Nonnull;
 import net.minecraft.item.ItemStack;
 

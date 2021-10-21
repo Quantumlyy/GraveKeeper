@@ -1,8 +1,12 @@
 package com.quantumlytangled.gravekeeper.core;
 
+import com.quantumlytangled.gravekeeper.block.TileDeathChest;
+import com.quantumlytangled.gravekeeper.util.InventorySlot;
+import com.quantumlytangled.gravekeeper.util.NBTFile;
+import com.quantumlytangled.gravekeeper.util.WorldPosition;
 import com.quantumlytangled.gravekeeper.GraveKeeper;
 import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
-import com.quantumlytangled.gravekeeper.block.TileDeathChest;
+
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
@@ -21,9 +25,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import com.quantumlytangled.gravekeeper.util.InventorySlot;
-import com.quantumlytangled.gravekeeper.util.NBTFile;
-import com.quantumlytangled.gravekeeper.util.WorldPosition;
+
 import org.apache.commons.io.FileUtils;
 
 public final class DeathHandler {

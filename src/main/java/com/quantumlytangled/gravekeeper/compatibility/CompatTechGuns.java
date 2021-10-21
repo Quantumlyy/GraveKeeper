@@ -1,12 +1,13 @@
 package com.quantumlytangled.gravekeeper.compatibility;
 
+import com.quantumlytangled.gravekeeper.util.InventoryType;
+
 import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-import com.quantumlytangled.gravekeeper.util.InventoryType;
 import techguns.capabilities.TGExtendedPlayer;
 
 public class CompatTechGuns implements ICompatInventory {
