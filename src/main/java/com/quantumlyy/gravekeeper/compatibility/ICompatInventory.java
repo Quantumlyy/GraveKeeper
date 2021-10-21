@@ -1,6 +1,6 @@
-package dev.quantumly.gravekeeper.compatibility;
+package com.quantumlyy.gravekeeper.compatibility;
 
-import dev.quantumly.gravekeeper.util.InventoryType;
+import com.quantumlyy.gravekeeper.util.InventoryType;
 import javax.annotation.Nonnull;
 
 import net.minecraft.entity.player.ServerPlayerEntity;

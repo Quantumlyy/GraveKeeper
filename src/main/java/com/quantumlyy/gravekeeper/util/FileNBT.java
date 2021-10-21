@@ -1,6 +1,6 @@
-package dev.quantumly.gravekeeper.util;
+package com.quantumlyy.gravekeeper.util;
 
-import dev.quantumly.gravekeeper.GraveKeeper;
+import com.quantumlyy.gravekeeper.GraveKeeper;
 
 import java.io.File;
 import java.io.FileInputStream;

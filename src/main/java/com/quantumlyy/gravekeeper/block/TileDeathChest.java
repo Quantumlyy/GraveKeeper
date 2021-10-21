@@ -1,9 +1,9 @@
-package dev.quantumly.gravekeeper.block;
+package com.quantumlyy.gravekeeper.block;
 
-import dev.quantumly.gravekeeper.GraveKeeperConfig;
-import dev.quantumly.gravekeeper.core.CreationDate;
-import dev.quantumly.gravekeeper.core.InventoryHandler;
-import dev.quantumly.gravekeeper.util.InventorySlot;
+import com.quantumlyy.gravekeeper.GraveKeeperConfig;
+import com.quantumlyy.gravekeeper.core.CreationDate;
+import com.quantumlyy.gravekeeper.util.InventorySlot;
+import com.quantumlyy.gravekeeper.core.InventoryHandler;
 
 import java.util.ArrayList;
 import java.util.List;

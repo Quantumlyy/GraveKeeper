@@ -1,6 +1,6 @@
-package dev.quantumly.gravekeeper.core;
+package com.quantumlyy.gravekeeper.core;
 
-import dev.quantumly.gravekeeper.GraveKeeperConfig;
+import com.quantumlyy.gravekeeper.GraveKeeperConfig;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;

@@ -1,4 +1,4 @@
-package dev.quantumly.gravekeeper;
+package com.quantumlyy.gravekeeper;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 
