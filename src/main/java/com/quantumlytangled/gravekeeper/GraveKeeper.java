@@ -1,7 +1,7 @@
-package com.quantumlyy.gravekeeper;
+package com.quantumlytangled.gravekeeper;
 
-import com.quantumlyy.gravekeeper.core.DeathHandler;
-import com.quantumlyy.gravekeeper.util.LoggerPrintStream;
+import com.quantumlytangled.gravekeeper.core.DeathHandler;
+import com.quantumlytangled.gravekeeper.util.LoggerPrintStream;
 
 import javax.annotation.Nonnull;
 

@@ -1,4 +1,4 @@
-package com.quantumlyy.gravekeeper.core;
+package com.quantumlytangled.gravekeeper.core;
 
 import javax.annotation.Nonnull;
 

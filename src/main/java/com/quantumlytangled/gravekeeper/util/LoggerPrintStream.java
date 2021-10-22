@@ -1,6 +1,6 @@
-package com.quantumlyy.gravekeeper.util;
+package com.quantumlytangled.gravekeeper.util;
 
-import com.quantumlyy.gravekeeper.GraveKeeper;
+import com.quantumlytangled.gravekeeper.GraveKeeper;
 
 import java.io.OutputStream;
 import java.io.PrintStream;

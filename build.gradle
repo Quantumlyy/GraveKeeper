@@ -26,7 +26,7 @@ configFile.withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-group = "dev.quantumly.gravekeeper" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "com.quantumlytangled.gravekeeper" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 version = "${config.minecraft_version}-${config.MAJORMOD}.${config.MAJORAPI}.${config.MINOR}.${config.PATCH}"
 archivesBaseName = "${config.modid}"
 

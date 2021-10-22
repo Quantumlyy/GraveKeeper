@@ -1,6 +1,6 @@
-package com.quantumlyy.gravekeeper.compatibility;
+package com.quantumlytangled.gravekeeper.compatibility;
 
-import com.quantumlyy.gravekeeper.util.InventoryType;
+import com.quantumlytangled.gravekeeper.util.InventoryType;
 
 import javax.annotation.Nonnull;
 
@@ -8,22 +8,22 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class CompatArmour implements ICompatInventory {
+public class CompatMain implements ICompatInventory {
+	
+	private static final CompatMain INSTANCE = new CompatMain();
   
-  private static final CompatArmour INSTANCE = new CompatArmour();
-  
-  public static CompatArmour getInstance() {
+  public static CompatMain getInstance() {
     return INSTANCE;
   }
   
   @Override
   public InventoryType getType() {
-    return InventoryType.ARMOUR;
+    return InventoryType.MAIN;
   }
   
   @Override
   public NonNullList<ItemStack> getAllContents(@Nonnull final ServerPlayerEntity player) {
-    return player.inventory.armor;
+    return player.inventory.items;
   }
   
   @Override

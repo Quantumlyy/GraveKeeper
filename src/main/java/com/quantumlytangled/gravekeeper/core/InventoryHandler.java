@@ -1,12 +1,12 @@
-package com.quantumlyy.gravekeeper.core;
+package com.quantumlytangled.gravekeeper.core;
 
-import com.quantumlyy.gravekeeper.GraveKeeper;
-import com.quantumlyy.gravekeeper.GraveKeeperConfig;
-import com.quantumlyy.gravekeeper.compatibility.CompatMain;
-import com.quantumlyy.gravekeeper.compatibility.ICompatInventory;
-import com.quantumlyy.gravekeeper.util.InventorySlot;
-import com.quantumlyy.gravekeeper.util.InventoryType;
-import com.quantumlyy.gravekeeper.util.SoulboundHandler;
+import com.quantumlytangled.gravekeeper.compatibility.CompatMain;
+import com.quantumlytangled.gravekeeper.compatibility.ICompatInventory;
+import com.quantumlytangled.gravekeeper.util.InventoryType;
+import com.quantumlytangled.gravekeeper.util.SoulboundHandler;
+import com.quantumlytangled.gravekeeper.GraveKeeper;
+import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
+import com.quantumlytangled.gravekeeper.util.InventorySlot;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

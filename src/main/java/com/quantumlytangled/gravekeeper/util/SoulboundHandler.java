@@ -1,6 +1,6 @@
-package com.quantumlyy.gravekeeper.util;
+package com.quantumlytangled.gravekeeper.util;
 
-import com.quantumlyy.gravekeeper.GraveKeeperConfig;
+import com.quantumlytangled.gravekeeper.GraveKeeperConfig;
 
 import java.util.Map;
 import java.util.Objects;
