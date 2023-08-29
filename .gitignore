@@ -22,3 +22,6 @@ eclipse
 run
 
 output/*
+
+# MacOS
+.DS_Store
