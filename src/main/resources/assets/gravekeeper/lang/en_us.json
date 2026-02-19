@@ -1,5 +1,13 @@
 {
-  "itemGroup.gravekeeper" : "Example Mod Tab",
-  "block.gravekeeper.example_block" : "Example Block",
-  "item.gravekeeper.example_item" : "Example Item"
+  "block.gravekeeper.grave": "Death Chest",
+
+  "gravekeeper.chat.grave_placed": "Your grave was safely placed at %s.",
+
+  "gravekeeper.chat.inspect.elapsed_yours": "I was waiting for you, %s, right click to get your %s items back!",
+  "gravekeeper.chat.inspect.delayed_yours": "I'm guarding your %s items for another %s, right click before it's too late!",
+  "gravekeeper.chat.inspect.guarded_yours": "I'm guarding your %s items until the end of time, right click to get your items back!",
+  "gravekeeper.chat.inspect.elapsed_other": "Here lies %s, right click to loot their %s items!",
+  "gravekeeper.chat.inspect.delayed_other": "Here lies %s, I'm guarding their %s items for %s!",
+  "gravekeeper.chat.inspect.guarded_other": "Here lies %s, I'm guarding their %s items until the end of time...",
+  "gravekeeper.chat.inspect.survival_required": "Only a survival player can recover those items."
 }

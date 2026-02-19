@@ -73,16 +73,16 @@ public class GraveKeeper {
 	private void commonSetup(FMLCommonSetupEvent event) {
 		// Some common setup code
 		LOGGER.info("HELLO FROM COMMON SETUP");
-	}	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GraveBlockEntity>> GRAVE_BLOCK_ENTITY =
-			BLOCK_ENTITY_TYPES.register("grave", () ->
-					                                     BlockEntityType.Builder.of(GraveBlockEntity::new, GRAVE_BLOCK.get()).build(null));
+	}
 	
 	// You can use SubscribeEvent and let the Event Bus discover methods to call
 	@SubscribeEvent
 	public void onServerStarting(ServerStartingEvent event) {
 		// Do something when the server starts
 		LOGGER.info("HELLO from server starting");
-	}
+	}	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GraveBlockEntity>> GRAVE_BLOCK_ENTITY =
+			BLOCK_ENTITY_TYPES.register("grave", () ->
+					                                     BlockEntityType.Builder.of(GraveBlockEntity::new, GRAVE_BLOCK.get()).build(null));
 	
 	// You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
 	@EventBusSubscriber(modid = GraveKeeper.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

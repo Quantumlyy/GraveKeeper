@@ -43,4 +43,12 @@ public class Config {
 			                                                                               .defineInRange("use_bed_or_spawn_location_below_y", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	
 	static final ModConfigSpec SPEC = BUILDER.build();
+	
+	public static boolean isInstantForeignCollection() {
+		return EXPIRE_TIME_SECONDS.get() == 0;
+	}
+	
+	public static boolean isOwnerOnlyCollection() {
+		return EXPIRE_TIME_SECONDS.get() == -1;
+	}
 }
