@@ -1,9 +1,10 @@
 {
   "credit": "SnezziJezzi, LemADEC",
   "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
   "textures": {
-    "1": "minecraft:block/grass_path_side",
-    "2": "minecraft:block/grass_path_top",
+    "1": "minecraft:block/dirt_path_side",
+    "2": "minecraft:block/dirt_path_top",
     "3": "minecraft:block/dirt",
     "4": "minecraft:block/cobblestone",
     "6": "gravekeeper:block/empty",
@@ -11,7 +12,7 @@
     "8": "gravekeeper:block/log_top",
     "9": "gravekeeper:block/plank",
     "10": "gravekeeper:block/flower",
-    "particle": "minecraft:block/grass_path_top"
+    "particle": "minecraft:block/dirt_path_top"
   },
   "elements": [
     {

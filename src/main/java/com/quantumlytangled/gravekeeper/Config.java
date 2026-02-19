@@ -1,42 +1,45 @@
 package com.quantumlytangled.gravekeeper;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-// An example config class. This is not required, but it's a good idea to have one to keep your config organized.
-// Demonstrates how to use Neo's config APIs
 public class Config {
-    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-
-    public static final ModConfigSpec.BooleanValue LOG_DIRT_BLOCK = BUILDER
-            .comment("Whether to log the dirt block on common setup")
-            .define("logDirtBlock", true);
-
-    public static final ModConfigSpec.IntValue MAGIC_NUMBER = BUILDER
-            .comment("A magic number")
-            .defineInRange("magicNumber", 42, 0, Integer.MAX_VALUE);
-
-    public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
-            .comment("What you want the introduction message to be for the magic number")
-            .define("magicNumberIntroduction", "The magic number is... ");
-
-    // a list of strings that are treated as resource locations for items
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
-            .comment("A list of items to log on common setup.")
-            .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
-
-    static final ModConfigSpec SPEC = BUILDER.build();
-
-    private static boolean validateItemName(final Object obj) {
-        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(new ResourceLocation(itemName));
-    }
+	private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+	
+	public static final ModConfigSpec.BooleanValue IGNORE_KEEP_INVENTORY = BUILDER
+			                                                                       .comment("Whether the chests should still spawn when keepInventory is enabled")
+			                                                                       .define("ignore_keep_inventory", false);
+	
+	public static final ModConfigSpec.BooleanValue DEBUG_LOGS = BUILDER
+			                                                            .comment("Enable console logs for debugging purpose")
+			                                                            .define("debug_logs", false);
+	
+	public static final ModConfigSpec.IntValue EXPIRE_TIME_SECONDS = BUILDER
+			                                                                 .comment("Time in seconds after which other players can collect the grave. 0 = instant, -1 = never expires")
+			                                                                 .defineInRange("expire_time", 7200, -1, Integer.MAX_VALUE);
+	
+	public static final ModConfigSpec.IntValue SEARCH_MIN_ALTITUDE = BUILDER
+			                                                                 .comment("Force a minimum altitude before looking for a free spot")
+			                                                                 .defineInRange("search_min_altitude", 0, 0, Integer.MAX_VALUE);
+	
+	public static final ModConfigSpec.IntValue SEARCH_RADIUS_ABOVE_M = BUILDER
+			                                                                   .comment("How far to search vertically above for a free spot")
+			                                                                   .defineInRange("search_radius_above_m", 10, 0, Integer.MAX_VALUE);
+	
+	public static final ModConfigSpec.IntValue SEARCH_RADIUS_BELOW_M = BUILDER
+			                                                                   .comment("How far to search vertically below for a free spot")
+			                                                                   .defineInRange("search_radius_below_m", 10, 0, Integer.MAX_VALUE);
+	
+	public static final ModConfigSpec.IntValue SEARCH_RADIUS_HORIZONTAL_M = BUILDER
+			                                                                        .comment("How far to search horizontally for a free spot")
+			                                                                        .defineInRange("search_radius_horizontal_m", 5, 0, Integer.MAX_VALUE);
+	
+	public static final ModConfigSpec.ConfigValue<String> SPAWN_DIMENSION = BUILDER
+			                                                                        .comment("Defines which spawn dimension to use when player has no bed set")
+			                                                                        .define("spawn_dimension", "minecraft:overworld");
+	
+	public static final ModConfigSpec.IntValue USE_BED_OR_SPAWN_LOCATION_BELOW_Y = BUILDER
+			                                                                               .comment("Use bed or spawn location when death happens below this Y value. -1000 to disable, 1000 to force always")
+			                                                                               .defineInRange("use_bed_or_spawn_location_below_y", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+	
+	static final ModConfigSpec SPEC = BUILDER.build();
 }
