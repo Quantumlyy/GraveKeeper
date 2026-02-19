@@ -1,7 +1,7 @@
 {
-  "variants": {
-    "": {
-      "model": "gravekeeper:block/grave"
+  "variants" : {
+    "" : {
+      "model" : "gravekeeper:block/grave"
     }
   }
 }

@@ -1,17 +1,17 @@
 package com.quantumlytangled.gravekeeper.foundation.inventory;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
-
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class InventoryCollector {
+	
 	public static List<InventorySlot> collectOnDeath(final ServerPlayer player) {
 		final List<InventorySlot> inventorySlots = new ArrayList<>();
 		

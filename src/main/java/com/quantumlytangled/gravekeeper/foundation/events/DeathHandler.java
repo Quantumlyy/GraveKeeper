@@ -3,16 +3,13 @@ package com.quantumlytangled.gravekeeper.foundation.events;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import com.quantumlytangled.gravekeeper.Config;
-
-import com.quantumlytangled.gravekeeper.content.grave.GraveBlockEntity;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 
+import com.quantumlytangled.gravekeeper.Config;
 import com.quantumlytangled.gravekeeper.GraveKeeper;
+import com.quantumlytangled.gravekeeper.content.grave.GraveBlockEntity;
 import com.quantumlytangled.gravekeeper.foundation.inventory.InventoryCollector;
 import com.quantumlytangled.gravekeeper.foundation.inventory.InventorySlot;
 import com.quantumlytangled.gravekeeper.foundation.position.GravePosition;
@@ -52,9 +49,9 @@ public final class DeathHandler {
 		// find a position for the
 		final WorldPosition worldPositionPlayer = new WorldPosition(player.level(),
 		                                                            new BlockPos(
-																																		(int) Math.floor(player.getX()),
-																																		(int) Math.floor(player.getY()),
-																																		(int) Math.floor(player.getZ())
+				                                                            (int) Math.floor(player.getX()),
+				                                                            (int) Math.floor(player.getY()),
+				                                                            (int) Math.floor(player.getZ())
 		                                                            ));
 		final WorldPosition gravePos = GravePosition.get(player, worldPositionPlayer.blockPos);
 		

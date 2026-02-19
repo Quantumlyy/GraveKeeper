@@ -20,7 +20,8 @@ public class GraveBlockEntityRenderer implements BlockEntityRenderer<GraveBlockE
 	private static final ResourceLocation GRAVE_CROSS_MODEL =
 			new ResourceLocation("gravekeeper", "block/grave_cross");
 	
-	public GraveBlockEntityRenderer(BlockEntityRendererProvider.Context context) {}
+	public GraveBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+	}
 	
 	@Override
 	public void render(GraveBlockEntity entity, float partialTick, PoseStack poseStack,

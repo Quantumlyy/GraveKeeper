@@ -39,14 +39,15 @@ public class GraveKeeper {
 	public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
 	public static final DeferredBlock<Block> GRAVE_BLOCK =
 			BLOCKS.register("grave", () -> new GraveBlock(
-					BlockBehaviour.Properties.of()
-					                         .mapColor(MapColor.STONE)
-					                         .noOcclusion()
-					                         .isSuffocating((state, level, pos) -> false)
-					                         .isViewBlocking((state, level, pos) -> false))
+					                BlockBehaviour.Properties.of()
+					                                         .mapColor(MapColor.STONE)
+					                                         .noOcclusion()
+					                                         .isSuffocating((state, level, pos) -> false)
+					                                         .isViewBlocking((state, level, pos) -> false))
 			               );
 	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
 			DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
+	
 	// The constructor for the mod class is the first code that is run when your mod is loaded.
 	// FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
 	public GraveKeeper(IEventBus modEventBus, ModContainer modContainer) {
@@ -67,14 +68,14 @@ public class GraveKeeper {
 		modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 		
 		NeoForge.EVENT_BUS.register(new DeathHandler());
-	}	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GraveBlockEntity>> GRAVE_BLOCK_ENTITY =
-			BLOCK_ENTITY_TYPES.register("grave", () ->
-					                                     BlockEntityType.Builder.of(GraveBlockEntity::new, GRAVE_BLOCK.get()).build(null));
+	}
 	
 	private void commonSetup(FMLCommonSetupEvent event) {
 		// Some common setup code
 		LOGGER.info("HELLO FROM COMMON SETUP");
-	}
+	}	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GraveBlockEntity>> GRAVE_BLOCK_ENTITY =
+			BLOCK_ENTITY_TYPES.register("grave", () ->
+					                                     BlockEntityType.Builder.of(GraveBlockEntity::new, GRAVE_BLOCK.get()).build(null));
 	
 	// You can use SubscribeEvent and let the Event Bus discover methods to call
 	@SubscribeEvent
@@ -96,4 +97,5 @@ public class GraveKeeper {
 	}
 	
 
+	
 }

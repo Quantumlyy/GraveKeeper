@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 public class GraveBlock extends Block implements EntityBlock {
+	
 	public GraveBlock(Properties properties) {
 		super(properties);
 	}

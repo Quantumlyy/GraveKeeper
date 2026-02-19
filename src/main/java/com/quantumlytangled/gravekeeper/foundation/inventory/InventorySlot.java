@@ -1,12 +1,13 @@
 package com.quantumlytangled.gravekeeper.foundation.inventory;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nonnull;
-
 public class InventorySlot {
+	
 	public final ItemStack itemStack;
 	public final int slot;
 	public final InventoryType type;

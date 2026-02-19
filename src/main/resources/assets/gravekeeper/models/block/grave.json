@@ -1,38 +1,143 @@
 {
-  "credit": "SnezziJezzi, LemADEC, Quantumly",
-  "ambientocclusion": false,
-  "render_type": "minecraft:cutout",
-  "textures": {
-    "1": "minecraft:block/dirt_path_side",
-    "2": "minecraft:block/dirt_path_top",
-    "3": "minecraft:block/dirt",
-    "4": "minecraft:block/cobblestone",
-    "particle": "minecraft:block/dirt_path_top"
+  "credit" : "SnezziJezzi, LemADEC, Quantumly",
+  "ambientocclusion" : false,
+  "render_type" : "minecraft:cutout",
+  "textures" : {
+    "1" : "minecraft:block/dirt_path_side",
+    "2" : "minecraft:block/dirt_path_top",
+    "3" : "minecraft:block/dirt",
+    "4" : "minecraft:block/cobblestone",
+    "particle" : "minecraft:block/dirt_path_top"
   },
-  "elements": [
+  "elements" : [
     {
-      "name": "base",
-      "from": [0, 0, 0],
-      "to": [16, 3, 16],
-      "faces": {
-        "north": {"uv": [0, 1, 16, 5], "texture": "#1"},
-        "east":  {"uv": [0, 1, 16, 5], "texture": "#1"},
-        "south": {"uv": [0, 1, 16, 5], "texture": "#1"},
-        "west":  {"uv": [0, 1, 16, 5], "texture": "#1"},
-        "up":    {"uv": [0, 1, 16, 16], "texture": "#2"},
-        "down":  {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "down"}
+      "name" : "base",
+      "from" : [
+        0,
+        0,
+        0
+      ],
+      "to" : [
+        16,
+        3,
+        16
+      ],
+      "faces" : {
+        "north" : {
+          "uv" : [
+            0,
+            1,
+            16,
+            5
+          ],
+          "texture" : "#1"
+        },
+        "east" : {
+          "uv" : [
+            0,
+            1,
+            16,
+            5
+          ],
+          "texture" : "#1"
+        },
+        "south" : {
+          "uv" : [
+            0,
+            1,
+            16,
+            5
+          ],
+          "texture" : "#1"
+        },
+        "west" : {
+          "uv" : [
+            0,
+            1,
+            16,
+            5
+          ],
+          "texture" : "#1"
+        },
+        "up" : {
+          "uv" : [
+            0,
+            1,
+            16,
+            16
+          ],
+          "texture" : "#2"
+        },
+        "down" : {
+          "uv" : [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture" : "#3",
+          "cullface" : "down"
+        }
       }
     },
     {
-      "name": "grave",
-      "from": [4, 3, 2],
-      "to": [12, 4, 16],
-      "faces": {
-        "north": {"uv": [2, 4, 10, 5], "texture": "#4"},
-        "east":  {"uv": [0, 0, 14, 1], "texture": "#4"},
-        "south": {"uv": [4, 5, 12, 6], "texture": "#4"},
-        "west":  {"uv": [0, 0, 14, 1], "texture": "#4"},
-        "up":    {"uv": [0, 0, 8, 14], "texture": "#4"}
+      "name" : "grave",
+      "from" : [
+        4,
+        3,
+        2
+      ],
+      "to" : [
+        12,
+        4,
+        16
+      ],
+      "faces" : {
+        "north" : {
+          "uv" : [
+            2,
+            4,
+            10,
+            5
+          ],
+          "texture" : "#4"
+        },
+        "east" : {
+          "uv" : [
+            0,
+            0,
+            14,
+            1
+          ],
+          "texture" : "#4"
+        },
+        "south" : {
+          "uv" : [
+            4,
+            5,
+            12,
+            6
+          ],
+          "texture" : "#4"
+        },
+        "west" : {
+          "uv" : [
+            0,
+            0,
+            14,
+            1
+          ],
+          "texture" : "#4"
+        },
+        "up" : {
+          "uv" : [
+            0,
+            0,
+            8,
+            14
+          ],
+          "texture" : "#4"
+        }
       }
     }
   ]

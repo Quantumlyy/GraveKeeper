@@ -1,7 +1,8 @@
 package com.quantumlytangled.gravekeeper.content.grave;
 
-import com.quantumlytangled.gravekeeper.GraveKeeper;
-import com.quantumlytangled.gravekeeper.foundation.inventory.InventorySlot;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -11,26 +12,25 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import com.quantumlytangled.gravekeeper.GraveKeeper;
+import com.quantumlytangled.gravekeeper.foundation.inventory.InventorySlot;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-
 public class GraveBlockEntity extends BlockEntity {
+	
 	private List<InventorySlot> inventorySlots = new ArrayList<>();
 	
 	public GraveBlockEntity(BlockPos pos, BlockState state) {
 		super(GraveKeeper.GRAVE_BLOCK_ENTITY.get(), pos, state);
 	}
 	
+	public List<InventorySlot> getInventorySlots() {
+		return inventorySlots;
+	}
+	
 	public void setInventorySlots(@Nonnull List<InventorySlot> slots) {
 		this.inventorySlots = new ArrayList<>(slots);
 		setChanged();
-	}
-	
-	public List<InventorySlot> getInventorySlots() {
-		return inventorySlots;
 	}
 	
 	@Override

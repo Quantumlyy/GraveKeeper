@@ -1,6 +1,8 @@
 package com.quantumlytangled.gravekeeper.foundation.position;
 
-import com.quantumlytangled.gravekeeper.GraveKeeper;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -8,18 +10,17 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.quantumlytangled.gravekeeper.GraveKeeper;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 public class WorldPosition {
 	
+	public BlockPos blockPos;
 	@Nullable
 	private ResourceKey<Level> dimensionKey;
 	@Nullable
 	private Level level;
-	public BlockPos blockPos;
 	
 	public WorldPosition(@Nonnull final Level level, @Nonnull final BlockPos blockPos) {
 		this.level = level;
@@ -36,6 +37,14 @@ public class WorldPosition {
 		this.dimensionKey = ResourceKey.create(Registries.DIMENSION,
 		                                       new ResourceLocation(tag.getString("dimensionKey")));
 		this.blockPos = new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
+	}
+	
+	@Nullable
+	private static Level getServerLevel(@Nullable final ResourceKey<Level> key) {
+		if (key == null) return null;
+		final MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+		if (server == null) return null;
+		return server.getLevel(key);
 	}
 	
 	@Nonnull
@@ -72,13 +81,5 @@ public class WorldPosition {
 	public String format() {
 		final String dimName = dimensionKey != null ? dimensionKey.location().toString() : "unknown";
 		return String.format("[%s] %d %d %d", dimName, blockPos.getX(), blockPos.getY(), blockPos.getZ());
-	}
-	
-	@Nullable
-	private static Level getServerLevel(@Nullable final ResourceKey<Level> key) {
-		if (key == null) return null;
-		final MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-		if (server == null) return null;
-		return server.getLevel(key);
 	}
 }
