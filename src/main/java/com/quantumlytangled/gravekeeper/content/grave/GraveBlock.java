@@ -17,4 +17,9 @@ public class GraveBlock extends Block implements EntityBlock {
 	public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
 		return new GraveBlockEntity(pos, state);
 	}
+	
+	@Override
+	public boolean useShapeForLightOcclusion(@NotNull BlockState state) {
+		return false;
+	}
 }
