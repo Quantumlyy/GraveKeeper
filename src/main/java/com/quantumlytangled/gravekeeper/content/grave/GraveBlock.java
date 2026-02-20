@@ -5,16 +5,29 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import org.jetbrains.annotations.NotNull;
 
 public class GraveBlock extends Block implements EntityBlock {
+	
+	private static final VoxelShape SHAPE = Shapes.or(
+			// base slab
+			Block.box(0, 0, 0, 16, 3, 16),
+			// grave slab
+			Block.box(4, 3, 2, 12, 4, 16),
+			// cross pole (approximate)
+			Block.box(5, 4, 13, 7, 16, 15)
+	                                                 );
 	
 	public GraveBlock(Properties properties) {
 		super(properties);
@@ -39,6 +52,16 @@ public class GraveBlock extends Block implements EntityBlock {
 		
 		grave.processInteraction((ServerPlayer) player);
 		return InteractionResult.SUCCESS;
+	}
+	
+	@Override
+	public @NotNull VoxelShape getShape(
+			@NotNull BlockState state,
+			@NotNull BlockGetter level,
+			@NotNull BlockPos pos,
+			@NotNull CollisionContext context
+	                                   ) {
+		return SHAPE;
 	}
 	
 	@Override

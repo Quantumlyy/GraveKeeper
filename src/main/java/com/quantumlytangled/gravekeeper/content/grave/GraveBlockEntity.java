@@ -1,6 +1,6 @@
 package com.quantumlytangled.gravekeeper.content.grave;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +13,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -27,12 +30,15 @@ import com.quantumlytangled.gravekeeper.foundation.inventory.InventorySlot;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.jetbrains.annotations.NotNull;
 
+@ParametersAreNonnullByDefault
 public class GraveBlockEntity extends BlockEntity {
 	
-	private final String ownerName = "";
-	private final UUID ownerUUID = null;
+	private String dataIdentifier = "";
 	
-	private final long creationDate = 0;
+	private String ownerName = "";
+	private UUID ownerUUID = null;
+	
+	private long creationDate = 0;
 	
 	private List<InventorySlot> inventorySlots = new ArrayList<>();
 	
@@ -40,7 +46,7 @@ public class GraveBlockEntity extends BlockEntity {
 		super(GraveKeeper.GRAVE_BLOCK_ENTITY.get(), pos, state);
 	}
 	
-	public void processInteraction(@Nonnull final ServerPlayer player) {
+	public void processInteraction(final ServerPlayer player) {
 		final boolean isCreative = player.isCreative();
 		final boolean isOwner = ownerUUID == null
 		                        || (ownerUUID.getLeastSignificantBits() == 0L && ownerUUID.getMostSignificantBits() == 0L)
@@ -65,36 +71,71 @@ public class GraveBlockEntity extends BlockEntity {
 		}
 	}
 	
+	public String getOwnerName() {
+		return ownerName;
+	}
+	
 	public List<InventorySlot> getInventorySlots() {
 		return inventorySlots;
 	}
 	
-	public void setInventorySlots(@Nonnull List<InventorySlot> slots) {
+	public void setData(ServerPlayer player, final String identifier, final long creationDate, List<InventorySlot> slots) {
+		this.dataIdentifier = identifier;
+		this.ownerName = player.getDisplayName().getString();
+		this.ownerUUID = player.getUUID();
+		this.creationDate = creationDate;
 		this.inventorySlots = new ArrayList<>(slots);
+		
 		setChanged();
 	}
 	
 	@Override
-	protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+	protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
 		super.saveAdditional(tag, registries);
 		ListTag slotsTag = new ListTag();
 		for (InventorySlot slot : inventorySlots) {
 			slotsTag.add(slot.writeToNBT(registries));
 		}
+		
+		tag.putString("DataIdentifier", dataIdentifier);
+		tag.putString("OwnerName", ownerName);
+		if (ownerUUID != null) {
+			tag.putUUID("OwnerUUID", ownerUUID);
+		}
+		tag.putLong("CreationDate", creationDate);
 		tag.put("InventorySlots", slotsTag);
 	}
 	
 	@Override
-	protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+	protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
 		super.loadAdditional(tag, registries);
 		inventorySlots.clear();
 		ListTag slotsTag = tag.getList("InventorySlots", Tag.TAG_COMPOUND);
 		for (int i = 0; i < slotsTag.size(); i++) {
 			inventorySlots.add(new InventorySlot(slotsTag.getCompound(i), registries));
 		}
+		
+		dataIdentifier = tag.getString("DataIdentifier");
+		ownerName = tag.getString("OwnerName");
+		ownerUUID = tag.getUUID("OwnerUUID");
+		creationDate = tag.getLong("CreationDate");
 	}
 	
-	private void doInspection(@Nonnull final ServerPlayer player, final boolean isCreative,
+	@Override
+	public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+		CompoundTag tag = new CompoundTag();
+		tag.putString("OwnerName", ownerName);
+		if (ownerUUID != null) tag.putUUID("OwnerUUID", ownerUUID);
+		tag.putLong("CreationDate", creationDate);
+		return tag;
+	}
+	
+	@Override
+	public Packet<ClientGamePacketListener> getUpdatePacket() {
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
+	
+	private void doInspection(final ServerPlayer player, final boolean isCreative,
 	                          final boolean isOwner, final long timeRemaining) {
 		
 		final Component textOwner = Component.literal(ownerName == null ? "-null-" : ownerName)
@@ -166,7 +207,7 @@ public class GraveBlockEntity extends BlockEntity {
 		level.setBlockAndUpdate(getBlockPos(), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
 	}
 	
-	private void doReturnToOwner(@Nonnull final ServerPlayer player) {
+	private void doReturnToOwner(final ServerPlayer player) {
 		if (level == null) return;
 		
 		final List<ItemStack> overflow = InventoryRestorer.restoreOrOverflow(player, inventorySlots);

@@ -2,6 +2,7 @@ package com.quantumlytangled.gravekeeper.foundation.position;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -39,22 +40,22 @@ public class WorldPosition {
 		this.blockPos = new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
 	}
 	
-	@Nullable
-	private static Level getServerLevel(@Nullable final ResourceKey<Level> key) {
-		if (key == null) return null;
+	private static Optional<Level> getServerLevel(@Nullable final ResourceKey<Level> key) {
+		if (key == null) return Optional.empty();
 		final MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-		if (server == null) return null;
-		return server.getLevel(key);
+		if (server == null) return Optional.empty();
+		return Optional.ofNullable(server.getLevel(key));
 	}
 	
 	@Nonnull
 	public Level getLevel() {
 		if (level == null) {
-			level = getServerLevel(dimensionKey);
-			if (level == null) {
-				GraveKeeper.LOGGER.warn("Failed to load dimension {}, defaulting to overworld", dimensionKey);
-				level = getServerLevel(Level.OVERWORLD);
-			}
+			level = getServerLevel(dimensionKey)
+					        .orElseGet(() -> {
+						        GraveKeeper.LOGGER.warn("Failed to load dimension {}, defaulting to overworld", dimensionKey);
+						        return getServerLevel(Level.OVERWORLD)
+								               .orElseThrow(() -> new IllegalStateException("Unable to resolve overworld level"));
+					        });
 		}
 		return level;
 	}

@@ -1,10 +1,24 @@
 package com.quantumlytangled.gravekeeper;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.quantumlytangled.gravekeeper.compat.CompatMain;
+import com.quantumlytangled.gravekeeper.compat.ICompatInventory;
+import com.quantumlytangled.gravekeeper.foundation.inventory.InventoryCollector;
+import com.quantumlytangled.gravekeeper.foundation.inventory.InventoryRestorer;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Config {
 	
 	private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+	
+	public static final ModConfigSpec.ConfigValue<List<? extends String>> COMPATIBILITY_ORDER = BUILDER
+			                                                                                            .comment("Define which inventories are enabled and in which order they're processed.",
+			                                                                                                     "Valid values: minecraft:main, minecraft:armour, minecraft:offhand")
+			                                                                                            .defineListAllowEmpty("compatibility_order",
+			                                                                                                                  List.of("minecraft:armour", "minecraft:main", "minecraft:offhand"),
+			                                                                                                                  obj -> obj instanceof String);
 	
 	public static final ModConfigSpec.BooleanValue IGNORE_KEEP_INVENTORY = BUILDER
 			                                                                       .comment("Whether the chests should still spawn when keepInventory is enabled")
@@ -50,5 +64,27 @@ public class Config {
 	
 	public static boolean isOwnerOnlyCollection() {
 		return EXPIRE_TIME_SECONDS.get() == -1;
+	}
+	
+	public static void onPostInit() {
+		final List<String> added = new ArrayList<>();
+		for (final String name : COMPATIBILITY_ORDER.get()) {
+			if (added.contains(name)) {
+				GraveKeeper.LOGGER.error("Skipping duplicated compatibility name {}", name);
+				continue;
+			}
+			final ICompatInventory compat = switch (name) {
+				case "minecraft:main" -> CompatMain.getInstance();
+				default -> {
+					GraveKeeper.LOGGER.error("Skipping unknown compatibility name {}", name);
+					yield null;
+				}
+			};
+			if (compat != null) {
+				InventoryCollector.addCompatibilityWrapper(compat);
+				InventoryRestorer.addCompatibilityWrapper(compat);
+				added.add(name);
+			}
+		}
 	}
 }
